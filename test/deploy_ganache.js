@@ -1,5 +1,5 @@
 const etherlime = require("etherlime-lib");
-const ethers = require("../packages/Base/src/node_modules/ethers");
+const ethers = require("ethers");
 const {
   hexlify,
   createIPFShash,

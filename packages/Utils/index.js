@@ -1,4 +1,4 @@
-const ethers = require("../Base/src/node_modules/ethers");
+const ethers = require("ethers");
 
 const hexlify = utf8str =>
   ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8str));

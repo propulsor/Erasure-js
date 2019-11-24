@@ -1,5 +1,4 @@
-const ethers = require("../packages/Base/src/node_modules/ethers");
-const SpawnArtifact = require("../../../Contracts/artifacts/Spawner.json")
+const ethers = require("ethers");
 
 const hexlify = utf8str =>
   ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8str));
@@ -38,72 +37,7 @@ function createSelector(functionName, abiTypes) {
   return selector;
 }
 
-function createInstanceAddressWithCallData(
-  factoryContractAddress,
-  logicContractAddress,
-  sender,
-  callData,
-  nonce,
-  salt
-) {
-  const abiEncoder = new ethers.utils.AbiCoder();
 
-  const initCallData = abiEncoder.encode(
-    ["address", "bytes"],
-    [logicContractAddress, callData]
-  );
-
-  const initCodeHash = ethers.utils.solidityKeccak256(
-    ["bytes", "bytes"],
-    [SpawnArtifact.bytecode, initCallData]
-  );
-
-  if (!salt) {
-    salt = ethers.utils.solidityKeccak256(
-      ["address", "uint256"],
-      [sender, nonce]
-    );
-  }
-
-  const create2hash = ethers.utils.solidityKeccak256(
-    ["bytes1", "address", "bytes32", "bytes32"],
-    ["0xff", factoryContractAddress, salt, initCodeHash]
-  );
-
-  let instanceAddress = ethers.utils.getAddress(
-    "0x" + create2hash.slice(12).substring(14)
-  );
-  return {
-    callData,
-    instanceAddress
-  };
-}
-
-// the long, manual way of re-creating the instance address
-function createInstanceAddress(
-  factoryContractAddress,
-  logicContractAddress,
-  sender,
-  initializeFunctionName,
-  abiTypes,
-  abiValues,
-  nonce,
-  salt
-) {
-  const callData = abiEncodeWithSelector(
-    initializeFunctionName,
-    abiTypes,
-    abiValues
-  );
-  return createInstanceAddressWithCallData(
-    factoryContractAddress,
-    logicContractAddress,
-    sender,
-    callData,
-    nonce,
-    salt
-  );
-}
 
 function createEip1167RuntimeCode(logicContractAddress) {
   return ethers.utils.solidityPack(
@@ -163,8 +97,6 @@ async function assertEvent(contract, txn, eventName, expectedArgs) {
 
 module.exports = {
   hexlify,
-  createInstanceAddress,
-  createInstanceAddressWithCallData,
   createEip1167RuntimeCode,
   createSelector,
   createIPFShash,

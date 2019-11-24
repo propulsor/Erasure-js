@@ -1,15 +1,15 @@
 {
   "name": "erasure",
   "version": "1.0.0",
-  "description": "erasure JS sdk wraping contract ABIs",
+  "description": "Erasure JS sdk wraping contract ABIs",
   "main": "index.js",
   "author": "propulsor",
   "license": "MIT",
   "private": true,
   "scripts": {
     "ganache": "ganache-cli --port 8545 --deterministic --secure -u 0x9608010323ed882a38ede9211d7691102b4f0ba0 --defaultBalanceEther 1000 -i 5777",
-    "test": "bash run-ganache-tests.sh",
-    "test_mocha": "npx mocha test --timeout=10000"
+    "test": "bash test/run-ganache-tests.sh",
+    "test_mocha": "mocha"
   },
   "devDependencies": {
     "etherlime": "^2.2.4",

@@ -1,12 +1,6 @@
-/**
- * Contract wrapper for Erasure Abis
- * When we have updated ABIs from upstream, this package will need to be udpated as well
- * Default web3 provider is mainnet from infura
- */
-const { ethers } = require("ethers");
 const Contracts = {
   NMR: {
-    artifact: require("../artifacts/MockNMR.json.js"),
+    artifact: require("../artifacts/MockNMR.json"),
     mainnet: {
       address: "0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671"
     },
@@ -18,7 +12,7 @@ const Contracts = {
     }
   },
   Erasure_Agreements: {
-    artifact: require("../artifacts/Erasure_Agreements.json.js"),
+    artifact: require("../artifacts/Erasure_Agreements.json"),
     mainnet: {
       address: "0xa6cf4Bf00feF8866e9F3f61C972bA7C687C6eDbF"
     },
@@ -30,7 +24,7 @@ const Contracts = {
     }
   },
   Erasure_Posts: {
-    artifact: require("../artifacts/Erasure_Posts.json.js"),
+    artifact: require("../artifacts/Erasure_Posts.json"),
     mainnet: {
       address: "0x348FA9DcFf507B81C7A1d7981244eA92E8c6Af29"
     },
@@ -42,7 +36,7 @@ const Contracts = {
     }
   },
   Erasure_Escrows: {
-    artifact: require("../artifacts/Erasure_Escrows.json.js"),
+    artifact: require("../artifacts/Erasure_Escrows.json"),
     mainnet: {
       address: ""
     },
@@ -55,7 +49,7 @@ const Contracts = {
   },
   Feed: {
     factory: {
-      artifact: require("../artifacts/Feed_Factory.json.js"),
+      artifact: require("../artifacts/Feed_Factory.json"),
       mainnet: {
         address: "0x206780873974878722Ed156544589701832eE920"
       },
@@ -67,7 +61,7 @@ const Contracts = {
       }
     },
     template: {
-      artifact: require("../artifacts/Feed.json.js"),
+      artifact: require("../artifacts/Feed.json"),
       mainnet: {
         address: "0xA411eB36538a2Ae060A766221E43A94205460369"
       },
@@ -92,7 +86,7 @@ const Contracts = {
   },
   SimpleGriefing: {
     factory: {
-      artifact: require("../artifacts/SimpleGriefing_Factory.json.js"),
+      artifact: require("../artifacts/SimpleGriefing_Factory.json"),
       mainnet: {
         address: "0x67ef9503cf0350dB52130Ef2Ad053E868Bc90FC7"
       },
@@ -104,7 +98,7 @@ const Contracts = {
       }
     },
     template: {
-      artifact: require("../artifacts/SimpleGriefing.json.js"),
+      artifact: require("../artifacts/SimpleGriefing.json"),
       mainnet: {
         address: "0xC04Bd2f0d484b7e0156b21c98B2923Ca8b9ce149"
       },
@@ -129,7 +123,7 @@ const Contracts = {
   },
   CountdownGriefing: {
     factory: {
-      artifact: require("../artifacts/CountdownGriefing_Factory.json.js"),
+      artifact: require("../artifacts/CountdownGriefing_Factory.json"),
       mainnet: {
         address: "0xd330e5e9670738D36E31dcb1fde0c08B1895a0b1"
       },
@@ -141,7 +135,7 @@ const Contracts = {
       }
     },
     template: {
-      artifact: require("../artifacts/CountdownGriefing.json.js"),
+      artifact: require("../artifacts/CountdownGriefing.json"),
       mainnet: {
         address: "0x89a2958544f86Cc57828dbBf31E2C786f20Fe0a0"
       },
@@ -166,7 +160,7 @@ const Contracts = {
   },
   CountdownGriefingEscrow: {
     factory: {
-      artifact: require("../artifacts/CountdownGriefingEscrow_Factory.json.js"),
+      artifact: require("../artifacts/CountdownGriefingEscrow_Factory.json"),
       mainnet: {
         address: ""
       },
@@ -178,7 +172,7 @@ const Contracts = {
       }
     },
     template: {
-      artifact: require("../artifacts/CountdownGriefingEscrow.json.js"),
+      artifact: require("../artifacts/CountdownGriefingEscrow.json"),
       mainnet: {
         address: ""
       },
@@ -202,68 +196,4 @@ const Contracts = {
     }
   }
 };
-Contracts.setAddress = (contractName, network, address) => {
-  Contracts[contractName][network].address = address;
-};
-
-/**
- * Factory functions
- */
-
-class Factory {
-  constructor(contractName, wallet, network, provider, contracts) {
-    let contractInstance = new ethers.Contract(
-      contracts[contractName].factory[network].address,
-      contracts[contractName].factory.artifact.abi,
-      provider
-    );
-    this.provider = provider;
-    this.contract = contractInstance.connect(wallet);
-    this.interface = new ethers.utils.Interface(
-      contracts[contractName].factory.artifact.abi
-    );
-    this.wallet = wallet;
-  }
-
-  //GETTERS
-  async getInstanceCount() {
-    return await this.contract.getInstanceCount();
-  }
-  async getInstance(index) {
-    return await this.contract.getInstance(index);
-  }
-  async getInstances() {
-    return await this.contract.getInstances();
-  }
-  async getPaginatedInstances(start, end) {
-    return await this.contract.getPaginatedInstances(start, end); //todo could revert -> handle
-  }
-}
-class Template {
-  constructor(contractName, contractAddress, wallet, provider) {
-    let contractInstance = new ethers.Contract(
-      contractAddress,
-      contracts[contractName].template.artifact.abi,
-      provider
-    );
-    this.contract = contractInstance.connect(wallet);
-    this.interface = new ethers.utils.Interface(
-      contracts[contractName].template.artifact.abi
-    );
-    this.wallet = wallet;
-  }
-  async transferOperator(newOperator) {
-    let tx = await this.contract.transferOperator(newOperator);
-    return tx.await();
-  }
-  async renounceOperator() {
-    let tx = await this.contract.renounceOperator();
-    return tx.await();
-  }
-
-  //GETTERS
-  async getOperator(){
-    return await this.contract.getOperator()
-  }
-}
-module.exports = { Factory, Contracts, Template };
+module.exports = { Contracts };

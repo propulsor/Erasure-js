@@ -1,6 +1,6 @@
 'use strict';
 
-const contracts = require('..');
+const {Contracts} = require('../../packages/Base');
 
 describe('contracts', () => {
     it('needs tests');
