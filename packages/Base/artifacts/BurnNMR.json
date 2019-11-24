@@ -1,0 +1,1513 @@
+{
+  "contractName": "BurnNMR",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getToken",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060c68061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c806321df0da714602d575b600080fd5b60336075565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000731776e1f26f98b1a5df9cd347953a26dd3cb4667190509056fea265627a7a723158202c200c911247b2a953be138e67c3ccf8f866676b728966470e3302415190648064736f6c634300050d0032",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c806321df0da714602d575b600080fd5b60336075565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000731776e1f26f98b1a5df9cd347953a26dd3cb4667190509056fea265627a7a723158202c200c911247b2a953be138e67c3ccf8f866676b728966470e3302415190648064736f6c634300050d0032",
+  "sourceMap": "319:977:12:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;319:977:12;;;;;;;",
+  "deployedSourceMap": "319:977:12:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;319:977:12;;;;;;;;;;;;;;;;;;;1206:87;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;1247:13;413:42;1272:14;;1206:87;:::o",
+  "source": "pragma solidity ^0.5.13;\n\nimport \"./iNMR.sol\";\n\n/// @title BurnNMR\n/// @author Stephane Gosselin (@thegostep) for Numerai Inc\n/// @dev Security contact: security@numer.ai\n/// @dev Version: 1.2.0\n/// @notice Allows for calling NMR burn functions using regular openzeppelin ERC20Burnable interface and revert on failure.\ncontract BurnNMR {\n\n    // address of the token\n    address private constant _Token = address(0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671);\n\n    /// @notice Burns a specific amount of NMR from this contract.\n    /// @param value uint256 The amount of NMR (18 decimals) to be burned.\n    function _burn(uint256 value) internal {\n        require(iNMR(_Token).mint(value), \"nmr burn failed\");\n    }\n\n    /// @dev Burns a specific amount of NMR from the target address and decrements allowance.\n    /// @param from address The account whose tokens will be burned.\n    /// @param value uint256 The amount of NMR (18 decimals) to be burned.\n    function _burnFrom(address from, uint256 value) internal {\n        require(iNMR(_Token).numeraiTransfer(from, value), \"nmr burnFrom failed\");\n    }\n\n    /// @notice Get the NMR token address.\n    /// @return token address The NMR token address.\n    function getToken() public pure returns (address token) {\n        token = _Token;\n    }\n\n}\n",
+  "sourcePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/BurnNMR.sol",
+  "ast": {
+    "absolutePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/BurnNMR.sol",
+    "exportedSymbols": {
+      "BurnNMR": [
+        3140
+      ]
+    },
+    "id": 3141,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3088,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".13"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:12"
+      },
+      {
+        "absolutePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/iNMR.sol",
+        "file": "./iNMR.sol",
+        "id": 3089,
+        "nodeType": "ImportDirective",
+        "scope": 3141,
+        "sourceUnit": 5645,
+        "src": "26:20:12",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title BurnNMR\n @author Stephane Gosselin (@thegostep) for Numerai Inc\n @dev Security contact: security@numer.ai\n @dev Version: 1.2.0\n @notice Allows for calling NMR burn functions using regular openzeppelin ERC20Burnable interface and revert on failure.",
+        "fullyImplemented": true,
+        "id": 3140,
+        "linearizedBaseContracts": [
+          3140
+        ],
+        "name": "BurnNMR",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": true,
+            "id": 3094,
+            "name": "_Token",
+            "nodeType": "VariableDeclaration",
+            "scope": 3140,
+            "src": "371:85:12",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 3090,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "371:7:12",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "arguments": [
+                {
+                  "argumentTypes": null,
+                  "hexValue": "307831373736653146323666393862314135644639634433343739353361323664643343623436363731",
+                  "id": 3092,
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "kind": "number",
+                  "lValueRequested": false,
+                  "nodeType": "Literal",
+                  "src": "413:42:12",
+                  "subdenomination": null,
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  },
+                  "value": "0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671"
+                }
+              ],
+              "expression": {
+                "argumentTypes": [
+                  {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  }
+                ],
+                "id": 3091,
+                "isConstant": false,
+                "isLValue": false,
+                "isPure": true,
+                "lValueRequested": false,
+                "nodeType": "ElementaryTypeNameExpression",
+                "src": "405:7:12",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_type$_t_address_$",
+                  "typeString": "type(address)"
+                },
+                "typeName": "address"
+              },
+              "id": 3093,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "typeConversion",
+              "lValueRequested": false,
+              "names": [],
+              "nodeType": "FunctionCall",
+              "src": "405:51:12",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              }
+            },
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 3109,
+              "nodeType": "Block",
+              "src": "644:69:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 3104,
+                            "name": "value",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3096,
+                            "src": "680:5:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 3101,
+                                "name": "_Token",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3094,
+                                "src": "667:6:12",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "id": 3100,
+                              "name": "iNMR",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 5644,
+                              "src": "662:4:12",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_contract$_iNMR_$5644_$",
+                                "typeString": "type(contract iNMR)"
+                              }
+                            },
+                            "id": 3102,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "662:12:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_iNMR_$5644",
+                              "typeString": "contract iNMR"
+                            }
+                          },
+                          "id": 3103,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "mint",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 5634,
+                          "src": "662:17:12",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$_t_bool_$",
+                            "typeString": "function (uint256) external returns (bool)"
+                          }
+                        },
+                        "id": 3105,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "662:24:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "6e6d72206275726e206661696c6564",
+                        "id": 3106,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "688:17:12",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_95654e79f9f3748dcd3676d98c8664ac1760b169c8ad025652c7e41b201b5b4a",
+                          "typeString": "literal_string \"nmr burn failed\""
+                        },
+                        "value": "nmr burn failed"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_95654e79f9f3748dcd3676d98c8664ac1760b169c8ad025652c7e41b201b5b4a",
+                          "typeString": "literal_string \"nmr burn failed\""
+                        }
+                      ],
+                      "id": 3099,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        7101,
+                        7102
+                      ],
+                      "referencedDeclaration": 7102,
+                      "src": "654:7:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 3107,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "654:52:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3108,
+                  "nodeType": "ExpressionStatement",
+                  "src": "654:52:12"
+                }
+              ]
+            },
+            "documentation": "@notice Burns a specific amount of NMR from this contract.\n @param value uint256 The amount of NMR (18 decimals) to be burned.",
+            "id": 3110,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_burn",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3097,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3096,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3110,
+                  "src": "620:13:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3095,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "620:7:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "619:15:12"
+            },
+            "returnParameters": {
+              "id": 3098,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "644:0:12"
+            },
+            "scope": 3140,
+            "src": "605:108:12",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3128,
+              "nodeType": "Block",
+              "src": "1014:90:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 3122,
+                            "name": "from",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3112,
+                            "src": "1061:4:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "id": 3123,
+                            "name": "value",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3114,
+                            "src": "1067:5:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            },
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 3119,
+                                "name": "_Token",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3094,
+                                "src": "1037:6:12",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "id": 3118,
+                              "name": "iNMR",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 5644,
+                              "src": "1032:4:12",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_contract$_iNMR_$5644_$",
+                                "typeString": "type(contract iNMR)"
+                              }
+                            },
+                            "id": 3120,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1032:12:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_iNMR_$5644",
+                              "typeString": "contract iNMR"
+                            }
+                          },
+                          "id": 3121,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "numeraiTransfer",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 5643,
+                          "src": "1032:28:12",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
+                            "typeString": "function (address,uint256) external returns (bool)"
+                          }
+                        },
+                        "id": 3124,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1032:41:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "6e6d72206275726e46726f6d206661696c6564",
+                        "id": 3125,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1075:21:12",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_6014821edbab5dd75b50f3074b20860241ba590b0519f41906596213ed89c355",
+                          "typeString": "literal_string \"nmr burnFrom failed\""
+                        },
+                        "value": "nmr burnFrom failed"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_6014821edbab5dd75b50f3074b20860241ba590b0519f41906596213ed89c355",
+                          "typeString": "literal_string \"nmr burnFrom failed\""
+                        }
+                      ],
+                      "id": 3117,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        7101,
+                        7102
+                      ],
+                      "referencedDeclaration": 7102,
+                      "src": "1024:7:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 3126,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1024:73:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3127,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1024:73:12"
+                }
+              ]
+            },
+            "documentation": "@dev Burns a specific amount of NMR from the target address and decrements allowance.\n @param from address The account whose tokens will be burned.\n @param value uint256 The amount of NMR (18 decimals) to be burned.",
+            "id": 3129,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_burnFrom",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3115,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3112,
+                  "name": "from",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3129,
+                  "src": "976:12:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3111,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "976:7:12",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3114,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3129,
+                  "src": "990:13:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3113,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "990:7:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "975:29:12"
+            },
+            "returnParameters": {
+              "id": 3116,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1014:0:12"
+            },
+            "scope": 3140,
+            "src": "957:147:12",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3138,
+              "nodeType": "Block",
+              "src": "1262:31:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3136,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 3134,
+                      "name": "token",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3132,
+                      "src": "1272:5:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 3135,
+                      "name": "_Token",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3094,
+                      "src": "1280:6:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "1272:14:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 3137,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1272:14:12"
+                }
+              ]
+            },
+            "documentation": "@notice Get the NMR token address.\n @return token address The NMR token address.",
+            "id": 3139,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getToken",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3130,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1223:2:12"
+            },
+            "returnParameters": {
+              "id": 3133,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3132,
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3139,
+                  "src": "1247:13:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3131,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1247:7:12",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1246:15:12"
+            },
+            "scope": 3140,
+            "src": "1206:87:12",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 3141,
+        "src": "319:977:12"
+      }
+    ],
+    "src": "0:1297:12"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/BurnNMR.sol",
+    "exportedSymbols": {
+      "BurnNMR": [
+        3140
+      ]
+    },
+    "id": 3141,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3088,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".13"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:12"
+      },
+      {
+        "absolutePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/iNMR.sol",
+        "file": "./iNMR.sol",
+        "id": 3089,
+        "nodeType": "ImportDirective",
+        "scope": 3141,
+        "sourceUnit": 5645,
+        "src": "26:20:12",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title BurnNMR\n @author Stephane Gosselin (@thegostep) for Numerai Inc\n @dev Security contact: security@numer.ai\n @dev Version: 1.2.0\n @notice Allows for calling NMR burn functions using regular openzeppelin ERC20Burnable interface and revert on failure.",
+        "fullyImplemented": true,
+        "id": 3140,
+        "linearizedBaseContracts": [
+          3140
+        ],
+        "name": "BurnNMR",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": true,
+            "id": 3094,
+            "name": "_Token",
+            "nodeType": "VariableDeclaration",
+            "scope": 3140,
+            "src": "371:85:12",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 3090,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "371:7:12",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "arguments": [
+                {
+                  "argumentTypes": null,
+                  "hexValue": "307831373736653146323666393862314135644639634433343739353361323664643343623436363731",
+                  "id": 3092,
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "kind": "number",
+                  "lValueRequested": false,
+                  "nodeType": "Literal",
+                  "src": "413:42:12",
+                  "subdenomination": null,
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  },
+                  "value": "0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671"
+                }
+              ],
+              "expression": {
+                "argumentTypes": [
+                  {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  }
+                ],
+                "id": 3091,
+                "isConstant": false,
+                "isLValue": false,
+                "isPure": true,
+                "lValueRequested": false,
+                "nodeType": "ElementaryTypeNameExpression",
+                "src": "405:7:12",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_type$_t_address_$",
+                  "typeString": "type(address)"
+                },
+                "typeName": "address"
+              },
+              "id": 3093,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "typeConversion",
+              "lValueRequested": false,
+              "names": [],
+              "nodeType": "FunctionCall",
+              "src": "405:51:12",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              }
+            },
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 3109,
+              "nodeType": "Block",
+              "src": "644:69:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 3104,
+                            "name": "value",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3096,
+                            "src": "680:5:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 3101,
+                                "name": "_Token",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3094,
+                                "src": "667:6:12",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "id": 3100,
+                              "name": "iNMR",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 5644,
+                              "src": "662:4:12",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_contract$_iNMR_$5644_$",
+                                "typeString": "type(contract iNMR)"
+                              }
+                            },
+                            "id": 3102,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "662:12:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_iNMR_$5644",
+                              "typeString": "contract iNMR"
+                            }
+                          },
+                          "id": 3103,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "mint",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 5634,
+                          "src": "662:17:12",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$_t_bool_$",
+                            "typeString": "function (uint256) external returns (bool)"
+                          }
+                        },
+                        "id": 3105,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "662:24:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "6e6d72206275726e206661696c6564",
+                        "id": 3106,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "688:17:12",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_95654e79f9f3748dcd3676d98c8664ac1760b169c8ad025652c7e41b201b5b4a",
+                          "typeString": "literal_string \"nmr burn failed\""
+                        },
+                        "value": "nmr burn failed"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_95654e79f9f3748dcd3676d98c8664ac1760b169c8ad025652c7e41b201b5b4a",
+                          "typeString": "literal_string \"nmr burn failed\""
+                        }
+                      ],
+                      "id": 3099,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        7101,
+                        7102
+                      ],
+                      "referencedDeclaration": 7102,
+                      "src": "654:7:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 3107,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "654:52:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3108,
+                  "nodeType": "ExpressionStatement",
+                  "src": "654:52:12"
+                }
+              ]
+            },
+            "documentation": "@notice Burns a specific amount of NMR from this contract.\n @param value uint256 The amount of NMR (18 decimals) to be burned.",
+            "id": 3110,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_burn",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3097,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3096,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3110,
+                  "src": "620:13:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3095,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "620:7:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "619:15:12"
+            },
+            "returnParameters": {
+              "id": 3098,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "644:0:12"
+            },
+            "scope": 3140,
+            "src": "605:108:12",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3128,
+              "nodeType": "Block",
+              "src": "1014:90:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 3122,
+                            "name": "from",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3112,
+                            "src": "1061:4:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "id": 3123,
+                            "name": "value",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3114,
+                            "src": "1067:5:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            },
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 3119,
+                                "name": "_Token",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3094,
+                                "src": "1037:6:12",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "id": 3118,
+                              "name": "iNMR",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 5644,
+                              "src": "1032:4:12",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_contract$_iNMR_$5644_$",
+                                "typeString": "type(contract iNMR)"
+                              }
+                            },
+                            "id": 3120,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1032:12:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_iNMR_$5644",
+                              "typeString": "contract iNMR"
+                            }
+                          },
+                          "id": 3121,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "numeraiTransfer",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 5643,
+                          "src": "1032:28:12",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
+                            "typeString": "function (address,uint256) external returns (bool)"
+                          }
+                        },
+                        "id": 3124,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1032:41:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "6e6d72206275726e46726f6d206661696c6564",
+                        "id": 3125,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1075:21:12",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_6014821edbab5dd75b50f3074b20860241ba590b0519f41906596213ed89c355",
+                          "typeString": "literal_string \"nmr burnFrom failed\""
+                        },
+                        "value": "nmr burnFrom failed"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_6014821edbab5dd75b50f3074b20860241ba590b0519f41906596213ed89c355",
+                          "typeString": "literal_string \"nmr burnFrom failed\""
+                        }
+                      ],
+                      "id": 3117,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        7101,
+                        7102
+                      ],
+                      "referencedDeclaration": 7102,
+                      "src": "1024:7:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 3126,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1024:73:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3127,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1024:73:12"
+                }
+              ]
+            },
+            "documentation": "@dev Burns a specific amount of NMR from the target address and decrements allowance.\n @param from address The account whose tokens will be burned.\n @param value uint256 The amount of NMR (18 decimals) to be burned.",
+            "id": 3129,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_burnFrom",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3115,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3112,
+                  "name": "from",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3129,
+                  "src": "976:12:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3111,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "976:7:12",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3114,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3129,
+                  "src": "990:13:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3113,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "990:7:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "975:29:12"
+            },
+            "returnParameters": {
+              "id": 3116,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1014:0:12"
+            },
+            "scope": 3140,
+            "src": "957:147:12",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3138,
+              "nodeType": "Block",
+              "src": "1262:31:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3136,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 3134,
+                      "name": "token",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3132,
+                      "src": "1272:5:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 3135,
+                      "name": "_Token",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3094,
+                      "src": "1280:6:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "1272:14:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 3137,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1272:14:12"
+                }
+              ]
+            },
+            "documentation": "@notice Get the NMR token address.\n @return token address The NMR token address.",
+            "id": 3139,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getToken",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3130,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1223:2:12"
+            },
+            "returnParameters": {
+              "id": 3133,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3132,
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3139,
+                  "src": "1247:13:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3131,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1247:7:12",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1246:15:12"
+            },
+            "scope": 3140,
+            "src": "1206:87:12",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 3141,
+        "src": "319:977:12"
+      }
+    ],
+    "src": "0:1297:12"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.13+commit.5b0b510c.Emscripten.clang",
+    "optimizer": false,
+    "runs": 200
+  },
+  "networks": {},
+  "schemaVersion": "2.2.0",
+  "updatedAt": "2019-11-23T03:57:38.402Z"
+}

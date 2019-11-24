@@ -1,0 +1,1204 @@
+{
+  "contractName": "ProofHash",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "caller",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "proofHash",
+          "type": "bytes"
+        }
+      ],
+      "name": "ProofHashSet",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getProofHash",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "proofHash",
+          "type": "bytes"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b506101f1806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c806355e0337314610030575b600080fd5b6100386100ad565b6040805160208082528351818301528351919283929083019185019080838360005b8381101561007257818101518382015260200161005a565b50505050905090810190601f16801561009f5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6040805160608181018352600054825260015460ff808216602085015261010090910416928201929092526100e1906100e6565b905090565b6040805160228082526060828101909352829190602082018180388339019050509050826020015160f81b8160008151811061011e57fe5b60200101906001600160f81b031916908160001a905350826040015160f81b8160018151811061014a57fe5b60200101906001600160f81b031916908160001a90535060005b60208160ff1610156101b557835160ff82166020811061018057fe5b1a60f81b828260020160ff168151811061019657fe5b60200101906001600160f81b031916908160001a905350600101610164565b509291505056fea265627a7a72315820bb9af7333fbb43d4cd8e7617c0df644991769a01bccc44b409d6271c4a78487964736f6c634300050b0032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c806355e0337314610030575b600080fd5b6100386100ad565b6040805160208082528351818301528351919283929083019185019080838360005b8381101561007257818101518382015260200161005a565b50505050905090810190601f16801561009f5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6040805160608181018352600054825260015460ff808216602085015261010090910416928201929092526100e1906100e6565b905090565b6040805160228082526060828101909352829190602082018180388339019050509050826020015160f81b8160008151811061011e57fe5b60200101906001600160f81b031916908160001a905350826040015160f81b8160018151811061014a57fe5b60200101906001600160f81b031916908160001a90535060005b60208160ff1610156101b557835160ff82166020811061018057fe5b1a60f81b828260020160ff168151811061019657fe5b60200101906001600160f81b031916908160001a905350600101610164565b509291505056fea265627a7a72315820bb9af7333fbb43d4cd8e7617c0df644991769a01bccc44b409d6271c4a78487964736f6c634300050b0032",
+  "sourceMap": "60:518:25:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;60:518:25;;;;;;;",
+  "deployedSourceMap": "60:518:25:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;60:518:25;;;;;;;;;;;;;;;;;;;431:144;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:100:-1;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;431:144:25;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;522:46;;;476:22;522:46;;;;;557:10;522:46;;;;;;;;;;;;;;;;;;;;;;;;;;;:34;:46::i;:::-;510:58;;431:144;:::o;623:358:23:-;744:13;;;754:2;744:13;;;701:12;744:13;;;;;;701:12;;744:13;;;;21:6:-1;;104:10;744:13:23;87:34:-1;135:17;;-1:-1;744:13:23;725:32;;782:9;:22;;;777:28;;768:3;772:1;768:6;;;;;;;;;;;:37;-1:-1:-1;;;;;768:37:23;;;;;;;;;829:9;:20;;;824:26;;815:3;819:1;815:6;;;;;;;;;;;:35;-1:-1:-1;;;;;815:35:23;;;;;;;;-1:-1:-1;861:7:23;878:76;894:2;890:1;:6;;;878:76;;;926:14;;:17;;;;;;;;;;;;;915:3;919:1;921;919:3;915:8;;;;;;;;;;;;;:28;-1:-1:-1;;;;;915:28:23;;;;;;;;-1:-1:-1;898:3:23;;878:76;;;-1:-1:-1;971:3:23;623:358;-1:-1:-1;;623:358:23:o",
+  "source": "pragma solidity ^0.5.0;\n\nimport \"./MultiHashWrapper.sol\";\n\n\ncontract ProofHash is MultiHashWrapper {\n\n    MultiHash private _proofHash;\n\n    event ProofHashSet(address caller, bytes proofHash);\n\n    // state functions\n\n    function _setProofHash(bytes memory proofHash) internal {\n        _proofHash = MultiHashWrapper._splitMultiHash(proofHash);\n        emit ProofHashSet(msg.sender, proofHash);\n    }\n\n    // view functions\n\n    function getProofHash() public view returns (bytes memory proofHash) {\n        proofHash = MultiHashWrapper._combineMultiHash(_proofHash);\n    }\n\n}\n",
+  "sourcePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/ProofHash.sol",
+  "ast": {
+    "absolutePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/ProofHash.sol",
+    "exportedSymbols": {
+      "ProofHash": [
+        4149
+      ]
+    },
+    "id": 4150,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4105,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:25"
+      },
+      {
+        "absolutePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/MultiHashWrapper.sol",
+        "file": "./MultiHashWrapper.sol",
+        "id": 4106,
+        "nodeType": "ImportDirective",
+        "scope": 4150,
+        "sourceUnit": 3935,
+        "src": "25:32:25",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 4107,
+              "name": "MultiHashWrapper",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 3934,
+              "src": "82:16:25",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_MultiHashWrapper_$3934",
+                "typeString": "contract MultiHashWrapper"
+              }
+            },
+            "id": 4108,
+            "nodeType": "InheritanceSpecifier",
+            "src": "82:16:25"
+          }
+        ],
+        "contractDependencies": [
+          3934
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 4149,
+        "linearizedBaseContracts": [
+          4149,
+          3934
+        ],
+        "name": "ProofHash",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 4110,
+            "name": "_proofHash",
+            "nodeType": "VariableDeclaration",
+            "scope": 4149,
+            "src": "106:28:25",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+              "typeString": "struct MultiHashWrapper.MultiHash"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 4109,
+              "name": "MultiHash",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 3829,
+              "src": "106:9:25",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_MultiHash_$3829_storage_ptr",
+                "typeString": "struct MultiHashWrapper.MultiHash"
+              }
+            },
+            "value": null,
+            "visibility": "private"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 4116,
+            "name": "ProofHashSet",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4115,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4112,
+                  "indexed": false,
+                  "name": "caller",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4116,
+                  "src": "160:14:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4111,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "160:7:25",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4114,
+                  "indexed": false,
+                  "name": "proofHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4116,
+                  "src": "176:15:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4113,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "176:5:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "159:33:25"
+            },
+            "src": "141:52:25"
+          },
+          {
+            "body": {
+              "id": 4134,
+              "nodeType": "Block",
+              "src": "279:123:25",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4126,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4121,
+                      "name": "_proofHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4110,
+                      "src": "289:10:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+                        "typeString": "struct MultiHashWrapper.MultiHash storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 4124,
+                          "name": "proofHash",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4118,
+                          "src": "335:9:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes_memory_ptr",
+                            "typeString": "bytes memory"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes_memory_ptr",
+                            "typeString": "bytes memory"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 4122,
+                          "name": "MultiHashWrapper",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3934,
+                          "src": "302:16:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_MultiHashWrapper_$3934_$",
+                            "typeString": "type(contract MultiHashWrapper)"
+                          }
+                        },
+                        "id": 4123,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "_splitMultiHash",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 3933,
+                        "src": "302:32:25",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_bytes_memory_ptr_$returns$_t_struct$_MultiHash_$3829_memory_ptr_$",
+                          "typeString": "function (bytes memory) pure returns (struct MultiHashWrapper.MultiHash memory)"
+                        }
+                      },
+                      "id": 4125,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "302:43:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_MultiHash_$3829_memory_ptr",
+                        "typeString": "struct MultiHashWrapper.MultiHash memory"
+                      }
+                    },
+                    "src": "289:56:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+                      "typeString": "struct MultiHashWrapper.MultiHash storage ref"
+                    }
+                  },
+                  "id": 4127,
+                  "nodeType": "ExpressionStatement",
+                  "src": "289:56:25"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 4129,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 6835,
+                          "src": "373:3:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 4130,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "373:10:25",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 4131,
+                        "name": "proofHash",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 4118,
+                        "src": "385:9:25",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      ],
+                      "id": 4128,
+                      "name": "ProofHashSet",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4116,
+                      "src": "360:12:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_bytes_memory_ptr_$returns$__$",
+                        "typeString": "function (address,bytes memory)"
+                      }
+                    },
+                    "id": 4132,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "360:35:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4133,
+                  "nodeType": "EmitStatement",
+                  "src": "355:40:25"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 4135,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_setProofHash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4119,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4118,
+                  "name": "proofHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4135,
+                  "src": "246:22:25",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4117,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "246:5:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "245:24:25"
+            },
+            "returnParameters": {
+              "id": 4120,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "279:0:25"
+            },
+            "scope": 4149,
+            "src": "223:179:25",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 4147,
+              "nodeType": "Block",
+              "src": "500:75:25",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4145,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4140,
+                      "name": "proofHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4138,
+                      "src": "510:9:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes memory"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 4143,
+                          "name": "_proofHash",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4110,
+                          "src": "557:10:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+                            "typeString": "struct MultiHashWrapper.MultiHash storage ref"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+                            "typeString": "struct MultiHashWrapper.MultiHash storage ref"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 4141,
+                          "name": "MultiHashWrapper",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3934,
+                          "src": "522:16:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_MultiHashWrapper_$3934_$",
+                            "typeString": "type(contract MultiHashWrapper)"
+                          }
+                        },
+                        "id": 4142,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "_combineMultiHash",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 3890,
+                        "src": "522:34:25",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_struct$_MultiHash_$3829_memory_ptr_$returns$_t_bytes_memory_ptr_$",
+                          "typeString": "function (struct MultiHashWrapper.MultiHash memory) pure returns (bytes memory)"
+                        }
+                      },
+                      "id": 4144,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "522:46:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes memory"
+                      }
+                    },
+                    "src": "510:58:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory_ptr",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "id": 4146,
+                  "nodeType": "ExpressionStatement",
+                  "src": "510:58:25"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 4148,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getProofHash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4136,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "452:2:25"
+            },
+            "returnParameters": {
+              "id": 4139,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4138,
+                  "name": "proofHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4148,
+                  "src": "476:22:25",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4137,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "476:5:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "475:24:25"
+            },
+            "scope": 4149,
+            "src": "431:144:25",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 4150,
+        "src": "60:518:25"
+      }
+    ],
+    "src": "0:579:25"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/ProofHash.sol",
+    "exportedSymbols": {
+      "ProofHash": [
+        4149
+      ]
+    },
+    "id": 4150,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4105,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:25"
+      },
+      {
+        "absolutePath": "/home/kim/Code/Erasure/erasure-protocol/contracts/modules/MultiHashWrapper.sol",
+        "file": "./MultiHashWrapper.sol",
+        "id": 4106,
+        "nodeType": "ImportDirective",
+        "scope": 4150,
+        "sourceUnit": 3935,
+        "src": "25:32:25",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 4107,
+              "name": "MultiHashWrapper",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 3934,
+              "src": "82:16:25",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_MultiHashWrapper_$3934",
+                "typeString": "contract MultiHashWrapper"
+              }
+            },
+            "id": 4108,
+            "nodeType": "InheritanceSpecifier",
+            "src": "82:16:25"
+          }
+        ],
+        "contractDependencies": [
+          3934
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 4149,
+        "linearizedBaseContracts": [
+          4149,
+          3934
+        ],
+        "name": "ProofHash",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 4110,
+            "name": "_proofHash",
+            "nodeType": "VariableDeclaration",
+            "scope": 4149,
+            "src": "106:28:25",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+              "typeString": "struct MultiHashWrapper.MultiHash"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 4109,
+              "name": "MultiHash",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 3829,
+              "src": "106:9:25",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_MultiHash_$3829_storage_ptr",
+                "typeString": "struct MultiHashWrapper.MultiHash"
+              }
+            },
+            "value": null,
+            "visibility": "private"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 4116,
+            "name": "ProofHashSet",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4115,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4112,
+                  "indexed": false,
+                  "name": "caller",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4116,
+                  "src": "160:14:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4111,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "160:7:25",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4114,
+                  "indexed": false,
+                  "name": "proofHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4116,
+                  "src": "176:15:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4113,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "176:5:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "159:33:25"
+            },
+            "src": "141:52:25"
+          },
+          {
+            "body": {
+              "id": 4134,
+              "nodeType": "Block",
+              "src": "279:123:25",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4126,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4121,
+                      "name": "_proofHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4110,
+                      "src": "289:10:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+                        "typeString": "struct MultiHashWrapper.MultiHash storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 4124,
+                          "name": "proofHash",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4118,
+                          "src": "335:9:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes_memory_ptr",
+                            "typeString": "bytes memory"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes_memory_ptr",
+                            "typeString": "bytes memory"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 4122,
+                          "name": "MultiHashWrapper",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3934,
+                          "src": "302:16:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_MultiHashWrapper_$3934_$",
+                            "typeString": "type(contract MultiHashWrapper)"
+                          }
+                        },
+                        "id": 4123,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "_splitMultiHash",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 3933,
+                        "src": "302:32:25",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_bytes_memory_ptr_$returns$_t_struct$_MultiHash_$3829_memory_ptr_$",
+                          "typeString": "function (bytes memory) pure returns (struct MultiHashWrapper.MultiHash memory)"
+                        }
+                      },
+                      "id": 4125,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "302:43:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_MultiHash_$3829_memory_ptr",
+                        "typeString": "struct MultiHashWrapper.MultiHash memory"
+                      }
+                    },
+                    "src": "289:56:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+                      "typeString": "struct MultiHashWrapper.MultiHash storage ref"
+                    }
+                  },
+                  "id": 4127,
+                  "nodeType": "ExpressionStatement",
+                  "src": "289:56:25"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 4129,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 6835,
+                          "src": "373:3:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 4130,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "373:10:25",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 4131,
+                        "name": "proofHash",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 4118,
+                        "src": "385:9:25",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      ],
+                      "id": 4128,
+                      "name": "ProofHashSet",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4116,
+                      "src": "360:12:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_bytes_memory_ptr_$returns$__$",
+                        "typeString": "function (address,bytes memory)"
+                      }
+                    },
+                    "id": 4132,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "360:35:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4133,
+                  "nodeType": "EmitStatement",
+                  "src": "355:40:25"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 4135,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_setProofHash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4119,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4118,
+                  "name": "proofHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4135,
+                  "src": "246:22:25",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4117,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "246:5:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "245:24:25"
+            },
+            "returnParameters": {
+              "id": 4120,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "279:0:25"
+            },
+            "scope": 4149,
+            "src": "223:179:25",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 4147,
+              "nodeType": "Block",
+              "src": "500:75:25",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4145,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4140,
+                      "name": "proofHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4138,
+                      "src": "510:9:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes memory"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 4143,
+                          "name": "_proofHash",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4110,
+                          "src": "557:10:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+                            "typeString": "struct MultiHashWrapper.MultiHash storage ref"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_struct$_MultiHash_$3829_storage",
+                            "typeString": "struct MultiHashWrapper.MultiHash storage ref"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 4141,
+                          "name": "MultiHashWrapper",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3934,
+                          "src": "522:16:25",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_MultiHashWrapper_$3934_$",
+                            "typeString": "type(contract MultiHashWrapper)"
+                          }
+                        },
+                        "id": 4142,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "_combineMultiHash",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 3890,
+                        "src": "522:34:25",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_struct$_MultiHash_$3829_memory_ptr_$returns$_t_bytes_memory_ptr_$",
+                          "typeString": "function (struct MultiHashWrapper.MultiHash memory) pure returns (bytes memory)"
+                        }
+                      },
+                      "id": 4144,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "522:46:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes memory"
+                      }
+                    },
+                    "src": "510:58:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory_ptr",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "id": 4146,
+                  "nodeType": "ExpressionStatement",
+                  "src": "510:58:25"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 4148,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getProofHash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4136,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "452:2:25"
+            },
+            "returnParameters": {
+              "id": 4139,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4138,
+                  "name": "proofHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4148,
+                  "src": "476:22:25",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4137,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "476:5:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "475:24:25"
+            },
+            "scope": 4149,
+            "src": "431:144:25",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 4150,
+        "src": "60:518:25"
+      }
+    ],
+    "src": "0:579:25"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.11+commit.c082d0b4.Emscripten.clang",
+    "optimizer": true,
+    "runs": 200
+  },
+  "networks": {},
+  "schemaVersion": "2.2.0",
+  "updatedAt": "2019-11-06T06:43:53.779Z"
+}
