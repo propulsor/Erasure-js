@@ -85,4 +85,4 @@ class CoundownGriefing_Factory extends Factory {
   }
 }
 
-module.exports ={CoundownGriefing_Factory}
+module.exports = { CoundownGriefing_Factory };

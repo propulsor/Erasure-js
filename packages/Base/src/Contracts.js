@@ -47,6 +47,18 @@ const Contracts = {
       address: ""
     }
   },
+  Erasure_Users: {
+    artifact: require("../artifacts/Erasure_Users.json"),
+    mainnet: {
+      address: ""
+    },
+    rinkeby: {
+      address: ""
+    },
+    ganache: {
+      address: ""
+    }
+  },
   Feed: {
     factory: {
       artifact: require("../artifacts/Feed_Factory.json"),

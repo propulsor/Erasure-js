@@ -4,11 +4,15 @@ const { NULL_ADDRESS, AGREEMENT_STATUS, hexlify } = require("../../Utils");
 const { Template, Contracts } = require("../../Base");
 
 class CountdownGriefingEscrow_Factory extends Factory{
-    constructor(){}
+    constructor(wallet,provider,network="mainnet"){
+        super(Contracts.CountdownGriefingEscrow_Factory,wallet,provider,network)
+    }
     async create(buyer,seller,paymentAmount,stakeAmount,escrowCountdown,metadata,agreementParams,operator=null){
         
     }
-    async createSalty(){}
+    async createSalty(buyer,seller,paymentAmount,stakeAmount,escrowCountdown,metadata,agreementParams,salt,operator=null){
+        
+    }
 }
 
 module.exports={CountdownGriefingEscrow_Factory}

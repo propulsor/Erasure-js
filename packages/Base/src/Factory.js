@@ -4,14 +4,14 @@ const { Contracts } = require("./Contracts");
 class Factory {
   constructor(contractObj, wallet, network, provider) {
     let contractInstance = new ethers.Contract(
-        contractObj.factory[network].address,
-        contractObj.factory.artifact.abi,
+      contractObj.factory[network].address,
+      contractObj.factory.artifact.abi,
       provider
     );
     this.provider = provider;
     this.contract = contractInstance.connect(wallet);
     this.interface = new ethers.utils.Interface(
-        contractObj.factory.artifact.abi
+      contractObj.factory.artifact.abi
     );
     this.wallet = wallet;
   }

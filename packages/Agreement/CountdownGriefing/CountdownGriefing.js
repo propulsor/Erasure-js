@@ -19,6 +19,7 @@ class CoundownGriefing extends Template {
       "Agreement is already terminated"
     );
   }
+
   async onlyCounterparty() {
     let counterparty = await this.getCounterParty();
     assert.equal(
@@ -27,6 +28,7 @@ class CoundownGriefing extends Template {
       "Only Operator can perform this method"
     );
   }
+
   async onlyCounterpartyOrOperator() {
     let counterparty = await this.getCounterParty();
     let operator = await this.getOperator();
@@ -35,9 +37,14 @@ class CoundownGriefing extends Template {
       "only counterparty or operator can perform this method"
     );
   }
-  async onlyStaker() {
+
+  async onlyStakerOrOperator() {
     let staker = await this.getStaker();
-    assert.equal(staker, wallet.address, "Only staker can perform this method");
+    let operator = await this.getOperator();
+    assert(
+      staker == this.wallet.address || operator == this.wallet.address,
+      "Only staker or operator can perform this method"
+    );
   }
   /**
    * Only staker can increate the stake
@@ -46,7 +53,7 @@ class CoundownGriefing extends Template {
    */
   async increateStake(amount) {
     await this.onlyNotTerminated();
-    await this.onlyStaker();
+    await this.onlyStakerOrOperator();
     let tx = await this.contract.increaseStake(
       ethers.utils.bigNumberify(amount)
     );
@@ -110,37 +117,37 @@ class CoundownGriefing extends Template {
   /**
    * Only staker or operator
    * Only when countdown is over
-   * @param {*} destAddress 
+   * @param {*} destAddress
    */
   async retrieveStake(destAddress = null) {
-    await this.onlyStakerOrOperator()
+    await this.onlyStakerOrOperator();
     //todo only when countdown is over
-    let tx = await this.contract.retrieveStake(destAddress||NULL_ADDRESS);
+    let tx = await this.contract.retrieveStake(destAddress || NULL_ADDRESS);
     let confirmedTx = await tx.wait();
     let amount = confirmedTx.amount; //TODO get amount from confirmedTx
     return [confirmedTx, amount];
   }
   //GETTERS
   async getStaker() {
-      return await this.contract.getStaker()
+    return await this.contract.getStaker();
   }
   async isStaker(caller) {
-      return await this.contract.isStaker(ethers.utils.getAddress(caller))
+    return await this.contract.isStaker(ethers.utils.getAddress(caller));
   }
   async getCounterParty() {
-      return await this.contract.getCounterParty()
+    return await this.contract.getCounterParty();
   }
   async isCounterparty(caller) {
-      return await this.contract.isCounterparty(ethers.utils.getAddress(caller))
+    return await this.contract.isCounterparty(ethers.utils.getAddress(caller));
   }
   async getCurrentStake() {
-      return await this.contract.getCurrentStake()
+    return await this.contract.getCurrentStake();
   }
   async isStaked() {
-      return await this.contract.isStaked()
+    return await this.contract.isStaked();
   }
   async getAgreementStatus() {
-      return await this.contract.getAgreementStatus()
+    return await this.contract.getAgreementStatus();
   }
 }
 
