@@ -29,7 +29,7 @@ describe("Feed Factory", function() {
   }
   describe("Feed Factory", function() {
     it("1.Should Initialize Feed Factory class with wallet", done => {
-      Feed_Factory = new ErasureFeed_Factory(wallet, "ganache", provider);
+      Feed_Factory = new ErasureFeed_Factory(wallet, provider,network= "ganache");
 
       done();
     });

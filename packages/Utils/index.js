@@ -40,9 +40,29 @@ function abiEncodeWithSelector(functionName, abiTypes, abiValues) {
   return encoded;
 }
 
+const NULL_ADDRESS = ethers.utils.getAddress(
+  "0x0000000000000000000000000000000000000000"
+);
+const RATIO_TYPES={
+  NaN: 0,
+  // CgtP: 1,
+  // CltP: 2,
+  // CeqP: 3,
+  Inf: 1,
+  Dec: 2
+}
+
+const AGREMENT_STATUS={
+  isTerminated:2,
+  isInCountdown:1,
+  isInitialized:0
+}
 module.exports = {
   hexlify,
   createSelector,
   createIPFShash,
-  abiEncodeWithSelector
+  abiEncodeWithSelector,
+  NULL_ADDRESS,
+  RATIO_TYPES,
+  AG
 };

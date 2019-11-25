@@ -29,11 +29,11 @@ describe("Feed", function() {
   const feedMetadata = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes("feedMetadata")
   );
-  const newFeedMetadata = ethers.utils.keccak256(
+  const newMetaData = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes("newFeedMetadata")
   );
   const proofHash = ethers.utils.sha256(hexlify(PROOF));
-  let TestFeed,Feed_Factory,feedAddress
+  let TestFeed,TestOperatorFeed,Feed_Factory,feedAddress
   describe("Feed Tests", function() {
     /**
      * Create New feed from factory as requirements
@@ -41,8 +41,8 @@ describe("Feed", function() {
     before(async () => {
       Feed_Factory = new ErasureFeed_Factory(
         wallet,
-        (network = "ganache"),
-        provider
+        provider,
+        (network = "ganache")
       );
       [tx,feedAddress] = await Feed_Factory.create(PROOF,METADATA,operatorWallet.address)
     });
@@ -59,21 +59,40 @@ describe("Feed", function() {
     it("2.Should initilize ErasureFeed class with existed address",async ()=>{
       TestFeed = new ErasureFeed(feedAddress,wallet,provider)
       let actualCreator =await TestFeed.getCreator()
-      let actualOperator = await TestFeed.getOperator()
-
+      let actualOperator = await TestFeed.getOperator()      
       assert.equal(actualCreator,wallet.address)
       assert.equal(actualOperator,operatorWallet.address)
     });
-    it("3. Operator and creator should be able to submit hash for feed", async () => {
+    it("3.Should initilize ErasureFeed class with existed address from operator wallet",async ()=>{
+      TestOperatorFeed = new ErasureFeed(feedAddress,operatorWallet,provider)
+      let actualCreator =await TestOperatorFeed.getCreator()
+      let actualOperator = await TestOperatorFeed.getOperator()      
+      assert.equal(actualCreator,wallet.address)
+      assert.equal(actualOperator,operatorWallet.address)
+    });
+
+    it("4. Operator and creator should be able to submit hash for feed", async () => {
       let hashtx = await TestFeed.submitProof(PROOF);
-      console.log("submit proof", hashtx);
-      
-    });
-    it("4. Operator should be able to set Metadata", async () => {
+      const proofHash = ethers.utils.keccak256(hexlify(PROOF));
+      let submitProofEvent = hashtx.events.find(e=>e.event=="HashSubmitted")
+      assert(submitProofEvent.args.hash,"no hash found in submitHash event")
+      assert.equal(submitProofEvent.args.hash,proofHash)
 
     });
-    it("5. Creator should be able to set Metadata", async () => {});
-
-    it("7. Should get all current posts for this feeds from registries", async () => {});
+    it("5. Creator should be able to set Metadata", async () => {
+      let resetdataTx = await TestFeed.setMetadata(newMetaData)
+      const feedMetadata = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(newMetaData));
+      let setDataEvent = resetdataTx.events.find(e=>e.event=="MetadataSet")
+      assert(setDataEvent.args.metadata,"no metadata found in setMetaData event")
+      assert.equal(setDataEvent.args.metadata,feedMetadata)
+       
+    });
+    it("6. Operator should be able to set Metadata", async () => {
+      let resetdataTx = await TestOperatorFeed.setMetadata(newMetaData)
+      const feedMetadata = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(newMetaData));
+      let setDataEvent = resetdataTx.events.find(e=>e.event=="MetadataSet")
+      assert(setDataEvent.args.metadata,"no metadata found in setMetaData event")
+      assert.equal(setDataEvent.args.metadata,feedMetadata)
+    });
   });
 });
