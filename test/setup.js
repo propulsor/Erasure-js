@@ -1,6 +1,8 @@
-const {deploy} = require("./deploy_ganache")
-const {Contracts} = require("../packages/Base")
-before(async()=>{
-    const contracts = await deploy("ganache",Contracts)
-    return contracts
-})
+const { deploy } = require("./deploy_ganache");
+const { Contracts } = require("../packages/Base");
+const {ethers} = require("ethers")
+before(async () => {
+  const contracts = await deploy("ganache", Contracts);
+});
+
+

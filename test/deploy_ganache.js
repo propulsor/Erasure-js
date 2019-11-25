@@ -254,5 +254,3 @@ return c
 };
 
 module.exports = { deploy };
-// const {Contracts} = require("../../../Contracts/src")
-// deploy("ganache",Contracts)

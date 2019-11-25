@@ -1,6 +1,7 @@
 const { Template } = require("../../Base");
 const { ethers } = require("ethers");
 const { abiEncodeWithSelector, hexlify } = require("../../Utils");
+const { ErasureFeed_Factory } = require("./Feed_Factory");
 const NULL_ADDRESS = ethers.utils.getAddress(
   "0x0000000000000000000000000000000000000000"
 );
@@ -19,10 +20,10 @@ class ErasureFeed extends Template {
    * Submit proofHash to add to feed
    * @param {*} param0
    */
-  async submitHash(proof) {
-    const proofHash = ethers.utils.sha256(hexlify(proof));
+  async submitProof(proof) {
+    const proofHash = ethers.utils.keccak256(hexlify(proof));
     let tx = await this.contract.submitHash(proofHash);
-    return tx.await();
+    return tx.wait();
   }
 
   /**
@@ -53,7 +54,35 @@ class ErasureFeed extends Template {
     return tx.await();
   }
 
+  /**
+   * We allow optional for network because ganache and ethers dont work well together on network name
+   * @param {} proof 
+   * @param {*} metadata 
+   * @param {*} operator 
+   * @param {*} wallet 
+   * @param {*} provider 
+   * @param {*} network 
+   */
+  static async createFeed(
+    proof,
+    metadata,
+    operator = null,
+    wallet,
+    provider,
+    network = null
+  ) {
+    if (!network) {
+      network = await provider.getNetwork();
+      network = network.name
+    }
+    let factory = new ErasureFeed_Factory(wallet, network, provider);
+    let [tx, feedAddress] = await factory.create(proof, metadata, operator);
+    return new ErasureFeed(feedAddress, wallet, provider);
+  }
+
   //GETTER
 
   //EVENTS
 }
+
+module.exports = { ErasureFeed };

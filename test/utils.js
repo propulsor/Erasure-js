@@ -95,6 +95,19 @@ async function assertEvent(contract, txn, eventName, expectedArgs) {
   );
 }
 
+
+const provider = new ethers.providers.JsonRpcProvider();
+const wallet = new ethers.Wallet(
+  "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d",
+  provider
+);
+const operatorWallet = new ethers.Wallet(
+  "0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c",
+  provider
+);
+const NULL_ADDRESS = ethers.utils.getAddress(
+  "0x0000000000000000000000000000000000000000"
+);
 module.exports = {
   hexlify,
   createEip1167RuntimeCode,
@@ -102,5 +115,9 @@ module.exports = {
   createIPFShash,
   getLatestContractAddressFrom,
   abiEncodeWithSelector,
-  assertEvent
+  assertEvent,
+  wallet,
+  operatorWallet,
+  NULL_ADDRESS,
+  provider
 };

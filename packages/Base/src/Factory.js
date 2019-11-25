@@ -2,16 +2,16 @@ const { ethers } = require("ethers");
 const { Contracts } = require("./Contracts");
 
 class Factory {
-  constructor(contractName, wallet, network, provider, contracts = Contracts) {
+  constructor(contractName, wallet, network, provider) {
     let contractInstance = new ethers.Contract(
-      contracts[contractName].factory[network].address,
-      contracts[contractName].factory.artifact.abi,
+      Contracts[contractName].factory[network].address,
+      Contracts[contractName].factory.artifact.abi,
       provider
     );
     this.provider = provider;
     this.contract = contractInstance.connect(wallet);
     this.interface = new ethers.utils.Interface(
-      contracts[contractName].factory.artifact.abi
+        Contracts[contractName].factory.artifact.abi
     );
     this.wallet = wallet;
   }
@@ -43,4 +43,4 @@ class Factory {
     return await this.contract.getPaginatedInstances(start, end); //todo could revert -> handle
   }
 }
-module.export = { Factory };
+module.exports = { Factory };

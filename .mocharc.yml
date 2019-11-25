@@ -2,7 +2,7 @@ timeout: 50000000
 reporter: spec
 extension: js
 color: true
-check-leaks: true
+check-leaks: false
 spec: test/**/*.spec.js
 recursive: true
 file: test/setup.js
