@@ -1,19 +1,48 @@
 const { Template, Contracts } = require("../../Base");
 const { ethers } = require("ethers");
 const { hexlify } = require("../../Utils");
-const { ErasureFeed_Factory } = require("./Feed_Factory");
+const { Feed_Factory } = require("./Feed_Factory");
 
-class ErasureFeed extends Template {
+class Feed extends Template {
   /**
    * @param {} feedAddress
    * @param {*} wallet
    * @param {*} provider
    */
-  constructor(feedAddress, wallet, provider) {
+  constructor({address, wallet, provider}) {
     //TODO check if wallet address is owner or operator
-    super(Contracts.Feed, feedAddress, wallet, provider);
+    super({contract:Contracts.Feed, address, wallet, provider});
   }
 
+  //==== Class methods ====//
+    /**
+   * We allow optional for network because ganache and ethers dont work well together on network name
+   * @param {} proof
+   * @param {*} metadata
+   * @param {*} operator
+   * @param {*} wallet
+   * @param {*} provider
+   * @param {*} network
+   */
+  static async createFeed(
+    {proof,
+    metadata,
+    wallet,
+    provider,
+    operator = null,
+    salt = null,
+    network = null
+    }
+  ) {
+    if (!network) {
+      network = await provider.getNetwork();
+      network = network.name;
+    }
+    let factory = new Feed_Factory({wallet, provider, network});
+    let [tx, instanceAddress] = await factory.create({proof, metadata, operator, salt});
+    return new Feed({address:instanceAddress, wallet, provider});
+  }
+  //==== State methods ====//
   /**
    * Submit proofHash to add to feed
    * @param {*} param0 : proof is normally an IPFS hash
@@ -33,42 +62,7 @@ class ErasureFeed extends Template {
     let tx = await this.contract.setMetadata(feedMetadata);
     return await tx.wait();
   }
-
-  /**
-   * We allow optional for network because ganache and ethers dont work well together on network name
-   * @param {} proof
-   * @param {*} metadata
-   * @param {*} operator
-   * @param {*} wallet
-   * @param {*} provider
-   * @param {*} network
-   */
-  static async createFeed(
-    proof,
-    metadata,
-    operator = null,
-    wallet,
-    provider,
-    network = null,
-    salt = null
-  ) {
-    if (!network) {
-      network = await provider.getNetwork();
-      network = network.name;
-    }
-    let factory = new ErasureFeed_Factory(wallet, provider, network);
-    let tx, feedAddress;
-    if (salt) {
-      [tx, feedAddress] = await factory.create(proof, metadata, operator, salt);
-    } else {
-      [tx, feedAddress] = await factory.create(proof, metadata, operator);
-    }
-    return new ErasureFeed(feedAddress, wallet, provider);
-  }
-
-  //GETTER
-
-  //EVENTS
+  
 }
 
-module.exports = { ErasureFeed };
+module.exports = { Feed };

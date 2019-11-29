@@ -14,11 +14,11 @@ const {
   counterpartyWallet
 } = require("../utils");
 const {
-  CountdownGriefing
+  SimpleGriefing
 } = require("../../packages/Agreement");
 const {RATIO_TYPES} = require("../../packages/Utils")
 
-describe("Countdown Griefing", function() {
+describe("Simple Griefing", function() {
   const staker = stakerWallet.address,
     counterparty = counterpartyWallet.address,
     network = "ganache",
@@ -28,9 +28,9 @@ describe("Countdown Griefing", function() {
     operator=operatorWallet.address
     let testSimple,instanceAddress,testSimpleOperator
 
-  describe.only("Countdown Griefing Tests", function() {
+  describe("Simple Griefing Tests", function() {
     before(async () => {});
-    it("1.Should create a CountdownGriefing agreement from class method", async () => {
+    it("1.Should create a SimpleGriefing agreement from class method", async () => {
       testSimple = await SimpleGriefing.create({
         staker,
         counterparty,
@@ -38,7 +38,6 @@ describe("Countdown Griefing", function() {
         ratioType,
         metadata,
         wallet,
-        coundownLength,
         provider,
         network,
         operator
@@ -48,11 +47,12 @@ describe("Countdown Griefing", function() {
 
       assert.equal(actualCreator, wallet.address);
       assert.equal(actualOperator, operatorWallet.address);
+      console.log("TEST SIMPLe here", testSimple.address)
       //Mock NMR contract
     
     });
-    it("2.Should initilize CountdownGriefing class with existed address", async () => {
-      testSimple = new CountdownGriefing({ address: testSimple.address, wallet, provider });
+    it("2.Should initilize SimpleGriefing class with existed address", async () => {
+      testSimple = new SimpleGriefing({ address: testSimple.address, wallet, provider });
       let actualCreator = await testSimple.getCreator();
       let actualOperator = await testSimple.getOperator();
       let actualStaker = await testSimple.getStaker()
@@ -63,7 +63,7 @@ describe("Countdown Griefing", function() {
       assert.equal(actualCounterparty,counterparty,"wrong counterparty")
     });
     it("3.Should initilize SimpleGriefing class with existed address from operator wallet", async () => {
-      testSimpleOperator = new CountdownGriefing({
+      testSimpleOperator = new SimpleGriefing({
         address: testSimple.address,
         wallet: operatorWallet,
         provider
@@ -79,6 +79,7 @@ describe("Countdown Griefing", function() {
     });
 
     it("4. Operator and staker should be able to approve and increase stake", async () => {
+        console.log("TEST SIMPLE ADDRESS",testSimple.address)
         const NMR = new ethers.Contract(Contracts.NMR.ganache.address,Contracts.NMR.artifact.abi,provider)
         NMRcontract = NMR.connect(stakerWallet)
         let tx = await NMRcontract.approve(testSimple.address,ethers.utils.parseEther("1000000000"))

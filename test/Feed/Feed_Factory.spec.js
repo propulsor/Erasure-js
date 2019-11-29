@@ -9,7 +9,7 @@ const {
   provider
 } = require("../utils");
 const { Contracts } = require("../../packages/Base");
-const { ErasureFeed_Factory } = require("../../packages/Feed/src/Feed_Factory");
+const { Feed_Factory } = require("../../packages/Feed/src/Feed_Factory");
 
 describe("Feed Factory", function() {
   const PROOF = "proof",
@@ -19,7 +19,7 @@ describe("Feed Factory", function() {
   const metaDataHash = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes(METADATA)
   );
-  let Feed_Factory;
+  let feedFactory;
   function getFeedInstance(feedAddress) {
     return new ethers.Contract(
       feedAddress,
@@ -29,12 +29,15 @@ describe("Feed Factory", function() {
   }
   describe("Feed Factory", function() {
     it("1.Should Initialize Feed Factory class with wallet", done => {
-      Feed_Factory = new ErasureFeed_Factory(wallet, provider,network= "ganache");
+      feedFactory = new Feed_Factory({ wallet, provider, network: "ganache" });
 
       done();
     });
     it("2. Should create new feed WITHOUT salt, WITHOUT operator", async () => {
-      let [tx, newFeedAddress] = await Feed_Factory.create(PROOF, METADATA);
+      let [tx, newFeedAddress] = await feedFactory.create({
+        proof: PROOF,
+        metadata: METADATA
+      });
       let callData = abiEncodeWithSelector(
         "initialize",
         ["address", "bytes32", "bytes"],
@@ -52,11 +55,11 @@ describe("Feed Factory", function() {
       assert.equal(actualOperator, NULL_ADDRESS);
     });
     it("3. Should create new feed WITHOUT salt, WITH operator", async () => {
-      let [tx, feedAddress] = await Feed_Factory.create(
-        PROOF,
-        METADATA,
-        (operator = operatorWallet.address)
-      );
+      let [tx, feedAddress] = await feedFactory.create({
+        proof: PROOF,
+        metadata: METADATA,
+        operator: operatorWallet.address
+      });
 
       let callData = abiEncodeWithSelector(
         "initialize",
@@ -79,12 +82,11 @@ describe("Feed Factory", function() {
       assert.equal(actualOperator, operatorWallet.address, "wrong operator");
     });
     it("4. Should create new feed WITH salt WITHOUT operator", async () => {
-      let [tx, feedAddress] = await Feed_Factory.createSalty(
-        PROOF,
-        METADATA,
-        SALT,
-        (operator = null)
-      );
+      let [tx, feedAddress] = await feedFactory.create({
+        proof: PROOF,
+        metadata: METADATA,
+        salt: SALT
+      });
       let callData = abiEncodeWithSelector(
         "initialize",
         ["address", "bytes32", "bytes"],
@@ -103,12 +105,12 @@ describe("Feed Factory", function() {
       assert.equal(actualOperator, NULL_ADDRESS, "wrong operator");
     });
     it("5. Should create new feed WITH salt WITH operator", async () => {
-      let [tx, feedAddress] = await Feed_Factory.createSalty(
-        PROOF,
-        METADATA,
-        SALT + "1",
-        (operator = operatorWallet.address)
-      );
+      let [tx, feedAddress] = await feedFactory.create({
+        proof: PROOF,
+        metadata: METADATA,
+        operator: operatorWallet.address,
+        salt: SALT + "1"
+      });
       let callData = abiEncodeWithSelector(
         "initialize",
         ["address", "bytes32", "bytes"],

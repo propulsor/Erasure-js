@@ -10,4 +10,4 @@ class Erasure_Agreements extends Registry {
   getAllAgreements=this.getInstances
   getPaginatedAgreements=this.getPaginatedInstances
 }
-module.exports = { Erasure_Agreements };
+module.exports =  Erasure_Agreements 

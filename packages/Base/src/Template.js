@@ -1,17 +1,18 @@
 const { ethers } = require("ethers");
 
 class Template {
-  constructor(contractObj, contractAddress, wallet, provider) {
+  constructor({contract, address, wallet, provider}) {
     let contractInstance = new ethers.Contract(
-      contractAddress,
-      contractObj.template.artifact.abi,
+        address,
+      contract.template.artifact.abi,
       provider
     );
     this.contract = contractInstance.connect(wallet);
     this.interface = new ethers.utils.Interface(
-      contractObj.template.artifact.abi
+        contract.template.artifact.abi
     );
     this.wallet = wallet;
+    this.address=address
   }
   /**
    * set metadata
@@ -57,7 +58,7 @@ class Template {
     return await this.contract.getCreator();
   }
   async getFactory() {
-    return await this.contract.getFactory;
+    return await this.contract.getFactory();
   }
 }
 

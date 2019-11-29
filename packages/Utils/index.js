@@ -57,6 +57,20 @@ const AGREMENT_STATUS={
   isInCountdown:1,
   isInitialized:0
 }
+const COUNDOWN_STATUS={
+  isNull:0,
+  isSet:1,
+  isActive:2,
+  isOver:3
+}
+const ESCROW_STATUS={
+  isOpen:0,
+  onlyStakedDeposited:2,
+  onlyPaymentDeposited:3,
+  isDeposited:4,
+  isFinalized:5,
+  isCancelled:6
+}
 module.exports = {
   hexlify,
   createSelector,
@@ -64,5 +78,5 @@ module.exports = {
   abiEncodeWithSelector,
   NULL_ADDRESS,
   RATIO_TYPES,
-  AG
+  ESCROW_STATUS
 };

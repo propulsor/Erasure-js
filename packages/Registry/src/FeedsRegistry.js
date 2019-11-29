@@ -10,4 +10,4 @@ class Erasure_Feeds extends Registry {
   getAllFeeds=this.getInstances
   getPaginatedFeeds=this.getPaginatedInstances
 }
-module.exports = { Erasure_Feeds };
+module.exports = Erasure_Feeds 

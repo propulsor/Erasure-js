@@ -11,8 +11,8 @@ const {
   provider
 } = require("../utils");
 const { Contracts } = require("../../packages/Base");
-const { ErasureFeed } = require("../../packages/Feed/src/Feed");
-const { ErasureFeed_Factory } = require("../../packages/Feed/src/Feed_Factory");
+const { Feed,Feed_Factory } = require("../../packages/Feed/");
+
 
 describe("Feed", function() {
   // local Post array
@@ -33,22 +33,22 @@ describe("Feed", function() {
     ethers.utils.toUtf8Bytes("newFeedMetadata")
   );
   const proofHash = ethers.utils.sha256(hexlify(PROOF));
-  let TestFeed,TestOperatorFeed,Feed_Factory,feedAddress
+  let TestFeed,TestOperatorFeed,feedFactory,feedAddress
   describe("Feed Tests", function() {
     /**
      * Create New feed from factory as requirements
      */
     before(async () => {
-      Feed_Factory = new ErasureFeed_Factory(
+      feedFactory = new Feed_Factory({
         wallet,
         provider,
-        (network = "ganache")
+        network : "ganache"}
       );
-      [tx,feedAddress] = await Feed_Factory.create(PROOF,METADATA,operatorWallet.address)
+      [tx,feedAddress] = await feedFactory.create({proof:PROOF,metadata:METADATA,operator:operatorWallet.address})
     });
     it("1.Should create new Feed with class method", async() => {
-      let feed =await  ErasureFeed.createFeed(
-        PROOF,METADATA,operatorWallet.address,wallet,provider,network="ganache"
+      let feed =await  Feed.createFeed(
+        {proof:PROOF,metadata:METADATA,wallet:wallet,provider:provider,network:"ganache",operator:operatorWallet.address}
       );
       let actualCreator =await feed.getCreator()
       let actualOperator = await feed.getOperator()
@@ -57,14 +57,14 @@ describe("Feed", function() {
       assert.equal(actualOperator,operatorWallet.address)
     });
     it("2.Should initilize ErasureFeed class with existed address",async ()=>{
-      TestFeed = new ErasureFeed(feedAddress,wallet,provider)
+      TestFeed = new Feed({address:feedAddress,wallet,provider})
       let actualCreator =await TestFeed.getCreator()
       let actualOperator = await TestFeed.getOperator()      
       assert.equal(actualCreator,wallet.address)
       assert.equal(actualOperator,operatorWallet.address)
     });
     it("3.Should initilize ErasureFeed class with existed address from operator wallet",async ()=>{
-      TestOperatorFeed = new ErasureFeed(feedAddress,operatorWallet,provider)
+      TestOperatorFeed = new Feed({address:feedAddress,wallet:operatorWallet,provider})
       let actualCreator =await TestOperatorFeed.getCreator()
       let actualOperator = await TestOperatorFeed.getOperator()      
       assert.equal(actualCreator,wallet.address)

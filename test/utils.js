@@ -105,6 +105,8 @@ const operatorWallet = new ethers.Wallet(
   "0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c",
   provider
 );
+const stakerWallet= new ethers.Wallet("0x6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1",provider)
+const counterpartyWallet=new ethers.Wallet("0x646f1ce2fdad0e6deeeb5c7e8e5543bdde65e86029e2fd9fc169899c440a7913",provider)
 const NULL_ADDRESS = ethers.utils.getAddress(
   "0x0000000000000000000000000000000000000000"
 );
@@ -119,5 +121,7 @@ module.exports = {
   wallet,
   operatorWallet,
   NULL_ADDRESS,
-  provider
+  provider,
+  stakerWallet,
+  counterpartyWallet
 };

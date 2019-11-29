@@ -39,4 +39,4 @@ class Erasure_Users {
     }
 }
 
-module.exports={Erasure_Users}
+module.exports=Erasure_Users

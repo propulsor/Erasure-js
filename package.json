@@ -2,7 +2,7 @@
   "name": "erasure",
   "version": "1.0.0",
   "description": "Erasure JS sdk wraping contract ABIs",
-  "main": "index.js",
+  "main": "packages/index.js",
   "author": "propulsor",
   "license": "MIT",
   "private": true,

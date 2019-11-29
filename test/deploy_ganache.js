@@ -3,7 +3,8 @@ const ethers = require("ethers");
 const {
   hexlify,
   createIPFShash,
-  abiEncodeWithSelector
+  stakerWallet,
+  counterpartyWallet
 } = require("./utils");
 const assert = require("assert");
 
@@ -33,7 +34,7 @@ const deploy = async (network, c) => {
   await deployRegistry("Erasure_Agreements");
   await deployRegistry("Erasure_Posts");
 
-
+  await deployNMR()
 
   // Erasure_Posts
   await getRegistry("Erasure_Posts");
@@ -59,91 +60,32 @@ const deploy = async (network, c) => {
   const agreementFactory = abiEncoder.encode(['address'], [c.CountdownGriefing.factory[network].address]);
   await deployFactory("CountdownGriefingEscrow", "Erasure_Escrows", agreementFactory);
 
-  // console.log(``);
-  // console.log(`Transfer Registry Ownership`);
-  // console.log(``);
 
-  // // Erasure_Posts
-  // await transferRegistry("Erasure_Posts");
-
-  // // Erasure_Agreements
-  // await transferRegistry("Erasure_Agreements");
-
-  // // Erasure_Escrows
-  // await transferRegistry("Erasure_Escrows");
 
 
   const userAddress = "0x6087555A70E2F96B7838806e7743041E035a37e5";
   const proofhash = ethers.utils.sha256(ethers.utils.toUtf8Bytes("proofhash"));
   const IPFShash = createIPFShash("multihash");
+  const nmrAddress = "0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671";
+
+  async function deployNMR() {
+    await deployer.deploy(c.NMR.artifact).then(wrap => {
+      // console.log("Wrap contractAddress",wrap.contractAddress,"network",network)
+      c.NMR[network] = {
+        wrap: wrap,
+        address: wrap.contractAddress
+      };
+      const balance = ethers.utils.parseEther("1000")
+      wrap.from(stakerWallet.address).mintMockTokens(stakerWallet.address,balance)
+
+    });
 
 
-  // Feed
-  await createInstance("Feed", abiEncodeWithSelector(
-    "initialize",
-    ["address", "bytes32", "bytes"],
-    [userAddress, proofhash, IPFShash]
-  ));
-
-  // SimpleGriefing
-  await createInstance("SimpleGriefing", abiEncodeWithSelector(
-    "initialize",
-    ["address", "address", "address", "uint256", "uint8", "bytes"],
-    [
-      userAddress,
-      userAddress,
-      userAddress,
-      ethers.utils.parseEther("1"),
-      2,
-      IPFShash
-    ]
-  ));
-
-  // CountdownGriefing
-  await createInstance("CountdownGriefing", abiEncodeWithSelector(
-    "initialize",
-    [
-      "address",
-      "address",
-      "address",
-      "uint256",
-      "uint8",
-      "uint256",
-      "bytes"
-    ],
-    [
-      userAddress,
-      userAddress,
-      userAddress,
-      ethers.utils.parseEther("1"),
-      2,
-      100000000,
-      IPFShash
-    ]
-  ));
-
-  // CountdownGriefingEscrow
-  await createInstance("CountdownGriefingEscrow", abiEncodeWithSelector(
-    "initialize",
-    ["address", "address", "address", "uint256", "uint256", "uint256", "bytes", "bytes"],
-    [
-      userAddress,
-      userAddress,
-      userAddress,
-      ethers.utils.parseEther("1"),
-      ethers.utils.parseEther("1"),
-      100000000,
-      IPFShash,
-      abiEncoder.encode(["uint256", "uint8", "uint256"], [ethers.utils.parseEther("1"), 2, 100000000])
-    ]
-  ));
-
-//   console.log(`
-// total gas used: ${gasUsed.toString()}
-
-// `);
+   
+}
+ 
 console.log("DONE DEPLOYING")
-return c
+return [deployer,c]
 
   async function deployRegistry(registry) {
     await deployer.deploy(c[registry].artifact).then(wrap => {
@@ -215,42 +157,7 @@ return c
       });
   }
 
-  async function transferRegistry(registry) {
-    await c[registry][network].wrap
-      .transferOwnership(multisig, { gasPrice: defaultGas })
-      .then(async txn => {
-        console.log(`transferOwnership() | ${registry} => ${multisig}`);
-        const receipt = await c[registry][network].wrap.verboseWaitForTransaction(txn);
-        console.log(`gasUsed: ${receipt.gasUsed}`);
-        console.log(``);
-        gasUsed = gasUsed.add(receipt.gasUsed);
-      });
-  }
-
-  async function createInstance(name, calldata) {
-    await c[name].factory[network].wrap
-      .create(calldata, { gasPrice: defaultGas })
-      .then(async txn => {
-        const receipt = await c[name].factory[
-          network
-        ].wrap.verboseWaitForTransaction(txn);
-        const eventFound = receipt.events.find(
-          emittedEvent => emittedEvent.event === "InstanceCreated",
-          "There is no such event"
-        );
-
-        c[name].instance[network].wrap = deployer.wrapDeployedContract(
-          c[name].template.artifact,
-          eventFound.args.instance
-        );
-
-        // console.log(
-        //   `create() | ${receipt.gasUsed} gas | ${name}_Factory => ${eventFound.args.instance}`
-        // );
-        // console.log(``);
-        gasUsed = gasUsed.add(receipt.gasUsed);
-      });
-  }
+ 
 };
 
 module.exports = { deploy };

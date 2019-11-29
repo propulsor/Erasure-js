@@ -11,49 +11,15 @@ class CoundownGriefing_Factory extends Factory {
     network = network || "mainnet";
     super(Contracts.CountdownGriefing, wallet, network, provider);
   }
-  async create(
-    operator = null,
-    staker,
-    counterparty,
-    ratio,
-    ratioType,
-    countdownLength,
-    metaData
-  ) {
-    if (operator) {
-      operator = ethers.utils.getAddress(operator);
-    }
-    let callData = abiEncodeWithSelector(
-      "initialize",
-      ["address", "address", "address", "uint256", "uint8", "uint256", "bytes"],
-      [
-        operator || NULL_ADDRESS,
-        ether.utils.getAddress(staker),
-        ethers.utils.getAddress(counterparty),
-        ethers.utils.bigNumberify(ratio),
-        ethers.utils.bigNumberify(ratioType),
-        ethers.utils.bigNumberify(countdownLength),
-        ethers.utils.keccak256(hexlify(metaData))
-      ]
-    );
-    let tx = await this.contract.create(callData);
-    let confirmedTx = await tx.wait();
-    let createdEvent = confirmedTx.events.find(
-      e => e.event == "InstanceCreated"
-    );
-    assert(createdEvent.args.instance, "No new instance's address found");
-    // let newFeedInstance = new ErasureFeed(createdEvent.address,this.wallet,this.provider)
-    return [confirmedTx, createdEvent.args.instance];
-  }
-  async createSalty(
-    operator = null,
+  async create({
     staker,
     counterparty,
     ratio,
     ratioType,
     countdownLength,
     metaData,
-    salt
+    operator = null,
+    salt = null}
   ) {
     if (operator) {
       operator = ethers.utils.getAddress(operator);
@@ -71,10 +37,15 @@ class CoundownGriefing_Factory extends Factory {
         ethers.utils.keccak256(hexlify(metaData))
       ]
     );
-    let tx = await this.contract.createSalty(
-      callData,
-      ethers.utils.formatBytes32String(salt)
-    );
+    let tx;
+    if (salt) {
+      tx = await this.contract.createSalty(
+        callData,
+        ethers.utils.formatBytes32String(salt)
+      );
+    } else {
+      tx = await this.contract.create(callData);
+    }
     let confirmedTx = await tx.wait();
     let createdEvent = confirmedTx.events.find(
       e => e.event == "InstanceCreated"

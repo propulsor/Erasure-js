@@ -10,4 +10,4 @@ class Erasure_Escrows extends Registry {
   getAllEscrows=this.getInstances
   getPaginatedEscrows=this.getPaginatedInstances
 }
-module.exports = { Erasure_Escrows };
+module.exports = Erasure_Escrows 
