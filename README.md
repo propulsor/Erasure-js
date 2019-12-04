@@ -30,7 +30,7 @@ const ErasureClient = Erasure.ErasureClient
 const client = new Erasure({wallet,provider})
 ```
 
-#### User:
+### User:
 -  create and register user - this method will create new asym keypair and upload pubkey to Erasure_User registry
     ```
     const [keypair,confirmedTx] = await client.createAndRegisterUser({msg,salt})
@@ -47,7 +47,7 @@ const client = new Erasure({wallet,provider})
     await client.getUsersCount()
     await client.getUserData(address)
 ```
-#### Feed 
+### Feed 
 -  Create feed
     ```
     const feed:Erasure.Feed = await client.createFeed({proof,metadata,operator=null,salt=null})
@@ -64,7 +64,7 @@ const client = new Erasure({wallet,provider})
     await client.getFeedsCount()
     await client.getFeedData()
 ```    
-#### Post : 
+### Post : 
 - Create new post: 
     + This method will follow the flow (create symkey -> encrypt -> load to ipfs -> upload to Erasure Feeds registry )
     ```
@@ -77,7 +77,7 @@ const client = new Erasure({wallet,provider})
     ```
 - Getters
     + Get from graph //todo
-#### Escrow : 
+### Escrow : 
 -  Create Escrow :
      ``` 
      const escrow:Erasure.Escrow = await client.createEscrow({paymentAmount,stakeAmount,ratio,ratioType,agreementCountdown,buyer=null,seller=null,operator=null,salt=null,metadata=null})
@@ -93,7 +93,27 @@ const client = new Erasure({wallet,provider})
     await client.getEscrowsCount()
     await client.getEscrow(address)
     await client.getEscrowData(address)
-```    
+```  
+####  Seller's methods
+```
+    await client.submitPost()//todo
+    await client.revealPost()
+    await escrow.depositStake(amount)
+    await escrow.finalize()
+    await escrow.cancel()
+    await escrow.startCountDown()
+    await escrow.retrieveSTake()
+```
+#### Buyer's methods
+```
+    await client.getFile() //todo
+    await escrow.depositPayment(amount)
+    await escrow.reward(amount)
+    await escrow.punish(amount)
+    await escrow.releaseStake()
+    await escrow.cancel()
+    await escrow.timeout()
+```  
 
 #### Listening to events
 - If no eventName array is passed in, client will listen to all events

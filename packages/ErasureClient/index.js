@@ -5,7 +5,7 @@ const { CountdownGriefingEscrow } = require("../Escrow")
  * Erasure client for high level getters , Buyer and Seller class
  */
 
-class Erasure {
+class ErasureClient {
   constructor({ wallet, provider, network = null }) {
     this.wallet = wallet.provider ? wallet : wallet.connect(provider);
     this.provider = provider;
@@ -96,3 +96,6 @@ getEscrowData = this.Erasure_Escrows.getEscrowData
     async startListening(eventName = null) { } //all event if no eventName passed in
     async getDataFromGraph(eventName = null) { } 
 }
+
+
+module.export = {ErasureClient}
