@@ -4,8 +4,8 @@ const { abiEncodeWithSelector,NULL_ADDRESS, hexlify } = require("../../Utils");
 const { Template, Contracts } = require("../../Base");
 
 class CountdownGriefingEscrow_Factory extends Factory{
-    constructor(wallet,provider,instanceAddress=null,network="mainnet"){
-        super(Contracts.CountdownGriefingEscrow_Factory,wallet,provider,instanceAddress,network)
+    constructor({wallet,provider,network="mainnet"}){
+        super({contract:Contracts.CountdownGriefingEscrow_Factory,wallet,provider,network})
     }
     async create(buyer,seller,paymentAmount,stakeAmount,escrowCountdown,metadata,agreementParams,operator=null,salt=null){
         if(operator){

@@ -123,5 +123,6 @@ module.exports = {
   NULL_ADDRESS,
   provider,
   stakerWallet,
-  counterpartyWallet
+  counterpartyWallet,
+  encoder:new ethers.utils.AbiCoder()
 };

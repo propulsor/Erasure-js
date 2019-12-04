@@ -28,7 +28,7 @@ describe("Countdown Griefing", function() {
     operator=operatorWallet.address
     let testSimple,instanceAddress,testSimpleOperator
 
-  describe.only("Countdown Griefing Tests", function() {
+  describe("Countdown Griefing Tests", function() {
     before(async () => {});
     it("1.Should create a CountdownGriefing agreement from class method", async () => {
       testSimple = await SimpleGriefing.create({

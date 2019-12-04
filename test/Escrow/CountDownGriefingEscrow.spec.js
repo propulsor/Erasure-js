@@ -10,5 +10,14 @@ const {
 } = require("../utils");
 const { Contracts } = require("../../packages/Base");
 
-describe("CountdownGriefingEscrow",function(){})
+describe("CountdownGriefingEscrow",function(){
+  describe("Escrow without buyer and seller at init",function(){
+    it("Should create CountfownGriefingEscrow ")
+  })
+  describe("Escrow with buyer,seller and operator at init",function(){
+    
+  })
+  
+  
+})
 

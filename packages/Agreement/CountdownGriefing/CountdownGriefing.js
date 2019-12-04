@@ -8,8 +8,8 @@ const { Template, Contracts } = require("../../Base");
 
 class CoundownGriefing extends Template {
 
-  constructor(instanceAddress, wallet, provider) {
-    super(Contracts.CountdownGriefing, instanceAddress, wallet, provider);
+  constructor({address, wallet, provider}) {
+    super({contract:Contracts.CountdownGriefing, address, wallet, provider});
   }
 
   //====class method====//
@@ -18,7 +18,7 @@ class CoundownGriefing extends Template {
     counterparty,
     ratio,
     ratioType,
-    counDownLength,
+    countdownLength,
     metaData,
     wallet,
     provider,
@@ -81,7 +81,7 @@ class CoundownGriefing extends Template {
    * Only can be done when agreement is not terminated
    * @param {*} amount
    */
-  async increateStake(amount) {
+  async increaseStake(amount) {
     await this.onlyNotTerminated();
     await this.onlyStakerOrOperator();
     let tx = await this.contract.increaseStake(

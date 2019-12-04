@@ -7,9 +7,9 @@ const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../../Utils");
 const { Factory, Contracts } = require("../../Base");
 
 class CoundownGriefing_Factory extends Factory {
-  constructor(wallet, provider, network = null) {
+  constructor({wallet, provider, network = null}) {
     network = network || "mainnet";
-    super(Contracts.CountdownGriefing, wallet, network, provider);
+    super({contract:Contracts.CountdownGriefing, wallet, network, provider});
   }
   async create({
     staker,

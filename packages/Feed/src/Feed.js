@@ -9,7 +9,7 @@ class Feed extends Template {
    * @param {*} wallet
    * @param {*} provider
    */
-  constructor({address, wallet, provider}) {
+  constructor({address=null, wallet, provider}) {
     //TODO check if wallet address is owner or operator
     super({contract:Contracts.Feed, address, wallet, provider});
   }
@@ -24,7 +24,7 @@ class Feed extends Template {
    * @param {*} provider
    * @param {*} network
    */
-  static async createFeed(
+  static async create(
     {proof,
     metadata,
     wallet,
@@ -42,6 +42,7 @@ class Feed extends Template {
     let [tx, instanceAddress] = await factory.create({proof, metadata, operator, salt});
     return new Feed({address:instanceAddress, wallet, provider});
   }
+  
   //==== State methods ====//
   /**
    * Submit proofHash to add to feed
