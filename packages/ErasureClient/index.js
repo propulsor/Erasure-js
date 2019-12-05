@@ -1,16 +1,17 @@
 const { Erasure_Users, Erasure_Feeds } = require("../Registry")
 const { Feed } = require("../Feed")
 const { CountdownGriefingEscrow } = require("../Escrow")
+const { ESCROW_STATUS } = require("../Utils")
 const IPFS = require("ipfs-mini")
-const SHA256 = require("crypto-js/sha256")
 const ErasureHelper = require("@erasure/crypto-ipfs")
+const gql = require("graphql-tag")
 const onlyHash = ErasureHelper.ipfs.onlyHash
 /**
  * Erasure client for high level getters , Buyer and Seller class
  */
 
 class ErasureClient {
-  constructor({ wallet, provider, network = null, ipfsOpts }) {
+  constructor({ wallet, provider, network = "mainnet", ipfsOpts,graphUri=null }) {
     ipfsOpts = ipfsOpts || { host: "ipfs.infura.io", port: "5001", protocol: "https" }
     this.wallet = wallet.provider ? wallet : wallet.connect(provider);
     this.provider = provider;
@@ -19,6 +20,7 @@ class ErasureClient {
     this.Erasure_Feeds = new Erasure_Feeds({ wallet, provider, network })
     this.Erasure_Escrows = new Erasure_Escrows({ wallet, provider, network })
     this.ipfsMini = new IPFS(ipfsOpts)
+    this.graphClient = new ErasureGraph({network,uri:graphUri})
   }
 
   async getEscrow(address) {
@@ -62,9 +64,7 @@ class ErasureClient {
       metadata,
       network
     });
-    this.escrow = escrow;
-    this.Buyer = new Buyer({ escrowAddres, wallet, provider, network });
-    this.Seller = new Seller({ escrowAddress, wallet, provider, network });
+    return escrow
   }
 
   async createFeed({ proof, metadata, operator = null, salt = null, network = null }) {
@@ -131,42 +131,79 @@ class ErasureClient {
     const confirmed = await tx.wait()
     //save encrypted data file and metadata to ipfs
     const encryptedDataIpfsPath = await this.ipfsMini.add(encryptedData)
-    assert.equal(encryptedDataIpfsPath,encryptedDataHash,"encrypted data ipfs hash are not the same")
+    assert.equal(encryptedDataIpfsPath, encryptedDataHash, "encrypted data ipfs hash are not the same")
     const proofHashIpfsPath = await this.ipfsMini.addJSON(metadata)
-    assert.equal(proofHashIpfsPath,proofHash,"proof hash and ipfs path are not the same")
+    assert.equal(proofHashIpfsPath, proofHash, "proof hash and ipfs path are not the same")
     //save post locally
-    this.posts.push({ symKey,rawData ,...metadata})
-    return []
+    this.posts.push({ symKey, rawData, ...metadata })
+    return confirmed
   }
 
   /**
    * Reveal post at index or the earliest one in the list if no index specified
    * @return ipfs path to decrypted file
    */
-  async revealPost(index=0) {
+  async revealPost(index = 0) {
     const post = this.posts[index]
     const symkeyIpfsPath = await this.ipfsMini.add(post.symKey)
-    assert.equal(symkeyIpfsPath,post.keyHash,"symkey ipfs path is not the same")
+    assert.equal(symkeyIpfsPath, post.keyHash, "symkey ipfs path is not the same")
     const rawdataIpfsPath = await this.ipfsMini.add(post.rawData)
-    assert.equal(rawdataIpfsPath,post.rawDataHash,"raw data ipfs path is not the same")
-    this.posts.splice(index,1)
+    assert.equal(rawdataIpfsPath, post.rawDataHash, "raw data ipfs path is not the same")
+    this.posts.splice(index, 1)
     return true
 
   }
 
-/**
- * Seller encrypted symkey with buyer's pubkey and upload to  escrow
- */
-  async deliverKey(escrowAddress){
-    const escrow = new CountdownGriefingEscrow({address:escrowAddress,wallet:this.wallet,provider:this.provider})
-    assert(validateEscrow(escrow))
+  /**
+   * Deliver key of a purchase to escrow
+   * Seller encrypted symkey with buyer's pubkey and upload to  escrow
+   */
+  async deliverKey({ escrowAddress, symKey }) {
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    const status = await escrow.getEscrowStatus()
+    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
+    assert(this.validateEscrow(escrow))
     const buyer = await escrow.getBuyer()
     const seller = await escrow.getSeller()
-    assert.equal(seller,this.wallet.address,"you are not the seller of this escrow")
-    const buyerPubkey = await this.Erasure_Users.getUserData()
-    // const encryptedSymkey = ErasureHelper.crypto.asymmetric
-
+    assert.equal(seller, this.wallet.address, "you are not the seller of this escrow")
+    const buyerPubkey = await this.Erasure_Users.getUserData(buyer)
+    // Encrypt symkey with buyer's pubkey
+    const encryptedSymkey = crypto.publicEncrypt(buyerPubkey, Buffer.from(symKey))
+    //send Encrypted symkey to escrow 
+    const tx = await escrow.submitData(encryptedSymkey)
+    return await tx.wait()
   }
+
+  /**
+   * Buyer call escrow to get encrypted symkey, decrypt, get encrypted data from ipfs, decrypt, return rawdata
+   * @param {escrow instance address} escrowAddress 
+   * @return rawData:string
+   */
+  async retrieveDataFromSeller({ escrowAddress }) {
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    const status = await escrow.getStatus()
+    const buyer = await escrow.getBuyer()
+    assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
+    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
+    //get submitted data from grapth based on the escrowAddress
+    const dataSubmitted = await this.erasureGraph.queryEscrows({buyer,seller:this.wallet.address,finalized:true,dataSubmitted:true})
+    //decrypt data with this user's privkey todo existed privkey ?
+    // const decryptedSymkey = 
+    //getData from the escrow path for encrypted data
+    //const encryptedDataPath
+    //const encryptedData = get from ipfs
+    //decrypt data
+    //const rawData = decrypt data with decryptedSymkey
+    //return rawData
+
+    
+  }
+
+  /**
+   * Create asym key for users
+   * send pubkey to registry
+   */
+  async createUser() { }
 
 
 
