@@ -1,5 +1,6 @@
 const ethers = require("ethers");
 
+
 const hexlify = utf8str =>
   ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8str));
 
@@ -43,7 +44,7 @@ function abiEncodeWithSelector(functionName, abiTypes, abiValues) {
 const NULL_ADDRESS = ethers.utils.getAddress(
   "0x0000000000000000000000000000000000000000"
 );
-const RATIO_TYPES={
+const RATIO_TYPES = {
   NaN: 0,
   // CgtP: 1,
   // CltP: 2,
@@ -52,25 +53,27 @@ const RATIO_TYPES={
   Dec: 2
 }
 
-const AGREMENT_STATUS={
-  isTerminated:2,
-  isInCountdown:1,
-  isInitialized:0
+const AGREMENT_STATUS = {
+  isTerminated: 2,
+  isInCountdown: 1,
+  isInitialized: 0
 }
-const COUNDOWN_STATUS={
-  isNull:0,
-  isSet:1,
-  isActive:2,
-  isOver:3
+const COUNTDOWN_STATUS = {
+  isNull: 0,
+  isSet: 1,
+  isActive: 2,
+  isOver: 3
 }
-const ESCROW_STATUS={
-  isOpen:0,
-  onlyStakedDeposited:2,
-  onlyPaymentDeposited:3,
-  isDeposited:4,
-  isFinalized:5,
-  isCancelled:6
+const ESCROW_STATUS = {
+  isOpen: 0,
+  onlyStakedDeposited: 2,
+  onlyPaymentDeposited: 3,
+  isDeposited: 4,
+  isFinalized: 5,
+  isCancelled: 6
 }
+
+
 module.exports = {
   hexlify,
   createSelector,

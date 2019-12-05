@@ -11,7 +11,7 @@ const onlyHash = ErasureHelper.ipfs.onlyHash
  */
 
 class ErasureClient {
-  constructor({ wallet, provider, network = "mainnet", ipfsOpts,graphUri=null }) {
+  constructor({ wallet, provider, network = "mainnet", ipfsOpts, graphUri = null }) {
     ipfsOpts = ipfsOpts || { host: "ipfs.infura.io", port: "5001", protocol: "https" }
     this.wallet = wallet.provider ? wallet : wallet.connect(provider);
     this.provider = provider;
@@ -20,7 +20,7 @@ class ErasureClient {
     this.Erasure_Feeds = new Erasure_Feeds({ wallet, provider, network })
     this.Erasure_Escrows = new Erasure_Escrows({ wallet, provider, network })
     this.ipfsMini = new IPFS(ipfsOpts)
-    this.graphClient = new ErasureGraph({network,uri:graphUri})
+    this.graphClient = new ErasureGraph({ network, uri: graphUri })
   }
 
   async getEscrow(address) {
@@ -44,7 +44,7 @@ class ErasureClient {
     buyer = null,
     seller = null,
     operator = null,
-    metadata = null,
+    metadata , //metadata is required(proofHash)
     salt = null,
     network = null
   }) {
@@ -122,7 +122,6 @@ class ErasureClient {
       rawDataHash,
       keyHash,
       encryptedDataHash
-
     }
     const proofHash = await onlyHash(metadata) //ipfs hash for metadata
     //submit proofHash to Feed
@@ -151,7 +150,6 @@ class ErasureClient {
     assert.equal(rawdataIpfsPath, post.rawDataHash, "raw data ipfs path is not the same")
     this.posts.splice(index, 1)
     return true
-
   }
 
   /**
@@ -176,40 +174,65 @@ class ErasureClient {
 
   /**
    * Buyer call escrow to get encrypted symkey, decrypt, get encrypted data from ipfs, decrypt, return rawdata
+   * If data is verified by sha256 -> call releaseStake for seller
+   * 
    * @param {escrow instance address} escrowAddress 
    * @return rawData:string
    */
-  async retrieveDataFromSeller({ escrowAddress }) {
+  async retrieveDataFromSeller({ escrowAddress, keypair }) {
     const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
     const status = await escrow.getStatus()
     const buyer = await escrow.getBuyer()
     assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
     assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
     //get submitted data from grapth based on the escrowAddress
-    const dataSubmitted = await this.erasureGraph.queryEscrows({buyer,seller:this.wallet.address,finalized:true,dataSubmitted:true})
-    //decrypt data with this user's privkey todo existed privkey ?
-    // const decryptedSymkey = 
-    //getData from the escrow path for encrypted data
-    //const encryptedDataPath
-    //const encryptedData = get from ipfs
+    const dataSubmitted = await this.erasureGraph.getDataSubmitted({ id: this.wallet.addres })
+    //decrypt data with this user's privkey
+    const decryptedSymkey = crypto.privateDecrypt(keypair.privateKey, Buffer.from(dataSubmitted))
+    //get path for encrypted data from escrow? //TODO 
+    const metadata = await escrow.getMetadata()
+    const metadataIpfsHash =  hexToHash(metadata)
+    const encryptedDataHash = metadata.encryptedFileIpfsPath
+    const encryptedData = await this.ipfsMini.cat(encryptedDataPath)
     //decrypt data
-    //const rawData = decrypt data with decryptedSymkey
-    //return rawData
-
-    
+    const rawData = ErasureHelper.crypto.symmetric.decryptMessage(decryptedSymkey, encryptedData)
+    assert.equal(await onlyHash(rawData), metadata.rawDataHash, "encrypted data is different from raw data")
+    return rawData
   }
 
   /**
-   * Create asym key for users
-   * send pubkey to registry
+   * After retrieving data from seller, buyer can call release stake before countdown is over
    */
-  async createUser() { }
+  async releaseStake(escrowAddress){
+    const escrow = new CountdownGriefingEscrow({address:escrowAddress,wallet:this.wallet,provider:this.provider})
+    const status = await escrow.getStatus()
+    const buyer = await escrow.getBuyer()
+    assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
+    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
+    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({id:escrowAddress})
+    const griefing = new CountdownGriefing({address:countdownGriefing})
+    const tx = await griefing.releaseStake()
+    return await tx.wait()
 
+  }
 
-
-  //==== Listener for real time events ===//
-  async startListening(eventName = null) { } //all event if no eventName passed in
-  async getDataFromGraph(eventName = null) { }
+  /**
+   * Buyer retrive stake after the countdown is over 
+   */
+  async retrieveStake(){
+    const escrow = new CountdownGriefingEscrow({address:escrowAddress,wallet:this.wallet,provider:this.provider})
+    const status = await escrow.getStatus()
+    const seller = await escrow.getSeller()
+    assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
+    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
+    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({id:escrowAddress})
+    const griefing = new CountdownGriefing({address:countdownGriefing})
+    //countdown has to be over
+    const griefingStatus = await griefing.getAgreementStatus()
+    assert.equal(griefingStatus,COUNTDOWN_STATUS.isTerminated,"Countdown is not over yet")
+    const tx = await griefing.retrieveStake()
+    return await tx.wait()
+  }
 }
 
 
