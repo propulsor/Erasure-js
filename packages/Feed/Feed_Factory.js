@@ -3,10 +3,10 @@
  * Create post and stake
  */
 
-const { Factory, Contracts } = require("../../Base");
+const { Factory, Contracts } = require("../Base");
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../../Utils");
+const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../Utils");
 
 /**
  * Create Feed from factory

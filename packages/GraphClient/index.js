@@ -15,7 +15,8 @@ class ErasureGraph {
             else if (network == "mainnet") {
                 uri = "https://thegraph.com/explorer/subgraph/jgeary/erasure"
             }
-            else {
+            else if(network=="ganache"){
+                //todo use localgraph
                 throw "Network unknown, please provide uri for graph Erasure"
             }
         }
@@ -40,6 +41,8 @@ class ErasureGraph {
 
     }
 
+    // ==== QUERY INSTANCES ====//
+
     /**
      * 
      * @param {} opts 
@@ -54,11 +57,12 @@ class ErasureGraph {
         const res = await this.client.query({ query })
         return res
     }
-    async getPosts(opts) {
+    async queryCountdownGriefingEscrows(opts){}
+    async queryCountdownGriefings(opts){}
+    async querySimpleGriefings(opts){}
 
-    }
     // ESCROW events
-    async getDataSubmitted(opts) {
+    async get(opts) {
         const query = gql`query dataSubmittedCountdownGriefingEscrows{ feeds(where:${{ ...opts }} ) {
             id
             data
