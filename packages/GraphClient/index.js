@@ -60,10 +60,13 @@ class ErasureGraph {
     async queryCountdownGriefingEscrows(opts){}
     async queryCountdownGriefings(opts){}
     async querySimpleGriefings(opts){}
+    // GET SINGLE INSTANCE
+    async getCountDownGriefing(address){
 
+    }
     // ESCROW events
-    async get(opts) {
-        const query = gql`query dataSubmittedCountdownGriefingEscrows{ feeds(where:${{ ...opts }} ) {
+    async getFinalizedCountdownGriefingEscrow(address) {
+        const query = gql`query dataSubmittedCountdownGriefingEscrows{ feeds(where:{id:${address}} ) {
             id
             data
             blockNumber
@@ -74,7 +77,7 @@ class ErasureGraph {
         const res = await this.client.query({ query })
         return res
     }
-    async getEscrows(opts) {
+    async queryEscrows(opts) {
         const query = gql`query getEscrows{ countdownGriefingEscrows(where:${{ ...opts }} ) {
             id
             creator
@@ -82,12 +85,14 @@ class ErasureGraph {
             buyer
             seller
             metadata
+            data
+            dataB58
           } }`
         const res = await this.client.query({ query })
         return res
     }
 
-    async getFinalizeEvent(address){
+    async getFinalizedCountdownGriefingEscrow(address){
         const returnData=
         `
         id

@@ -179,9 +179,8 @@ class ErasureClient {
    * @param {} Escrow Address and amount
    */
   async depositStake({ escrowAddress, amount }) {
-    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
-    const griefing = new CountdownGriefing({ address: countdownGriefing })
-    return await griefing.depositStake(amount)
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    return await escrow.depositStake(amount)
   }
 
   /**
@@ -190,9 +189,8 @@ class ErasureClient {
    * @param {*} escrowAddress 
    */
   async finalize(escrowAddress) {
-    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
-    const griefing = new CountdownGriefing({ address: countdownGriefing })
-    return await griefing.finalize()
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    return await escrow.finalize()
   }
 
 
@@ -227,12 +225,17 @@ class ErasureClient {
     return rawData
   }
 
+  async depositPayment(amount) {
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    return await escrow.depositPayment(amount)
+  }
+
   /**
    * Only Buyer
    * After retrieving data from seller, buyer can call release stake before countdown is over
    */
   async releaseStake(escrowAddress) {
-    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
+    const countdownGriefing = await this.erasureGraph.getFinalizedCountdownGriefingEscrow({ id: escrowAddress })
     const griefing = new CountdownGriefing({ address: countdownGriefing })
     return await griefing.releaseStake()
   }
@@ -266,9 +269,8 @@ class ErasureClient {
    * @param {} escrowAddress 
    */
   async timeout(escrowAddress) {
-    const finalized = await this.erasureGraph.getFinalizedCountdownGriefingEscrow(escrowAddress)
-    const countDownGriefing = new CountdownGriefing({ address: finalized.agreement, wallet: this.wallet, provider: this.provider })
-    return await countDownGriefing.punish({ amount, msg })
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    return await escrow.timeout()
   }
 
   // ==== BUYER OR SELLER OR OPERATOR ===//
