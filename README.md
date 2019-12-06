@@ -28,7 +28,7 @@ const client = new Erasure({wallet=null,provider})
 ### User:
 #### create and register user 
 ```
-    const [keypair,confirmedTx] = await client.createAndRegisterUser({msg,salt})
+const [keypair,confirmedTx] = await client.createAndRegisterUser({msg,salt})
 ```
 - How it works:
 1. Create new asym keypair
@@ -36,16 +36,16 @@ const client = new Erasure({wallet=null,provider})
 3. @return keypair
 
 #### Remove user:
-    ```
-    await client.removeUser()
-    ```
+```
+await client.removeUser()
+```
 #### Getters:
 ```
-    await client.getAllUsers()
-    await client.getPaginatedUsers(start,end)
-    await client.getUser(address)
-    await client.getUsersCount()
-    await client.getUserData(address)
+await client.getAllUsers()
+await client.getPaginatedUsers(start,end)
+await client.getUser(address)
+await client.getUsersCount()
+await client.getUserData(address)
 ```
 ### Feed 
 #### Create feed
@@ -59,17 +59,17 @@ const feed:Erasure.Feed = client.getFeed(feedAddress)
 ```
 #### Getters
 ```
-    await client.getAllFeeds()
-    await client.getPaginatedFeeds(start,end)
-    await client.getFeed(address)
-    await client.getFeedsCount()
-    await client.getFeedData()
+await client.getAllFeeds()
+await client.getPaginatedFeeds(start,end)
+await client.getFeed(address)
+await client.getFeedsCount()
+await client.getFeedData()
 ```    
 ### Post : 
 #### Create new post: 
-    ```
-    const metadataObj = await client.submitPost({feedAddress,rawData})
-    ```
+```
+const metadataObj = await client.submitPost({feedAddress,rawData})
+```
 - How It works:    
 1. Create symkey
 2. Encrypt rawData with symkey
@@ -95,13 +95,13 @@ const feed:Erasure.Feed = client.getFeed(feedAddress)
 
 ### Escrow : 
 -  Create Escrow :
-     ``` 
-     const escrow:Erasure.Escrow = await client.createEscrow({paymentAmount,stakeAmount,ratio,ratioType,agreementCountdown,buyer=null,seller=null,operator=null,salt=null,metadata=null})
-     ```
+``` 
+const escrow:Erasure.Escrow = await client.createEscrow({paymentAmount,stakeAmount,ratio,ratioType,agreementCountdown,buyer=null,seller=null,operator=null,salt=null,metadata=null})
+```
 - Get existing Escrow
-    ```
-    const escrow:Erasure.Escrow = client.getEscrow(address)
-    ```
+```
+const escrow:Erasure.Escrow = client.getEscrow(address)
+```
 
 #### Deliver Key from Seller to Buyer:
 ```
@@ -124,37 +124,37 @@ const feed:Erasure.Feed = client.getFeed(feedAddress)
 6. Decrypt data with symKey
 ####  Seller's methods
 ```
-    await client.submitPost({feedAddress,rawData})
-    await client.revealPost({proofHash,symkey})
-    await client.deliverKey({escrowAddress,symkey})
-    await client.depositStake({escrowAddress,amount})
-    await client.finalize(escrowAddress)
-    await client.cancel(escrowAddress)
-    await client.retrieveSTake(escrowAddress)
+await client.submitPost({feedAddress,rawData})
+await client.revealPost({proofHash,symkey})
+await client.deliverKey({escrowAddress,symkey})
+await client.depositStake({escrowAddress,amount})
+await client.finalize(escrowAddress)
+await client.cancel(escrowAddress)
+await client.retrieveSTake(escrowAddress)
 ```
 #### Buyer's methods
 ```
-    await client.retrieveDataFromSeller({escrowAddress,keypair}) 
-    await client.depositPayment({escrowAddress,amount})
-    await client.reward({escrowAddress,amount})
-    await client.punish({escrowAddress,msg=null,amount})
-    await client.releaseStake(escrowAddress)
-    await client.cancel(escrowAdress)
-    await client.timeout(escrowAdress)
+await client.retrieveDataFromSeller({escrowAddress,keypair}) 
+await client.depositPayment({escrowAddress,amount})
+await client.reward({escrowAddress,amount})
+await client.punish({escrowAddress,msg=null,amount})
+await client.releaseStake(escrowAddress)
+await client.cancel(escrowAdress)
+await client.timeout(escrowAdress)
 ```  
 #### Getters
 ```
-    await client.getAllEscrows()
-    await client.getPaginatedEscrows(start,end)
-    await client.getEscrowsCount()
-    await client.getEscrow(address)
-    await client.getEscrowData(address)
+await client.getAllEscrows()
+await client.getPaginatedEscrows(start,end)
+await client.getEscrowsCount()
+await client.getEscrow(address)
+await client.getEscrowData(address)
 ```  
 
 ## ErasureGraph
 ```
-    const {ErasureGraph} = require("erasureJs)
-    const erasureGraph = new ErasureGraph(network="mainnet") 
+const {ErasureGraph} = require("erasureJs)
+const erasureGraph = new ErasureGraph(network="mainnet") 
 ```
 - Network : 
     + `mainnet` or `rinkery` for accessing Erasure graph public node
@@ -162,11 +162,11 @@ const feed:Erasure.Feed = client.getFeed(feedAddress)
 ### Listening to subscriptions 
 - If no eventName array is passed in, client will listen to all events
 ```
-    erasureGraph.startListening(events=null,cb) 
+erasureGraph.startListening(events=null,cb) 
 ```
 ### Query the graph
 ```
-    erasrureGraph.query(queryName=null,eventName,opts:Obj,returnData:String)
+erasrureGraph.query(queryName=null,eventName,opts:Obj,returnData:String)
 ```
 
 

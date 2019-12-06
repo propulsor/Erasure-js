@@ -167,7 +167,7 @@ class ErasureClient {
     const seller = await escrow.getSeller()
     assert.equal(seller, this.wallet.address, "This wallet is not the buyer of this escrow")
     assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
-    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
+    const countdownGriefing = await this.erasureGraph.getAgreementOfEscrow(escrowAddress)
     const griefing = new CountdownGriefing({ address: countdownGriefing })
     //countdown has to be over
     const griefingStatus = await griefing.getAgreementStatus()
@@ -235,7 +235,7 @@ class ErasureClient {
    * After retrieving data from seller, buyer can call release stake before countdown is over
    */
   async releaseStake(escrowAddress) {
-    const countdownGriefing = await this.erasureGraph.getFinalizedCountdownGriefingEscrow({ id: escrowAddress })
+    const countdownGriefing = await this.erasureGraph.getAgreementOfEscrow({ id: escrowAddress })
     const griefing = new CountdownGriefing({ address: countdownGriefing })
     return await griefing.releaseStake()
   }
@@ -246,7 +246,7 @@ class ErasureClient {
    * @param {} param0 
    */
   async reward({ escrowAddress, amount }) {
-    const finalized = await this.erasureGraph.getFinalizedCountdownGriefingEscrow(escrowAddress)
+    const finalized = await this.erasureGraph.getAgreementOfEscrow(escrowAddress)
     const countDownGriefing = new CountdownGriefing({ address: finalized.agreement, wallet: this.wallet, provider: this.provider })
     return await countDownGriefing.reward(amount)
   }
@@ -257,7 +257,7 @@ class ErasureClient {
    * @param {} param0 
    */
   async punish({ escrowAddress, amount, msg = null }) {
-    const finalized = await this.erasureGraph.getFinalizedCountdownGriefingEscrow(escrowAddress)
+    const finalized = await this.erasureGraph.getAgreementOfEscrow(escrowAddress)
     const countDownGriefing = new CountdownGriefing({ address: finalized.agreement, wallet: this.wallet, provider: this.provider })
     return await countDownGriefing.punish({ amount, msg })
   }
