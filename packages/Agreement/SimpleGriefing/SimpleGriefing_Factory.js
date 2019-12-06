@@ -7,9 +7,9 @@ const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../../Utils");
 const { Factory, Contracts } = require("../../Base");
 
 class SimpleGriefing_Factory extends Factory {
-  constructor({wallet, provider, network = null}) {
+  constructor({ wallet, provider, network = null }) {
     network = network || "mainnet";
-    super({contract:Contracts.SimpleGriefing, wallet, network, provider});
+    super({ contract: Contracts.SimpleGriefing, wallet, network, provider });
   }
   async create({
     staker,
@@ -18,7 +18,7 @@ class SimpleGriefing_Factory extends Factory {
     ratioType,
     metadata,
     operator = null,
-    salt = null}
+    salt = null }
   ) {
     if (operator) {
       operator = ethers.utils.getAddress(operator);

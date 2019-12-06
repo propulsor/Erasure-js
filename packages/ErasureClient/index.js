@@ -180,7 +180,7 @@ class ErasureClient {
    * Only when escrow status is isDeposited
    * @param {*} escrowAddress 
    */
-  async finalize(escrowAddress) { 
+  async finalize(escrowAddress) {
     const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
     const griefing = new CountdownGriefing({ address: countdownGriefing })
     return await griefing.finalize()
