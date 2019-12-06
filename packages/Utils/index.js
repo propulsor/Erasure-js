@@ -41,6 +41,13 @@ function abiEncodeWithSelector(functionName, abiTypes, abiValues) {
   return encoded;
 }
 
+function hexToHash(hex){
+  if(hex.startswith("0x")){
+    hex.splice(2)
+  }
+  return multihash.toB58String(multihash.fromHexString(hex))
+}
+
 const NULL_ADDRESS = ethers.utils.getAddress(
   "0x0000000000000000000000000000000000000000"
 );

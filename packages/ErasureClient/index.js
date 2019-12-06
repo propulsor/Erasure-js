@@ -1,7 +1,7 @@
 const { Erasure_Users, Erasure_Feeds } = require("../Registry")
 const { Feed } = require("../Feed")
 const { CountdownGriefingEscrow } = require("../Escrow")
-const { ESCROW_STATUS } = require("../Utils")
+const { ESCROW_STATUS, hexToHash } = require("../Utils")
 const IPFS = require("ipfs-mini")
 const ErasureHelper = require("@erasure/crypto-ipfs")
 const gql = require("graphql-tag")
@@ -23,12 +23,11 @@ class ErasureClient {
     this.graphClient = new ErasureGraph({ network, uri: graphUri })
   }
 
-  async getEscrow(address) {
-    return new CountdownGriefingEscrow({ address, wallet: this.wallet, provider: this.provider, network: this.network })
-  }
-  async getFeed(address) {
-    return new Feed({ address, wallet: this.wallet, provider: this.provider, network: this.network })
-  }
+  // ==== USER's METHODS ====//
+  removeUser = this.Erasure_Users.removeUser
+  createAndRegisterUser = this.Erasure_Users.createAndRegisterUser
+
+  // ==== ESCROW ====//
 
   /**
    * Create Escrow
@@ -44,7 +43,7 @@ class ErasureClient {
     buyer = null,
     seller = null,
     operator = null,
-    metadata , //metadata is required(proofHash)
+    metadata, //metadata is required(proofHash)
     salt = null,
     network = null
   }) {
@@ -67,44 +66,22 @@ class ErasureClient {
     return escrow
   }
 
-  async createFeed({ proof, metadata, operator = null, salt = null, network = null }) {
-
-  }
-
-  //===USERS===//
-  getAllUsers = this.Erasure_Users.getUsers
-  getUsersCount = this.Erasure_Users.getUsersCount
-  getPaginatedUsers = this.Erasure_Users.getPaginatedUsers
-  getUser = this.Erasure_Users.getUser
-  removeUser = this.Erasure_Users.removeUser
-  createAndRegisterUser = this.Erasure_Users.createAndRegisterUser
-  getUserData = this.Erasure_Users.getUserData
-
-  //==== FEEDS ====//
-
-  getAllFeeds = this.Erasure_Feeds.getAllFeeds
-  getFeedsCount = this.Erasure_Feeds.getFeedsCount
-  getPaginatedFeeds = this.Erasure_Feeds.getPaginatedFeeds
-  getFeed = this.Erasure_Feeds.getFeed
-  getFeedData = this.Erasure_Feeds.getFeedData
-
-  //==== ESCROWS ====//
-  getAllEscrows = this.Erasure_Escrows.getAllEscrows
-  getEscrowsCount = this.Erasure_Escrows.getEscrowsCounts
-  getPaginatedEscrows = this.Erasure_Escrows.getPaginatedEscrows
-  getEscrow = this.Erasure_Escrows.getEscrow
-  getEscrowData = this.Erasure_Escrows.getEscrowData
 
 
-  //=== submit and reveal post ===//
+  //=== SELLER's METHODS ===//
+
   /**
-   * Follow the flow to create symkey, asymkey, encrypt File with
+   * 1. Create symkey
+   * 2. Encrypt data with symkey
+   * 3. Create MetaData of ipfs hash of data,encryptedData,key
+   * 4. create ipfs hash of metadata and push hash to feed
+   * 5. push encryptedData and proofHash to ipfs
    * @param {raw data} rawData 
    * @param {any msg to sign } msg 
    * @param {salt} salt 
    * @param {optional description} description 
    */
-  async submitPost(feedAddress, rawData) {
+  async submitPost({ feedAddress, rawData }) {
 
     const sig = this.wallet.signer.sign(msg)
 
@@ -133,8 +110,6 @@ class ErasureClient {
     assert.equal(encryptedDataIpfsPath, encryptedDataHash, "encrypted data ipfs hash are not the same")
     const proofHashIpfsPath = await this.ipfsMini.addJSON(metadata)
     assert.equal(proofHashIpfsPath, proofHash, "proof hash and ipfs path are not the same")
-    //save post locally
-    this.posts.push({ symKey, rawData, ...metadata })
     return confirmed
   }
 
@@ -142,14 +117,17 @@ class ErasureClient {
    * Reveal post at index or the earliest one in the list if no index specified
    * @return ipfs path to decrypted file
    */
-  async revealPost(index = 0) {
-    const post = this.posts[index]
-    const symkeyIpfsPath = await this.ipfsMini.add(post.symKey)
-    assert.equal(symkeyIpfsPath, post.keyHash, "symkey ipfs path is not the same")
-    const rawdataIpfsPath = await this.ipfsMini.add(post.rawData)
-    assert.equal(rawdataIpfsPath, post.rawDataHash, "raw data ipfs path is not the same")
-    this.posts.splice(index, 1)
-    return true
+  async revealPost({ feedAddress, symKey, rawData }) {
+    const proofHashHex = await this.erasureGraph.getLatestPost(feedAddress)
+    const proofIpfsHash = hexToHash(proofHashHex)
+    const metadata = await this.ipfsMini.cat(proofIpfsHash)
+    const symkeyIpfsPath = await onlyHash(symKey)
+    assert.equal(symkeyIpfsPath, metadata.keyHash, "symkey ipfs path is not the same")
+    const rawdataIpfsPath = await onlyHash(rawData)
+    assert.equal(rawdataIpfsPath, metadata.rawDataHash), "raw data ipfs path is not the same")
+    const symKeyIpfs = await this.ipfsMini.add(symKey)
+    const rawDataIpfs = await this.ipfsMini.add(rawData)
+    return [symKeyIpfs, rawDataIpfs]
   }
 
   /**
@@ -168,10 +146,48 @@ class ErasureClient {
     // Encrypt symkey with buyer's pubkey
     const encryptedSymkey = crypto.publicEncrypt(buyerPubkey, Buffer.from(symKey))
     //send Encrypted symkey to escrow 
-    const tx = await escrow.submitData(encryptedSymkey)
-    return await tx.wait()
+    return await escrow.submitData(encryptedSymkey)
   }
 
+  /**
+  * Seller retrive stake after the countdown is over 
+  */
+  async retrieveStake() {
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    const status = await escrow.getStatus()
+    const seller = await escrow.getSeller()
+    assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
+    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
+    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
+    const griefing = new CountdownGriefing({ address: countdownGriefing })
+    //countdown has to be over
+    const griefingStatus = await griefing.getAgreementStatus()
+    assert.equal(griefingStatus, COUNTDOWN_STATUS.isTerminated, "Countdown is not over yet")
+    return await griefing.retrieveStake()
+  }
+  /**
+   * Only Seller or Operator
+   * @param {} Escrow Address and amount
+   */
+  async depositStake({ escrowAddress, amount }) {
+    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
+    const griefing = new CountdownGriefing({ address: countdownGriefing })
+    return await griefing.depositStake(amount)
+  }
+
+  /**
+   * Only Seller or operator
+   * Only when escrow status is isDeposited
+   * @param {*} escrowAddress 
+   */
+  async finalize(escrowAddress) { 
+    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
+    const griefing = new CountdownGriefing({ address: countdownGriefing })
+    return await griefing.finalize()
+  }
+
+
+  // ==== BUYER's METHODs ====//
   /**
    * Buyer call escrow to get encrypted symkey, decrypt, get encrypted data from ipfs, decrypt, return rawdata
    * If data is verified by sha256 -> call releaseStake for seller
@@ -190,10 +206,11 @@ class ErasureClient {
     //decrypt data with this user's privkey
     const decryptedSymkey = crypto.privateDecrypt(keypair.privateKey, Buffer.from(dataSubmitted))
     //get path for encrypted data from escrow? //TODO 
-    const metadata = await escrow.getMetadata()
-    const metadataIpfsHash =  hexToHash(metadata)
-    const encryptedDataHash = metadata.encryptedFileIpfsPath
-    const encryptedData = await this.ipfsMini.cat(encryptedDataPath)
+    const metadataHash = await escrow.getMetadata()
+    const metadataIpfsHash = hexToHash(metadataHash)
+    const metadata = await this.ipfsMini.cat(metadataIpfsHash)
+    const encryptedDataIpfsPath = metadata.encryptedFileIpfsPath
+    const encryptedData = await this.ipfsMini.cat(encryptedDataIpfsPath)
     //decrypt data
     const rawData = ErasureHelper.crypto.symmetric.decryptMessage(decryptedSymkey, encryptedData)
     assert.equal(await onlyHash(rawData), metadata.rawDataHash, "encrypted data is different from raw data")
@@ -201,38 +218,79 @@ class ErasureClient {
   }
 
   /**
+   * Only Buyer
    * After retrieving data from seller, buyer can call release stake before countdown is over
    */
-  async releaseStake(escrowAddress){
-    const escrow = new CountdownGriefingEscrow({address:escrowAddress,wallet:this.wallet,provider:this.provider})
-    const status = await escrow.getStatus()
-    const buyer = await escrow.getBuyer()
-    assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
-    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
-    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({id:escrowAddress})
-    const griefing = new CountdownGriefing({address:countdownGriefing})
-    const tx = await griefing.releaseStake()
-    return await tx.wait()
-
+  async releaseStake(escrowAddress) {
+    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({ id: escrowAddress })
+    const griefing = new CountdownGriefing({ address: countdownGriefing })
+    return await griefing.releaseStake()
   }
 
   /**
-   * Buyer retrive stake after the countdown is over 
+   * Only Buyer or operator
+   * Only when escrow is finalized
+   * @param {} param0 
    */
-  async retrieveStake(){
-    const escrow = new CountdownGriefingEscrow({address:escrowAddress,wallet:this.wallet,provider:this.provider})
-    const status = await escrow.getStatus()
-    const seller = await escrow.getSeller()
-    assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
-    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
-    const countdownGriefing = await this.erasureGraph.getCountdownGriefing({id:escrowAddress})
-    const griefing = new CountdownGriefing({address:countdownGriefing})
-    //countdown has to be over
-    const griefingStatus = await griefing.getAgreementStatus()
-    assert.equal(griefingStatus,COUNTDOWN_STATUS.isTerminated,"Countdown is not over yet")
-    const tx = await griefing.retrieveStake()
-    return await tx.wait()
+  async reward({ escrowAddress, amount }) {
+    const finalized = await this.erasureGraph.getFinalizedCountdownGriefingEscrow(escrowAddress)
+    const countDownGriefing = new CountdownGriefing({ address: finalized.agreement, wallet: this.wallet, provider: this.provider })
+    return await countDownGriefing.reward(amount)
   }
+
+  /**
+   * Only Buyer or Operator
+   * Only when escrow is finalized 
+   * @param {} param0 
+   */
+  async punish({ escrowAddress, amount, msg = null }) {
+    const finalized = await this.erasureGraph.getFinalizedCountdownGriefingEscrow(escrowAddress)
+    const countDownGriefing = new CountdownGriefing({ address: finalized.agreement, wallet: this.wallet, provider: this.provider })
+    return await countDownGriefing.punish({ amount, msg })
+  }
+
+  /**
+   * Buyer or operator
+   * Only after deposit and countdown is over
+   * Only when no data was submitted
+   * @param {} escrowAddress 
+   */
+  async timeout(escrowAddress) {
+    const finalized = await this.erasureGraph.getFinalizedCountdownGriefingEscrow(escrowAddress)
+    const countDownGriefing = new CountdownGriefing({ address: finalized.agreement, wallet: this.wallet, provider: this.provider })
+    return await countDownGriefing.punish({ amount, msg })
+  }
+
+  // ==== BUYER OR SELLER OR OPERATOR ===//
+
+  async cancel(escrowAddress) {
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    return await escrow.cancel()
+  }
+
+  // ==== GETTERS ====//
+
+  //===USERS===//
+  getAllUsers = this.Erasure_Users.getUsers
+  getUsersCount = this.Erasure_Users.getUsersCount
+  getPaginatedUsers = this.Erasure_Users.getPaginatedUsers
+  getUser = this.Erasure_Users.getUser
+  getUserData = this.Erasure_Users.getUserData
+
+  //==== FEEDS ====//
+
+  getAllFeeds = this.Erasure_Feeds.getAllFeeds
+  getFeedsCount = this.Erasure_Feeds.getFeedsCount
+  getPaginatedFeeds = this.Erasure_Feeds.getPaginatedFeeds
+  getFeed = this.Erasure_Feeds.getFeed
+  getFeedData = this.Erasure_Feeds.getFeedData
+
+  //==== ESCROWS ====//
+  getAllEscrows = this.Erasure_Escrows.getAllEscrows
+  getEscrowsCount = this.Erasure_Escrows.getEscrowsCounts
+  getPaginatedEscrows = this.Erasure_Escrows.getPaginatedEscrows
+  getEscrow = this.Erasure_Escrows.getEscrow
+  getEscrowData = this.Erasure_Escrows.getEscrowData
 }
 
 
