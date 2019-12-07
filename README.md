@@ -1,5 +1,5 @@
 # NMR ERASURE JS SDK
-ErasureJS module compises of:
+ErasureJS module comprises of:
 1. ErasureClient for creating and getting  Users,Feeds,Posts,Agreements,Escrows
 2. Core Erasure modules : ErasureFeed,ErasurePost,ErasureAgreements,ErasureEscrows 
 3. ErasureGraph : for querying Erasure Protocol graph and listening to events
@@ -11,25 +11,27 @@ ErasureJS module compises of:
 const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,ErasureEscrow} = require("erasure-js)
 ```
 
-### Wallet and provider
+### Config variables for constructors
 
-- Wallet : Implemented using ethers.js wallet module, which can be converted from JSON key file, private ket, mnemonic, or web3 wallet.
+- `wallet` : Implemented using ethers.js wallet module, which can be converted from JSON key file, private ket, mnemonic, or web3 wallet.
   + To learn more check out [Ethers Docs](https://docs.ethers.io)
-- Provider: Implemented using ethers.js module, which can be converted from web3Provider
-
+- `provider`: Implemented using ethers.js module, which can be converted from web3Provider
+- `ipfs` : Default = infura node, format : `{host:"",port:"",protocol:"https"} `
+- `network` (optional) : only used in development env
+- `graph` : default to ErasureGraph of provider's network, can passed in custom local graph for development
 ## ErasureClient
 ```
-const client = new ErasureClient({wallet,provider,ipfs,graph})
+const client = new ErasureClient({wallet,provider,ipfs=null:{host:string,post:string,protocol:string},graph=null:string})
 ```
 #### METHODS:
-- `await client.createUser()`
-- `await client.createFeed()`
-- `await client.getFeed(address)`
-- `await client.getPost({proofHash,feedAddress})`
-- `await client.createAgreement()`
-- `await client.getAgreement(address)`
-- `await client.createEscrow()`
-- `await client.getEscrow(address)`
+- `await client.createUser() -> ErasureUser`
+- `await client.createFeed() -> ErasureFeed`
+- `await client.getFeed(address) -> ErasureFeed`
+- `await client.getPost({proofHash,feedAddress}) -> ErasurePost`
+- `await client.createAgreement() -> ErasureAgreement`
+- `await client.getAgreement(address) ->ErasureAgreement`
+- `await client.createEscrow() -> ErasureEscrow`
+- `await client.getEscrow(address) -> ErasureEscrow`
 #### Get data from Registry contract
 ##### Users
 - `await client.getAllUsers()`
@@ -53,12 +55,12 @@ const client = new ErasureClient({wallet,provider,ipfs,graph})
 
 ### ErasureUser:
 ```
-const erasureUser = new ErasureUser({wallet,provider})
+const erasureUser = new ErasureUser({wallet,provider,ipfs,graph})
 ```
 #### create and register user 
 
 ```
-const [keypair,confirmedTx] = await erasureUser.createAndRegisterUser({msg,salt})
+const [keypair,confirmedTx] = await erasureUser.createAndRegisterUser({msg,salt=null})
 ```
     + How it works:
         1. Create new asym keypair
@@ -77,7 +79,7 @@ await client.getUserData(address)
 ```
 const feed = new ErasureFeed({address,wallet,provider,ipfs,graph})
 ```
-- Create new post: 
+#### Create new post: 
 ```
 await feed.createPost(rawData)
 ```
@@ -126,7 +128,6 @@ const success:bool = await post.reveal({symKey})
 - `post.owner()`
 - `post.proofHash()`
 - `await post.getEscrows()` : Get all Escrows that transact this post
-### ErasureAgreement
 
 ### ErasureEscrow : 
 ```
@@ -150,7 +151,7 @@ const escrow = new ErasureEscrow({address,wallet,provider,ipfs,graph})
 - `await escrow.finalize()`
 - `await escrow.cancel()`
 - `await escrow.deliverKey({symKey)`
-    +  How it works:
+    + How it works:
         1. Get Buyer's pubkey from escrow 
         2. Encrypt symKey with Buyer's pubkey 
         3. Submit the new encrypted symKey to escrow contract
@@ -167,8 +168,9 @@ const escrow = new ErasureEscrow({address,wallet,provider,ipfs,graph})
 const agreement = new ErasureAgreement({address,wallet,provider,ipfs,graph})
 ```
 #### METHODS
+//TODO
 #### GETTERS
-
+//TODO
 ## ErasureGraph
 ```
 const {ErasureGraph} = require("erasureJs)
@@ -178,7 +180,7 @@ const erasureGraph = new ErasureGraph(network="mainnet")
     + `mainnet` or `rinkery` for accessing Erasure graph public node
     + `ganache` for local node (require having a graph node locally and run deploy graph)
 ### Listening to subscriptions 
-- If no eventName array is passed in, client will listen to all events
+- If no `events` array is passed in, client will listen to all events
 ```
 erasureGraph.startListening(events=null,cb) 
 ```
