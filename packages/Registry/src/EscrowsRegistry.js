@@ -1,6 +1,6 @@
 const { Registry, Contracts } = require("../../Base");
 
-class Erasure_Escrows extends Registry {
+class Escrows_Registry extends Registry {
   constructor(provider, network = "mainnet") {
     super(Contracts.Erasure_Escrows, provider, network);
   }
@@ -10,4 +10,4 @@ class Erasure_Escrows extends Registry {
   getAllEscrows=this.getInstances
   getPaginatedEscrows=this.getPaginatedInstances
 }
-module.exports = Erasure_Escrows 
+module.exports = Escrows_Registry 

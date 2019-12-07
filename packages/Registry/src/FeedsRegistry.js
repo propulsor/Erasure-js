@@ -1,6 +1,6 @@
 const { Registry, Contracts } = require("../../Base");
 
-class Erasure_Feeds extends Registry {
+class Feeds_Registry extends Registry {
   constructor(provider, network = "mainnet") {
     super(Contracts.Erasure_Feeds, provider, network);
   }
@@ -10,4 +10,4 @@ class Erasure_Feeds extends Registry {
   getAllFeeds=this.getInstances
   getPaginatedFeeds=this.getPaginatedInstances
 }
-module.exports = Erasure_Feeds 
+module.exports = Feeds_Registry 

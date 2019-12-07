@@ -5,7 +5,7 @@ const assert = require("assert");
 /**
  * Erasure_Users has its own methods and doesnt extend Registry class
  */
-class Erasure_Users {
+class Users_Registry {
   constructor({ wallet = null, provider, network = null }) {
     this.wallet = wallet || ethers.Wallet.createRandom();
     this.provider = provider;
@@ -77,4 +77,4 @@ class Erasure_Users {
   }
 }
 
-module.exports = Erasure_Users;
+module.exports = Users_Registry;

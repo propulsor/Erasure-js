@@ -5,59 +5,12 @@ const { ethers } = require("ethers");
 const assert = require("assert");
 const { ESCROW_STATUS } = require("../../Utils");
 const { Template, Contracts } = require("../../Base");
+const ErasureHelper = require("@erasure/crypto-ipfs")
+const onlyHash = ErasureHelper.ipfs.onlyHash
 
 class CountdownGriefingEscrow extends Template {
-  constructor({ address, wallet, provider }) {
-    super({
-      contract: Contracts.CountdownGriefingEscrow,
-      wallet,
-      provider,
-      address
-    });
-  }
-
-  //====Class methods====//
-  static async create({
-    paymentAmount,
-    stakeAmount,
-    escrowCountdown,
-    ratio,
-    ratioType,
-    agreementCountdown,
-    wallet,
-    provider,
-    buyer = null,
-    seller = null,
-    operator = null,
-    metadata = null,
-    salt = null,
-    network = null
-  }) {
-    if (!network) {
-      network = await provider.getNetwork();
-      network = network.name;
-    }
-    let factory = new CountdownGriefingEscrow_Factory(
-      wallet,
-      provider,
-      network
-    );
-    let agreementParams = encoder(
-      ["uint120", "uint8", "uint128"],
-      [ratio, ratioType, agreementCountdown]
-    );
-    let [tx, instanceAddress] = await factory.create(
-      buyer,
-      seller,
-      paymentAmount,
-      stakeAmount,
-      escrowCountdown,
-      metadata,
-      agreementParams,
-      operator,
-      salt
-    );
-    return new CountdownGriefingEscrow(instanceAddress, wallet, provider);
+  constructor(opts) {
+    super({ contract: Contracts.CountdownGriefingEscrow, ...opts });
   }
 
   //====MODIFIERS====//
@@ -85,7 +38,7 @@ class CountdownGriefingEscrow extends Template {
     let escrowStatus = await this.getEscrowStatus();
     assert(
       escrowStatus == ESCROW_STATUS.onlyPaymentDeposited ||
-        escrowStatus == ESCROW_STATUS.isOpen,
+      escrowStatus == ESCROW_STATUS.isOpen,
       "Escrow status has to be open or payment deposited"
     );
   }
@@ -113,7 +66,7 @@ class CountdownGriefingEscrow extends Template {
     let escrowStatus = await this.getEscrowStatus();
     assert(
       escrowStatus == ESCROW_STATUS.isOpen ||
-        escrowStatus == ESCROW_STATUS.onlyStakeDeposited,
+      escrowStatus == ESCROW_STATUS.onlyStakeDeposited,
       "Escrow status has to be open or stake deposited"
     );
   }
@@ -134,7 +87,8 @@ class CountdownGriefingEscrow extends Template {
     );
   }
 
-  //===== State Methods ====//
+  //===== STATE METHODS ====//
+
   /**
    * If sellet is not set -> set seller
    * If buyer is already deposit payment => finalize
@@ -213,28 +167,91 @@ class CountdownGriefingEscrow extends Template {
     return await tx.wait();
   }
 
+/**
+   * Deliver key of a purchase to escrow
+   * Seller encrypted symkey with buyer's pubkey and upload to  escrow
+   */
+  async deliverKey({  symKey, proofHashIpfsPath }) {
+    const status = await this.status()
+    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
+    const buyer = await this.buyer()
+    const seller = await this.seller()
+    assert.equal(seller, this.wallet.address, "you are not the seller of this escrow")
+    const buyerPubkey = await this.graph.getUser(buyer)
+    // Encrypt symkey with buyer's pubkey
+    const encryptedSymkey = crypto.publicEncrypt(buyerPubkey, Buffer.from(symKey))
+    const json_selldata = {
+      encryptedSymkey,
+      proofHashIpfsPath
+    }
+    const selldataIpfsPath = await onlyHash(json_selldata)
+    //send Encrypted symkey to escrow 
+    const confirmedTx = await this.submitData(hashToHex(selldataIpfsPath))
+    const actualIPFSPath = await this.ipfs.addJSON(json_selldata)
+    assert.equal(actualIPFSPath, selldataIpfsPath, "ipfs hash for sell data is not consistent")
+    return confirmedTx
+
+  }
+   /**
+   * Buyer call escrow to get encrypted symkey, decrypt, get encrypted data from ipfs, decrypt, return rawdata
+   * If data is verified by sha256 -> call releaseStake for seller
+   * 
+   * @param {escrow instance address} escrowAddress 
+   * @return rawData:string
+   */
+  async retrieveDataFromSeller({ escrowAddress, keypair }) {
+    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
+    const status = await escrow.getStatus()
+    const buyer = await escrow.getBuyer()
+    assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
+    assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
+    //get submitted data from grapth based on the escrowAddress
+    const dataSubmitted = await this.erasureGraph.getDataSubmitted(escrowAddress)
+    const dataSubmittedIPFS = await this.ipfsMini.catJSON(hexToHash(dataSubmitted))
+    encryptedSymkey = dataSubmittedIPFS.encryptedSymkey
+    proofHashIpfsPath = dataSubmittedIPFS.proofHashIpfsPath
+    const proofData = await this.ipfsMini.catJSON(proofHashIpfsPath)
+    //decrypt data with this user's privkey
+    const decryptedSymkey = crypto.privateDecrypt(keypair.privateKey, Buffer.from(encryptedSymkey))
+    //get path for encrypted data from escrow? //TODO 
+    const encryptedDataIpfsPath = proofData.encryptedFileIpfsPath
+    const encryptedData = await this.ipfsMini.cat(encryptedDataIpfsPath)
+    //decrypt data
+    const rawData = ErasureHelper.crypto.symmetric.decryptMessage(decryptedSymkey, encryptedData)
+    assert.equal(await onlyHash(rawData), proofData.rawDataHash, "encrypted data is different from raw data")
+    return rawData
+  }
+
+
+    /**
+  * Seller retrive stake after the countdown is over 
+  */
+ async getAgreement() {
+  const countdownGriefing = await this.graph.getAgreementOfEscrow(escrowAddress)
+  return new countdownGriefing({address:countdownGriefing,wallet:this.wallet,provider:this.provider,ipfs:this.ipfs,graph:this.graph})
+}
   //====Getters====//
-  async getBuyer() {
+  async buyer() {
     return await this.contract.getBuyer();
   }
-  async isBuyer(caller=null) {
-    return await this.contract.isBuyer(ethers.utils.getAddress(caller||this.wallet.address));
+  async isBuyer(caller = null) {
+    return await this.contract.isBuyer(ethers.utils.getAddress(caller || this.wallet.address));
   }
-  async getSeller() {
+  async seller() {
     return await this.contract.getSeller();
   }
-  async isSeller(caller=null) {
-    return await this.contract.isSeller(ethers.utils.getAddress(caller||this.wallet.address));
+  async isSeller(caller = null) {
+    return await this.contract.isSeller(ethers.utils.getAddress(caller || this.wallet.address));
   }
   /**
    * Data about this Escrow :
    * - paymentAmount, stakeAmount, ratio, ratioType, countdownLength
    */
-  async getData() {
+  async data() {
     const data = await this.contract.getData();
     return data;
   }
-  async getEscrowStatus() {
+  async status() {
     return await this.contract.getEscrowStatus();
   }
 }

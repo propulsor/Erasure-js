@@ -1,7 +1,7 @@
 const { ethers } = require("ethers");
 
 class Template {
-  constructor({contract, address, wallet, provider}) {
+  constructor({contract, address, wallet, provider,ipfs,graph}) {
     let contractInstance = new ethers.Contract(
         address,
       contract.template.artifact.abi,
@@ -13,6 +13,8 @@ class Template {
     );
     this.wallet = wallet;
     this.address=address
+    this.ipfs=ipfs
+    this.graph=graph
   }
   /**
    * set metadata
@@ -51,15 +53,16 @@ class Template {
     return await tx.wait();
   }
   //GETTERS
-  async getOperator() {
+  async operator() {
     return await this.contract.getOperator();
   }
-  async getCreator() {
+  async owner() {
     return await this.contract.getCreator();
   }
-  async getFactory() {
-    return await this.contract.getFactory();
+  async address(){
+    return this.address
   }
+
 }
 
 module.exports = { Template };

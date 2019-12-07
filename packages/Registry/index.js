@@ -1,15 +1,7 @@
-const RAgreements = require("./src/AgreementsRegistry")
-const REscrows = require("./src/EscrowsRegistry")
-const RFeeds = require("./src/FeedsRegistry")
-const RUsers = require("./src/UsersRegistry")
-class Registry{
-  constructor({wallet,provider,network=null}){
-    this.Users = new RUsers({wallet,provider,network})
-    this.Feeds = new RFeeds({wallet,provider,network})
-    this.Escrows = new REscrows({wallet,provider,network})
-    this.Agreements = new RAgreements({wallet,provider,network})
-  }
-}
+const Agreements_Registry = require("./src/AgreementsRegistry")
+const Escrows_Registry = require("./src/EscrowsRegistry")
+const Feeds_Registry = require("./src/FeedsRegistry")
+const Users_Registry = require("./src/UsersRegistry")
 
  
-module.exports = {Registry}
+module.exports = {Agreements_Registry,Escrows_Registry,Feeds_Registry,Users_Registry}

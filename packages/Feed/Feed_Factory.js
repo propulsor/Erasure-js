@@ -49,9 +49,13 @@ class Feed_Factory extends Factory {
     let createdEvent = confirmedTx.events.find(
       e => e.event == "InstanceCreated"
     );
-    assert(createdEvent.args.instance, "No new instance's address found");
-    // let newFeedInstance = new ErasureFeed(createdEvent.address,this.wallet,this.provider)
-    return [confirmedTx, createdEvent.args.instance];
+    try {
+      assert(createdEvent.args.instance, "No new instance's address found");
+      let feed = new ErasureFeed({ address: createdEvent.args.instance, wallet: this.wallet, provider: this.provider })
+      return { confirmedTx, feed };
+    } catch (e) {
+      return { confirmedTx, error: "Feed creation failed" }
+    }
   }
 }
 
