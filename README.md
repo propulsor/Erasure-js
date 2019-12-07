@@ -8,7 +8,7 @@ ErasureJS module compises of:
 
 # Usage
 ```
-const {ErasureClient,ErasureGraph,ErasureFeeds,ErasurePosts,ErasureAgreements,ErasureEscrow} = require("erasure-js)
+const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,ErasureEscrow} = require("erasure-js)
 ```
 
 ### Wallet and provider
@@ -118,13 +118,13 @@ const success:bool = await post.reveal({symKey})
         2. Get metadata from ipfs path
         3. Validate symkey and rawData
         4. Upload symkey and rawData to IPFS 
-- Create escrow as seller: `await post.offerSell()`
-- Create escrow as buyer:  `await post.offerBuy()`
-- Create escrow as operator: `await post.offerAsOperator()`
+- `await post.offerSell()`: Create escrow as seller
+- `await post.offerBuy()` : Create escrow as buyer
+- `await post.offerAsOperator()` : Create escrow as operator
 #### Getters:
 - `await post.status()` : Get status if revealed
 - `post.owner()`
-- `await post.proofHash()`
+- `post.proofHash()`
 - `await post.getEscrows()` : Get all Escrows that transact this post
 ### ErasureAgreement
 
