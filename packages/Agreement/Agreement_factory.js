@@ -21,7 +21,7 @@ class Agreement_Factory extends Factory {
     counterparty,
     ratio,
     ratioType,
-    countdownLength,
+    countDown=null,
     metaData,
     ipfs,
     graph,
@@ -31,19 +31,36 @@ class Agreement_Factory extends Factory {
     if (operator) {
       operator = ethers.utils.getAddress(operator);
     }
-    let callData = abiEncodeWithSelector(
-      "initialize",
-      ["address", "address", "address", "uint256", "uint8", "uint256", "bytes"],
-      [
-        operator || NULL_ADDRESS,
-        ether.utils.getAddress(staker),
-        ethers.utils.getAddress(counterparty),
-        ethers.utils.bigNumberify(ratio),
-        ethers.utils.bigNumberify(ratioType),
-        ethers.utils.bigNumberify(countdownLength),
-        ethers.utils.keccak256(hexlify(metaData))
-      ]
-    );
+    let callData
+    if(!countDown){//simplegriefing
+      callData = abiEncodeWithSelector(
+        "initialize",
+        ["address", "address", "address", "uint256", "uint8", "bytes"],
+        [
+          operator || NULL_ADDRESS,
+          ether.utils.getAddress(staker),
+          ethers.utils.getAddress(counterparty),
+          ethers.utils.bigNumberify(ratio),
+          ethers.utils.bigNumberify(ratioType),
+          ethers.utils.keccak256(hexlify(metaData))
+        ]
+      );
+    }
+    else{//countdownGriefing
+      callData = abiEncodeWithSelector(
+        "initialize",
+        ["address", "address", "address", "uint256", "uint8", "uint256", "bytes"],
+        [
+          operator || NULL_ADDRESS,
+          ether.utils.getAddress(staker),
+          ethers.utils.getAddress(counterparty),
+          ethers.utils.bigNumberify(ratio),
+          ethers.utils.bigNumberify(ratioType),
+          ethers.utils.bigNumberify(countDown),
+          ethers.utils.keccak256(hexlify(metaData))
+        ]
+      );
+    }
     let tx;
     if (salt) {
       tx = await this.contract.createSalty(

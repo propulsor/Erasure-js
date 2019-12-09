@@ -19,7 +19,7 @@ class ERasureFeed extends Template {
    * @param {*} param0 : proof is normally an IPFS hash
    */
   async submitProof(proof) {
-    const proofHash = ethers.utils.keccak256(hexlify(proof));
+    const proofHash = hexlify(proof);
     let tx = await this.contract.submitHash(proofHash);
     return await tx.wait();
   }
@@ -63,7 +63,7 @@ class ERasureFeed extends Template {
       keyHash,
       encryptedDataHash
     }
-    const proofHash = await onlyHash(metadata) //ipfs hash for metadata
+    const proofHash = sha256(metadata) //ipfs hash for metadata
     //submit proofHash to Feed
     let confirmedTx = await this.submitProof(proofHash)
     //save encrypted data file and metadata to ipfs
