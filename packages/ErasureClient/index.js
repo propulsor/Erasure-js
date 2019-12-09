@@ -1,16 +1,21 @@
-const { Users_Registry, Feeds_Registry,Agreements_Registry,Escrows_Registry } = require("../Registry")
-const { CountdownGriefingEscrow } = require("../Escrow")
+const { Users_Registry, Feeds_Registry, Agreements_Registry, Escrows_Registry } = require("../Registry")
+const { ErasureEscrow ,Escrow_Factory} = require("../Escrow")
+const {ErasureAgreement,Agreement_Factory} = require("../Agreement")
+const {ErasureFeed,Feed_Factory} = require("../Feed")
 const { INFURA_IPFS, MAINNET_GRAPH } = require("../Utils")
 const IPFS = require("ipfs-mini")
 const ErasureGraph = require("../GraphClient")
-/**
- * Erasure client for high level getters , Buyer and Seller class
- */
+
 
 class ErasureClient {
   /**
    * 
    * @param {object} config 
+   * @param {Obj} config.wallet - web3 wallet or ethers wallet
+   * @param {Obj} config.provider - web3 or ethers provider
+   * @param {string} config.network - "mainnet", "rinkerby","ganache"
+   * @param {Obj} [config.ipfsOpts] - ipfs confif : {host,port,protocol}
+   * @param {graphUri} [config.graphUri] - graph uri for ErasureGraph
    * @param wallet 
    */
   constructor({ wallet, provider, network = "mainnet", ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH }) {
@@ -43,19 +48,28 @@ class ErasureClient {
   getPaginatedFeeds = this.Feeds_Registry.getPaginatedFeeds
 
 
-  async createFeed({ proof, metadata, opreator = null, salt = null }) {
-    const feedFactory = new ErasureFeed_Factory({ wallet: this.wallet, provider: this.provider, network: this.network })
+     /** createFeed
+     * 
+     * Create a new feed
+     *
+     * @param {Object} config
+     * @param {string} [config.operator] optional operator
+     * @param {string} [config.proofhash] optional initial post
+     * @param {string} [config.metadata] optional metadata
+     * @returns {Promise} {feed,confirmedTx} object
+     */
+  async createFeed({ proof=null, metadata=null, operator = null, salt = null }) {
+    const feedFactory = new Feed_Factory({ wallet: this.wallet, provider: this.provider, network: this.network })
     return await feedFactory.create({ proof, metadata, salt, operator, ipfs: this.ipfs, graph: this.graph })
   }
+  /**
+   * Get ErasureFeed object of a feedAddress
+   * @param {String} address 
+   */
   async getFeed(address) {
-    return new Feeds_Registry({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
+    return new ErasureFeed({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
   }
 
-
-  //==== POST ====//
-  async getPost({proofHash,feedAddress}) {
-    return new ErasurePost({wallet:this.wallet,provider:this.provider,proofHash,feedAddress,ipfs:this.ipfs,graph:this.graph})
-  }
 
 
   //=== AGREEMENTS ====//
@@ -67,24 +81,39 @@ class ErasureClient {
 
   /**
    * Create CountdownGriefing /SimpleGriefing Agreement
-   * @param {Obj} opts 
+    * @param {Object} config
+    * @param {string} config.staker
+    * @param {string} config.counterparty
+    * @param {string} config.griefRatio
+    * @param {string} config.griefRatioType
+    * @param {string} [config.countdownLength] - creates a simple griefing agreement if not set
+    * @param {string} [config.metadata]
+    * @param {string} [config.operator]
+    * @returns {Promise} ErasureAgreement object
+    * @returns {Promise} transaction receipts
    */
   async createAgreement({
     staker, counterparty, ratio, ratioType, metadata, operator = null, countdownLength = null, salt = null
   }) {
-    let factory = new Agreement_Factory({...this.factoryOpts,countdownLength})
+    let factory = new Agreement_Factory({ ...this.factoryOpts, countdownLength })
     return await factory.create({ staker, counterparty, ratio, ratioType, metadata, operator, countdownLength, salt, ipfs: this.ipfs, graph: this.graph })
   }
+
+  /**
+   * Get Agreement from agreement address
+   * @param {string} address of agreement
+   */
   async getAgreement(address) {
     return ErasureAgreement({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
   }
 
 
   // ==== ESCROW ====//
+  //getters
   getEscrowsCount = this.Escrows_Registry.getEscrowsCount
-  getEscrowData=this.Escrows_Registry.getEscrowData
-  getAllEscrows=this.Escrows_Registry.getAllEscrows
-  getPaginatedEscrows=this.Escrows_Registry.getPaginatedEscrows
+  getEscrowData = this.Escrows_Registry.getEscrowData
+  getAllEscrows = this.Escrows_Registry.getAllEscrows
+  getPaginatedEscrows = this.Escrows_Registry.getPaginatedEscrows
 
   /**
    * 
@@ -110,7 +139,7 @@ class ErasureClient {
     operator = null, metadata = null,
     salt = null
   }) {
-    const escrowFactory = new CountfownGriefingEscrow_Factory(this.factoryOpts)
+    const escrowFactory = new Escrow_Factory(this.factoryOpts)
     return escrowFactory.create({
       paymentAmount, stakeAmount,
       escrowCountdown, ratio,
@@ -123,8 +152,12 @@ class ErasureClient {
     });
   }
 
+  /**
+   * 
+   * @param {string} address of escrow
+   */
   async getEscrow(address) {
-    return new CountdownGriefingEscrow({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
+    return new ErasureEscrow({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
   }
 
 }

@@ -1,55 +1,55 @@
 const Queries = {
     //CountDownEscrow
     countdownGriefingEscrows: {
-        dataReturn: ` id: ID!
-        creator: Bytes
-        operator: Bytes
-        buyer: Bytes
-        seller: Bytes
-        paymentAmount: BigInt
-        stakeAmount: BigInt
-        countdownLength: BigInt
-        agreementParams: Bytes
-        deadline: BigInt
-        data: Bytes
-        dataB58: String
-        dataSubmitted: Boolean
-        paymentDeposited: Boolean
-        stakeDeposited: Boolean
-        finalized: Boolean
-        cancelled: Boolean
-        metadata: Bytes
-        metadataB58: String
-        countdownGriefingAgreement: CountdownGriefing
-        initMetadata: Bytes
-        initMetadataB58: String
-        initCallData: Bytes
-        createdTimestamp: BigInt`
+        dataReturn: ` id
+        creator
+        operator
+        buyer
+        seller
+        paymentAmount
+        stakeAmount
+        countdownLength
+        agreementParams
+        deadline
+        data
+        dataB58
+        dataSubmitted
+        paymentDeposited
+        stakeDeposited
+        finalized
+        cancelled
+        metadata
+        metadataB58
+        countdownGriefingAgreement
+        initMetadata
+        initMetadataB58
+        initCallData
+        createdTimestamp`
     },
     instanceCreatedCountdownGriefingEscrowFactories: {
-        returnData: ` id: ID!
-        instance: Bytes!
-        creator: Bytes!
-        callData: Bytes!
-        blockNumber: BigInt!
-        timestamp: BigInt!
-        txHash: Bytes!
-        logIndex: BigInt!`
+        returnData: ` id
+        instance
+        creator
+        callData
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
     },
     cancelledCountdownGriefingEscrows: {
-        returnData: ` id: ID!
-        blockNumber: BigInt!
-        timestamp: BigInt!
-        txHash: Bytes!
-        logIndex: BigInt!`
+        returnData: ` id
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
     },
     dataSubmittedCountdownGriefingEscrows: {
-        returnData: `id: ID!
-        data: Bytes!
-        blockNumber: BigInt!
-        timestamp: BigInt!
-        txHash: Bytes!
-        logIndex: BigInt!`
+        returnData: `id
+        data
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
     },
     deadlineSetCountdownGriefingEscrows: {
         returnData: `id
@@ -60,41 +60,296 @@ const Queries = {
         logIndex`
     },
     finalizedCountdownGriefingEscrows: {
-        returnData: ` id: ID!
-        agreement: Bytes!
-        blockNumber: BigInt!
-        timestamp: BigInt!
-        txHash: Bytes!
-        logIndex: BigInt!`
+        returnData:`id
+        agreement
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
     },
-    initializedCountdownGriefingEscrows: {},
-    metadataSetCountdownGriefingEscrows: {},
-    operatorUpdatedCountdownGriefingEscrows: {},
-    paymentDepositedCountdownGriefingEscrows: {},
-    stakeDepositedCountdownGriefingEscrows: {},
-    //CountdownGriefing
-    instanceCreatedCountdownGriefingFactories: {},
-    initializedCountdownGriefings: {},
-    iatioSetCountdownGriefings: {},
-    iriefedCountdownGriefings: {},
-    iengthSetCountdownGriefings: {},
-    iperatorUpdatedCountdownGriefings: {},
-    ietadataSetCountdownGriefings: {},
-    stakeAddedCountdownGriefings: {},
-    stakeTakenCountdownGriefings: {},
-    stakeBurnedCountdownGriefings: {},
-    deadlineSetCountdownGriefings: {},
-    //SimpleGriefing
-    simpleGriefings: {},
-    instanceCreatedSimpleGriefingFactories: {},
-    griefedSimpleGriefings: {},
-    initializedSimpleGriefings: {},
-    metadataSetSimpleGriefings: {},
-    operatorUpdatedSimpleGriefings: {},
-    ratioSetSimpleGriefings: {},
-    stakeAddedSimpleGriefings: {},
-    stakeBurnedSimpleGriefings: {},
-    stakeTakenSimpleGriefings: {},
+    initializedCountdownGriefingEscrows: {
+        returnData:`id
+        operator
+        buyer
+        seller
+        paymentAmount
+        stakeAmount
+        countdownLength
+        metadata
+        metadataB58
+        agreementParams
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    metadataSetCountdownGriefingEscrows: {
+        returnData:`id
+        metadata
+        metadataB58
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    operatorUpdatedCountdownGriefingEscrows: {
+        returnData:`id
+        operator
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    paymentDepositedCountdownGriefingEscrows: {
+        returnData:`id
+        buyer
+        amount
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    stakeDepositedCountdownGriefingEscrows: {
+        returnData:`id
+        seller
+        amount
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    countdownGriefings:{
+        returnData:`id
+        creator
+        operator
+        staker
+        currentStake
+        totalBurned
+        totalTaken
+        counterparty
+        ratio
+        ratioType
+        countdownLength
+        deadline
+        metadata
+        metadataB58
+        initMetadata
+        initMetadataB58
+        initCallData
+        createdTimestamp`
+    },
+    instanceCreatedCountdownGriefingFactories: {
+        returnData:`id
+        instance
+        creator
+        callData
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    initializedCountdownGriefings: {
+        returnData:`id
+        operator
+        staker
+        counterparty
+        ratio
+        ratioType
+        countdownLength
+        metadata
+        metadataB58
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    ratioSetCountdownGriefings: {
+        returnData:`id
+        staker
+        ratio
+        ratioType
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    griefedCountdownGriefings: {
+        returnData:`id
+        punisher
+        staker
+        punishment
+        cost
+        message
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    lengthSetCountdownGriefings: {
+        returnData:`id
+        length
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    operatorUpdatedCountdownGriefings: {
+        returnData:`id
+        operator
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    metadataSetCountdownGriefings: {
+        returnData:`id
+        metadata
+        metadataB58
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    stakeAddedCountdownGriefings: {
+        returnData:`id
+        staker
+        funder
+        amount
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    stakeTakenCountdownGriefings: {
+        returnData:`id
+        staker
+        recipient
+        amount
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    stakeBurnedCountdownGriefings: {
+        returnData:`id
+        staker
+        amount
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    deadlineSetCountdownGriefings: {
+        returnData:`id
+        deadline
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    simpleGriefings: {
+        returnData:`id
+        creator
+        operator
+        staker
+        currentStake
+        totalBurned
+        totalTaken
+        counterparty
+        ratio
+        ratioType
+        metadata
+        metadataB58
+        initMetadata
+        initMetadataB58
+        initCallData
+        createdTimestamp`
+    },
+    instanceCreatedSimpleGriefingFactories: {
+        returnData:`id
+        instance
+        creator
+        callData
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    griefedSimpleGriefings: {
+        returnData:`id
+        punisher
+        staker
+        punishment
+        cost
+        message
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    initializedSimpleGriefings: {
+        returnData:`id
+        operator
+        staker
+        counterparty
+        ratio
+        ratioType
+        metadata
+        metadataB58
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    metadataSetSimpleGriefings: {
+        returnData:`id
+        metadata
+        metadataB58
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    operatorUpdatedSimpleGriefings: {
+        returnData:`id
+        operator
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    ratioSetSimpleGriefings: {
+        returnData:`id
+        staker
+        ratio
+        ratioType
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    stakeAddedSimpleGriefings: {
+        returnData:`id
+        staker
+        funder
+        amount
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    stakeBurnedSimpleGriefings: {
+        returnData:`id
+        staker
+        amount
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    stakeTakenSimpleGriefings: {
+        returnData:``
+    },
     //Feeds
     feeds: {
         queryName: "Feeds",
@@ -109,7 +364,16 @@ const Queries = {
             initCallData
             createdTimestamp`
     },
-    instanceCreatedFeedFactories: {},
+    instanceCreatedFeedFactories: {
+        returnData:`id
+        staker
+        recipient
+        amount
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
     hashSubmittedFeeds: {
         returnData: `
         id
@@ -120,9 +384,34 @@ const Queries = {
         logIndex
         `
     },
-    initializedFeeds: {},
-    operatorUpdatedFeeds: {},
-    metadataSetFeeds: {}
+    initializedFeeds: {
+        returnData:`id
+        operator
+        proofHash
+        metadata
+        metadataB58
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    operatorUpdatedFeeds: {
+        returnData:`id
+        operator
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    },
+    metadataSetFeeds: {
+        returnData:`id
+        metadata
+        metadataB58
+        blockNumber
+        timestamp
+        txHash
+        logIndex`
+    }
 
 }
 

@@ -3,49 +3,39 @@
  */
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { Template, Contracts } = require("../../Base");
-const { SimpleGriefing_Factory } = require("./SimpleGriefing_Factory");
+const { NULL_ADDRESS, AGREEMENT_STATUS, AGREEMENT_TYPE } = require("../Utils");
+const { Template, Contracts } = require("../Base");
 
-class SimpleGriefing extends Template {
-  constructor({ address, wallet, provider }) {
-    super({ contract: Contracts.SimpleGriefing, address, wallet, provider });
-  }
+class ErasureAgreement extends Template {
 
-  //====class method====//
-  static async create({
-    staker,
-    counterparty,
-    ratio,
-    ratioType,
-    metadata,
-    wallet,
-    provider,
-    operator = null,
-    salt = null,
-    network = null
-  }) {
-    if (!network) {
-      network = await provider.getNetwork();
-      network = network.name;
+  constructor(opts) {
+    if (opts.countDown) {
+      this.type = AGREEMENT_TYPE.COUNTDOWN
+
+    } else {
+      this.type = AGREEMENT_TYPE.SIMPLE
     }
-    let factory = new SimpleGriefing_Factory({wallet, provider, network});
-    let [tx, instanceAddress] = await factory.create({
-      staker,
-      counterparty,
-      ratio,
-      ratioType,
-      metadata,
-      operator,
-      salt
-    });
-    return new SimpleGriefing({ address: instanceAddress, wallet, provider });
+    super({ type: this.type, ...opts });
+
+
   }
+
 
   //====Modifiers====//
 
+  async onlyNotTerminated() {
+    let agreementStatus = await this.status();
+    assert.notEqual(
+      agreementStatus,
+      AGREEMENT_STATUS.isTerminated,
+      "Agreement is already terminated"
+    );
+  }
+
+
   async onlyCounterpartyOrOperator() {
-    let counterparty = await this.getCounterParty();
-    let operator = await this.getOperator();
+    let counterparty = await this.counterparty();
+    let operator = await this.operator();
     assert(
       this.wallet.address == counterparty || this.wallet.address == operator,
       "only counterparty or operator can perform this method"
@@ -53,8 +43,8 @@ class SimpleGriefing extends Template {
   }
 
   async onlyStakerOrOperator() {
-    let staker = await this.getStaker();
-    let operator = await this.getOperator();
+    let staker = await this.staker();
+    let operator = await this.operator();
     assert(
       staker == this.wallet.address || operator == this.wallet.address,
       "Only staker or operator can perform this method"
@@ -63,30 +53,31 @@ class SimpleGriefing extends Template {
 
   //====== State Methods====//
 
-
   /**
-   * Only staker or operator can increase the stake
+   * Only staker can increate the stake
    * Only can be done when agreement is not terminated
    * @param {*} amount
    */
   async increaseStake(amount) {
+    await this.onlyNotTerminated();
     await this.onlyStakerOrOperator();
     let tx = await this.contract.increaseStake(
-      ethers.utils.parseEther(amount)
+      ethers.utils.bigNumberify(amount)
     );
     let confirmedTx = await tx.wait();
-    // let newStakeAmount = await this.getCurrentStake();
-    return [confirmedTx, 0];
+    let newStakeAmount = await this.getCurrentStake();
+    return [confirmedTx, newStakeAmount];
   }
   /**
    * Only counterparty can reward staker
    * @param {} amount
    */
   async reward(amount) {
+    await this.onlyNotTerminated();
     await this.onlyCounterpartyOrOperator();
     let tx = await this.contract.reward(ethers.utils.bigNumberify(amount));
     let confirmedTx = await tx.wait();
-    let newStakeAmount = await this.getCurrentStake();
+    let newStakeAmount = await this.currentStake();
     return [confirmedTx, newStakeAmount];
   }
   /**
@@ -95,6 +86,7 @@ class SimpleGriefing extends Template {
    */
   async punish({ amount, message }) {
     await this.onlyCounterpartyOrOperator();
+    await this.onlyNotTerminated();
     let tx = await this.contract.punish(
       ethers.utils.bigNumberify(amount),
       ethers.utils.toUtf8Bytes(ethers.utils.hexlify(message))
@@ -118,26 +110,56 @@ class SimpleGriefing extends Template {
     return confirmedTx;
   }
 
+  /**
+   * Only staker or operator
+   */
+  async startCountDown() {
+    assert.equal(this.type, AGREEMENT_TYPE.COUNTDOWN, "SimpleGriefing can't start countdown")
+    await this.onlyStakerOrOperator();
+    await this.onlyWhenInitialized();
+    //todo only when countdown is not started
+    let tx = await this.contract.startCountDown();
+    let confirmedTx = await tx.wait();
+    let deadline = confirmedTx.deadline; //TODO get deadline from confirmedTx
+    return [confirmedTx, deadline];
+  }
+
+  /**
+   * Only staker or operator
+   * Only when countdown is over
+   * @param {*} destAddress
+   */
+  async retrieveStake(destAddress = null) {
+    assert.equal(this.type, AGREEMENT_TYPE.COUNTDOWN, "SimpleGriefing cant retrieve stake")
+    await this.onlyStakerOrOperator();
+    //todo only when countdown is over
+    let tx = await this.contract.retrieveStake(destAddress || NULL_ADDRESS);
+    let confirmedTx = await tx.wait();
+    let amount = confirmedTx.amount; //TODO get amount from confirmedTx
+    return [confirmedTx, amount];
+  }
   //==== Getters ====//
-  async getStaker() {
+  async staker() {
     return await this.contract.getStaker();
   }
   async isStaker(caller) {
     return await this.contract.isStaker(ethers.utils.getAddress(caller));
   }
-  async getCounterparty() {
-    return await this.contract.getCounterparty();
+  async counterparty() {
+    return await this.contract.getCounterParty();
   }
   async isCounterparty(caller) {
     return await this.contract.isCounterparty(ethers.utils.getAddress(caller));
   }
-  async getCurrentStake() {
+  async currentStake() {
     return await this.contract.getCurrentStake();
   }
-
-  async getAgreementStatus() {
+  async isStaked() {
+    return await this.contract.isStaked();
+  }
+  async status() {
     return await this.contract.getAgreementStatus();
   }
 }
 
-module.exports = { SimpleGriefing };
+module.exports = { ErasureAgreement };

@@ -3,11 +3,11 @@ const assert = require("assert");
 const { abiEncodeWithSelector, NULL_ADDRESS, hexlify } = require("../../Utils");
 const { Template, Contracts } = require("../../Base");
 
-class CountdownGriefingEscrow_Factory extends Factory {
+class Escrow_Factory extends Factory {
     constructor({ wallet, provider, network = "mainnet" }) {
         super({ contract: Contracts.CountdownGriefingEscrow_Factory, wallet, provider, network })
     }
-    async create(buyer, seller, paymentAmount, stakeAmount, escrowCountdown, metadata, agreementParams, operator = null, salt = null) {
+    async create({ buyer, seller, paymentAmount, stakeAmount, escrowCountdown, metadata, agreementParams, ipfs, graph, operator = null, salt = null }) {
         if (operator) {
             operator = getAddress(operator)
         }
@@ -41,4 +41,4 @@ class CountdownGriefingEscrow_Factory extends Factory {
 
 }
 
-module.exports = { CountdownGriefingEscrow_Factory }
+module.exports = { Escrow_Factory }

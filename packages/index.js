@@ -1,10 +1,9 @@
 
-const {Feed} =require("./Feed")
-const {CountdownGriefingEscrow} = require("./Escrow")
-const {Registry} = require("./Registry")
-const {CountDownGriefing,SimpleGriefing} = require("./Agreement")
+const {ErasureFeed} =require("./Feed")
+const {ErasureEscrow} = require("./Escrow")
+const {ErasureAgreement} = require("./Agreement")
 const {ErasureClient} = require("./ErasureClient")
 const {ErasureGraph} = require("./GraphClient")
 module.exports={
-    Feed,CountdownGriefingEscrow,Registry,CountDownGriefing,SimpleGriefing,ErasureClient,ErasureGraph
+    ErasureFeed,CountdownGriefingEscrow,ErasureAgreement,ErasureClient,ErasureGraph
 }

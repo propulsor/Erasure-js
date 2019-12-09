@@ -3,20 +3,28 @@
  */
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../../Utils");
-const { Factory, Contracts } = require("../../Base");
+const { NULL_ADDRESS, abiEncodeWithSelector, hexlify, AGREEMENT_TYPE } = require("../Utils");
+const { Factory, Contracts } = require("../Base");
 
-class SimpleGriefing_Factory extends Factory {
+class Agreement_Factory extends Factory {
   constructor({ wallet, provider, network = null }) {
     network = network || "mainnet";
-    super({ contract: Contracts.SimpleGriefing, wallet, network, provider });
+    if (this.type == AGREEMENT_TYPE.COUNTDOWN) {
+      super({ contract: Contracts.CountdownGriefing, wallet, network, provider });
+    } else {
+      super({ contract: Contracts.SimpleGriefing, wallet, network, provider });
+
+    }
   }
   async create({
     staker,
     counterparty,
     ratio,
     ratioType,
-    metadata,
+    countdownLength,
+    metaData,
+    ipfs,
+    graph,
     operator = null,
     salt = null }
   ) {
@@ -25,14 +33,15 @@ class SimpleGriefing_Factory extends Factory {
     }
     let callData = abiEncodeWithSelector(
       "initialize",
-      ["address", "address", "address", "uint256", "uint8", "bytes"],
+      ["address", "address", "address", "uint256", "uint8", "uint256", "bytes"],
       [
         operator || NULL_ADDRESS,
-        ethers.utils.getAddress(staker),
+        ether.utils.getAddress(staker),
         ethers.utils.getAddress(counterparty),
         ethers.utils.bigNumberify(ratio),
         ethers.utils.bigNumberify(ratioType),
-        ethers.utils.keccak256(hexlify(metadata))
+        ethers.utils.bigNumberify(countdownLength),
+        ethers.utils.keccak256(hexlify(metaData))
       ]
     );
     let tx;
@@ -49,9 +58,9 @@ class SimpleGriefing_Factory extends Factory {
       e => e.event == "InstanceCreated"
     );
     assert(createdEvent.args.instance, "No new instance's address found");
-    // let newFeedInstance = new ErasureFeed(createdEvent.address,this.wallet,this.provider)
-    return [confirmedTx, createdEvent.args.instance];
+    const agreement = new Agreement({ address: createdEvent.address, wallet: this.wallet, provider: this.provider, ipfs, graph })
+    return { confirmedTx, agreement };
   }
 }
 
-module.exports = { SimpleGriefing_Factory };
+module.exports = { Agreement_Factory };

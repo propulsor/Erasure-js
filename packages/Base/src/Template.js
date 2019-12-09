@@ -62,6 +62,9 @@ class Template {
   async address(){
     return this.address
   }
+  async contract(){
+    return this.contract
+  }
 
 }
 

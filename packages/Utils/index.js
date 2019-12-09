@@ -80,6 +80,10 @@ const ESCROW_STATUS = {
   isCancelled: 6
 }
 
+const AGREMENT_TYPE={
+  COUNTDOWN:"CountdownGriefing",
+  SIMPLE:"SimpleGriefing"
+}
 
 module.exports = {
   hexlify,
