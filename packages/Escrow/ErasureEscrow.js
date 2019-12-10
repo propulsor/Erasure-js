@@ -171,7 +171,7 @@ class ErasureEscrow extends Template {
    * Deliver key of a purchase to escrow
    * Seller encrypted symkey with buyer's pubkey and upload to  escrow
    */
-  async deliverKey({  symKey, proofHashIpfsPath }) {
+  async deliverKey({  symKey, proofIpfsPath }) {
     const status = await this.status()
     assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
     const buyer = await this.buyer()
@@ -182,11 +182,11 @@ class ErasureEscrow extends Template {
     const encryptedSymkey = crypto.publicEncrypt(buyerPubkey, Buffer.from(symKey))
     const json_selldata = {
       encryptedSymkey,
-      proofHashIpfsPath
+      proofIpfsPath
     }
     const selldataIpfsPath = await onlyHash(json_selldata)
     //send Encrypted symkey to escrow 
-    const confirmedTx = await this.submitData(hashToHex(selldataIpfsPath))
+    const confirmedTx = await this.submitData(selldataIpfsPath)
     const actualIPFSPath = await this.ipfs.addJSON(json_selldata)
     assert.equal(actualIPFSPath, selldataIpfsPath, "ipfs hash for sell data is not consistent")
     return confirmedTx
@@ -195,22 +195,20 @@ class ErasureEscrow extends Template {
    /**
    * Buyer call escrow to get encrypted symkey, decrypt, get encrypted data from ipfs, decrypt, return rawdata
    * If data is verified by sha256 -> call releaseStake for seller
-   * 
-   * @param {escrow instance address} escrowAddress 
+   * @param {String} keypair of buyer used to decrypt symkey //fixme shouldnt pass in raw keypair
    * @return rawData:string
    */
-  async retrieveDataFromSeller({ escrowAddress, keypair }) {
-    const escrow = new CountdownGriefingEscrow({ address: escrowAddress, wallet: this.wallet, provider: this.provider })
-    const status = await escrow.status()
-    const buyer = await escrow.buyer()
+  async retrieveDataFromSeller( keypair ) {
+    const status = await this.status()
+    const buyer = await this.buyer()
     assert.equal(buyer, this.wallet.address, "This wallet is not the buyer of this escrow")
     assert.equal(status, ESCROW_STATUS.isFinalized, "escrow is not finalized")
     //get submitted data from grapth based on the escrowAddress
-    const dataSubmitted = await this.erasureGraph.getDataSubmitted(escrowAddress)
+    const dataSubmitted = await this.erasureGraph.getDataSubmitted(this.address)
     const dataSubmittedIPFS = await this.ipfsMini.catJSON(hexToHash(dataSubmitted))
     encryptedSymkey = dataSubmittedIPFS.encryptedSymkey
-    proofHashIpfsPath = dataSubmittedIPFS.proofHashIpfsPath
-    const proofData = await this.ipfsMini.catJSON(proofHashIpfsPath)
+    proofIpfsPath = dataSubmittedIPFS.proofIpfsPath
+    const proofData = await this.ipfsMini.catJSON(proofIpfsPath)
     //decrypt data with this user's privkey
     const decryptedSymkey = crypto.privateDecrypt(keypair.privateKey, Buffer.from(encryptedSymkey))
     //get path for encrypted data from escrow? //TODO 
@@ -218,7 +216,7 @@ class ErasureEscrow extends Template {
     const encryptedData = await this.ipfsMini.cat(encryptedDataIpfsPath)
     //decrypt data
     const rawData = ErasureHelper.crypto.symmetric.decryptMessage(decryptedSymkey, encryptedData)
-    assert.equal(await onlyHash(rawData), proofData.rawDataHash, "encrypted data is different from raw data")
+    assert.equal(sha256(rawData), proofData.rawDataHash, "encrypted data is different from raw data")
     return rawData
   }
 

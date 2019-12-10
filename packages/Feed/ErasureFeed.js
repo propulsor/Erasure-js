@@ -4,7 +4,7 @@ const { hexlify } = require("../Utils");
 const ErasureHelper = require("@erasure/crypto-ipfs")
 const onlyHash = ErasureHelper.ipfs.onlyHash
 
-class ERasureFeed extends Template {
+class ErasureFeed extends Template {
   /**
    * @param {} feedAddress
    * @param {*} wallet
@@ -16,11 +16,11 @@ class ERasureFeed extends Template {
 
   /**
    * Submit proofHash to add to feed
-   * @param {*} param0 : proof is normally an IPFS hash
+   * @param {string} sha256 of metadata 
    */
   async submitProof(proof) {
     const proofHash = hexlify(proof);
-    let tx = await this.contract.submitHash(proofHash);
+    let tx = await this.contract.submitHash(hexlify(proofHash));
     return await tx.wait();
   }
 
@@ -70,7 +70,6 @@ class ERasureFeed extends Template {
     const encryptedDataIpfsPath = await this.ipfs.add(encryptedData)
     assert.equal(encryptedDataIpfsPath, encryptedDataHash, "encrypted data ipfs hash are not the same")
     const proofHashIpfsPath = await this.ipfs.addJSON(metadata)
-    assert.equal(proofHashIpfsPath, proofHash, "proof hash and ipfs path are not the same")
     return {symKey,confirmedTx}
   }
 
@@ -80,16 +79,9 @@ class ERasureFeed extends Template {
    * //TODO get all posts from graph, check if reveal, if not -> reveal
    */
   async reveal({ symKey, rawData }) {
-    const proofHashHex = await this.graph.getAllPosts(this.address())
-    const proofIpfsHash = hexToHash(proofHashHex)
-    const metadata = await this.ipfs.cat(proofIpfsHash)
-    const symkeyIpfsPath = await onlyHash(symKey)
-    assert.equal(symkeyIpfsPath, metadata.keyHash, "symkey ipfs path is not the same")
-    const rawdataIpfsPath = await onlyHash(rawData)
-    assert.equal(rawdataIpfsPath, metadata.rawDataHash), "raw data ipfs path is not the same")
     const symKeyIpfs = await this.ipfs.add(symKey)
     const rawDataIpfs = await this.ipfs.add(rawData)
-    return [{symKeyIpfs, rawDataIpfs}]
+    return {symKeyIpfs, rawDataIpfs}
   }
   /**
    * get all escrows to transact this feed (from graph)

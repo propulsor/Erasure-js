@@ -5,5 +5,5 @@ const {ErasureAgreement} = require("./Agreement")
 const {ErasureClient} = require("./ErasureClient")
 const {ErasureGraph} = require("./GraphClient")
 module.exports={
-    ErasureFeed,CountdownGriefingEscrow,ErasureAgreement,ErasureClient,ErasureGraph
+    ErasureFeed,ErasureEscrow,ErasureAgreement,ErasureClient,ErasureGraph
 }
