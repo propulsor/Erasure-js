@@ -1,17 +1,9 @@
 const ethers = require("ethers");
+const ipfsHash = require("ipfs-only-hash")
+const ErasureHelper= require("@erasure/crypto-ipfs")
 
+const createIPFShash = (data)=>ErasureHelper.multihash({inputType:'raw',outputType:'b58',input:data})
 
-const hexlify = utf8str =>
-  ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8str));
-
-const createIPFShash = _hash => {
-  const hash = ethers.utils.sha256(ethers.utils.toUtf8Bytes(_hash));
-  const sha2_256 = "0x12"; // uint8
-  const bits256 = ethers.utils.hexlify(32);
-  const multihash = sha2_256 + bits256.substr(2) + hash.substr(2);
-
-  return multihash;
-};
 
 function createSelector(functionName, abiTypes) {
   const joinedTypes = abiTypes.join(",");

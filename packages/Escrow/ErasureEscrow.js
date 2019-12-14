@@ -3,10 +3,9 @@
  */
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { ESCROW_STATUS } = require("../../Utils");
+const { ESCROW_STATUS, createIpfsHash } = require("../../Utils");
 const { Template, Contracts } = require("../../Base");
 const ErasureHelper = require("@erasure/crypto-ipfs")
-const onlyHash = ErasureHelper.ipfs.onlyHash
 
 class ErasureEscrow extends Template {
   constructor(opts) {
@@ -184,7 +183,7 @@ class ErasureEscrow extends Template {
       encryptedSymkey,
       proofIpfsPath
     }
-    const selldataIpfsPath = await onlyHash(json_selldata)
+    const selldataIpfsPath = await createIpfsHash(json_selldata)
     //send Encrypted symkey to escrow 
     const confirmedTx = await this.submitData(selldataIpfsPath)
     const actualIPFSPath = await this.ipfs.addJSON(json_selldata)

@@ -1,8 +1,7 @@
 const { Template, Contracts } = require("../Base");
 const { ethers } = require("ethers");
-const { hexlify } = require("../Utils");
+const { hexlify ,createIPFShash} = require("../Utils");
 const ErasureHelper = require("@erasure/crypto-ipfs")
-const onlyHash = ErasureHelper.ipfs.onlyHash
 
 class ErasureFeed extends Template {
   /**
@@ -50,20 +49,20 @@ class ErasureFeed extends Template {
 
     //create symkey
     const symKey = ErasureHelper.crypto.symmetric.generateKey()
-    const keyHash = await onlyHash(symKey) //ipfs path for symkey (for revealing later)
+    const keyHash = await createIPFShash(symKey) //ipfs path for symkey (for revealing later)
 
     //encrypt file with symkey and post to ipfs
-    const rawDataHash = await onlyHash(rawData) //ipfs path for raw data (for revealing later)
+    const rawDataHash = await createIPFShash(rawData) //ipfs path for raw data (for revealing later)
     const dataEncoded = b64.encode(rawData)
     const encrytpedData = ErasureHelper.crypto.symmetric.encryptMessage(symKey, dataEncoded)
-    const encryptedDataHash = await onlyHash(encrytpedData) //ipfs path for encrypted data
+    const encryptedDataHash = await createIPFShash(encrytpedData) //ipfs path for encrypted data
     const metadata = {
       address: this.wallet.address,
       rawDataHash,
       keyHash,
       encryptedDataHash
     }
-    const proofHash = sha256(metadata) //ipfs hash for metadata
+    const proofHash = await ErasureHelper.multihash({input:metadata, inputType:'raw', outputType:'digest'}) 
     //submit proofHash to Feed
     let confirmedTx = await this.submitProof(proofHash)
     //save encrypted data file and metadata to ipfs
