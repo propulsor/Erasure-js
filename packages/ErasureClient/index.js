@@ -30,22 +30,23 @@ class ErasureClient {
     this.ipfs = new IPFS(ipfsOpts)
     this.graph = new ErasureGraph({ network, uri: graphUri })
     this.factoryOpts = { wallet: this.wallet, provider: this.provider, network: this.network }
-
   }
 
+  
+
   // ==== USER ====//
-  createAndRegisterUser = this.Users_Registry.createAndRegisterUser
-  removeUser = this.Users_Registry.removeUser
-  getAllUsers = this.Users_Registry.getUsers
-  getUsersCount = this.Users_Registry.getUsersCount
-  getPaginatedUsers = this.Users_Registry.getPaginatedUsers
-  getUserData = this.Users_Registry.getUserData
+  async createAndRegisterUser(opts){return this.Users_Registry.createAndRegisterUser(opts)}
+  async removeUser(opts) {return this.Users_Registry.removeUser(opts)}
+  async getAllUsers() {return  this.Users_Registry.getUsers()}
+  async getUsersCount() {return this.Users_Registry.getUsersCount()}
+  async getPaginatedUsers(start,end) {return this.Users_Registry.getPaginatedUsers(start,end)}
+  async getUserData(address) {return  this.Users_Registry.getUserData(address)}
 
 
   //==== FEEDS ====//
-  getAllFeeds = this.Feeds_Registry.getAllFeeds
-  getFeedsCount = this.Feeds_Registry.getFeedsCount
-  getPaginatedFeeds = this.Feeds_Registry.getPaginatedFeeds
+  async getAllFeeds(){return this.Feeds_Registry.getAllFeeds()}
+  async getFeedsCount() {return this.Feeds_Registry.getFeedsCount()}
+  async getPaginatedFeeds(start,end){return this.Feeds_Registry.getPaginatedFeeds(start,end)}
 
 
      /** createFeed
@@ -73,11 +74,11 @@ class ErasureClient {
 
 
   //=== AGREEMENTS ====//
-  getAgreement = this.Agreements_Registry.getAgreement
-  getAgreementsCount = this.Agreements_Registry.getAgreementsCount
-  getAgreementData = this.Agreements_Registry.getAgreementData
-  getAllAgreements = this.Agreements_Registry.getAllAgreements
-  getPaginatedAgreements = this.Agreements_Registry.getPanigatedAgreements
+  async getAgreement(address) {return this.Agreements_Registry.getAgreement(address)}
+  async getAgreementsCount(){return this.Agreements_Registry.getAgreementsCount()}
+  async getAgreementData(address){this.Agreements_Registry.getAgreementData(address)}
+  async getAllAgreements(){return this.Agreements_Registry.getAllAgreements()}
+  async getPaginatedAgreements(start,end){return  this.Agreements_Registry.getPanigatedAgreements(start,end)}
 
   /**
    * Create CountdownGriefing /SimpleGriefing Agreement
@@ -110,10 +111,10 @@ class ErasureClient {
 
   // ==== ESCROW ====//
   //getters
-  getEscrowsCount = this.Escrows_Registry.getEscrowsCount
-  getEscrowData = this.Escrows_Registry.getEscrowData
-  getAllEscrows = this.Escrows_Registry.getAllEscrows
-  getPaginatedEscrows = this.Escrows_Registry.getPaginatedEscrows
+  async getEscrowsCount(){return this.Escrows_Registry.getEscrowsCount()}
+  async getEscrowData(address){return this.Escrows_Registry.getEscrowData(address)}
+  async getAllEscrows(){return this.Escrows_Registry.getAllEscrows()}
+  async getPaginatedEscrows(start,end){return this.Escrows_Registry.getPaginatedEscrows(start,end)}
 
   /**
    * 

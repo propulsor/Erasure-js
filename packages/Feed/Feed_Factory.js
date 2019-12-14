@@ -6,6 +6,7 @@
 const { Factory, Contracts } = require("../Base");
 const { ethers } = require("ethers");
 const assert = require("assert");
+const {ErasureFeed} = require("./ErasureFeed")
 const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../Utils");
 
 /**
@@ -16,14 +17,14 @@ const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../Utils");
 class Feed_Factory extends Factory {
   constructor({ wallet, provider, network = null }) {
     network = network || "mainnet";
-    super({ contract: Contracts.Feed, wallet, network, provider });
+    super({ contract: Contracts.Feed_Factory, wallet, network, provider });
   }
   /**
    * Create New Feed == Deploy new Feed Template instance by Factory
    * Using nonce for new addrss
    * @param {*} param0
    */
-  async create({ proof, metadata, operator = null, salt = null }) {
+  async create({ proof, metadata, operator = null, salt = null ,ipfs,graph}) {
     const proofHash = ethers.utils.sha256(hexlify(proof));
     const feedMetadata = ethers.utils.keccak256(
       ethers.utils.toUtf8Bytes(metadata)
@@ -51,7 +52,7 @@ class Feed_Factory extends Factory {
     );
     try {
       assert(createdEvent.args.instance, "No new instance's address found");
-      let feed = new ErasureFeed({ address: createdEvent.args.instance, wallet: this.wallet, provider: this.provider })
+      let feed = new ErasureFeed({ address: createdEvent.args.instance, wallet: this.wallet, provider: this.provider,ipfs,graph})
       return { confirmedTx, feed };
     } catch (e) {
       return { confirmedTx, error: "Feed creation failed" }

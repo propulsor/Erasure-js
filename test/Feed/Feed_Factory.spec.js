@@ -9,7 +9,7 @@ const {
   provider
 } = require("../utils");
 const { Contracts } = require("../../packages/Base");
-const { Feed_Factory } = require("../../packages/Feed/src/Feed_Factory");
+const { Feed_Factory } = require("../../packages/Feed");
 
 describe("Feed Factory", function() {
   const PROOF = "proof",
@@ -34,7 +34,7 @@ describe("Feed Factory", function() {
       done();
     });
     it("2. Should create new feed WITHOUT salt, WITHOUT operator", async () => {
-      let [tx, newFeedAddress] = await feedFactory.create({
+      let {confirmedTx, feed} = await feedFactory.create({
         proof: PROOF,
         metadata: METADATA
       });
@@ -43,19 +43,18 @@ describe("Feed Factory", function() {
         ["address", "bytes32", "bytes"],
         [NULL_ADDRESS, proofHash, metaDataHash]
       );
-      let newFeedEvent = tx.events.find(
+      let newFeedEvent = confirmedTx.events.find(
         e => e.event == "InstanceCreated",
         "No InstanceCreated event found"
       );
       assert.equal(newFeedEvent.args.callData, callData);
-      let instanceContract = getFeedInstance(newFeedAddress);
-      let actualCreator = await instanceContract.getCreator();
+      let actualCreator = await feed.owner();
       assert.equal(actualCreator, wallet.address);
-      let actualOperator = await instanceContract.getOperator();
+      let actualOperator = await feed.operator();
       assert.equal(actualOperator, NULL_ADDRESS);
     });
     it("3. Should create new feed WITHOUT salt, WITH operator", async () => {
-      let [tx, feedAddress] = await feedFactory.create({
+      let {confirmedTx, feed} = await feedFactory.create({
         proof: PROOF,
         metadata: METADATA,
         operator: operatorWallet.address
@@ -70,19 +69,18 @@ describe("Feed Factory", function() {
           metaDataHash
         ]
       );
-      let newFeedEvent = tx.events.find(
+      let newFeedEvent = confirmedTx.events.find(
         e => e.event == "InstanceCreated",
         "No InstanceCreated event found"
       );
       assert.equal(newFeedEvent.args.callData, callData);
-      let instanceContract = getFeedInstance(feedAddress);
-      let actualCreator = await instanceContract.getCreator();
-      let actualOperator = await instanceContract.getOperator();
+      let actualCreator = await feed.owner();
+      let actualOperator = await feed.operator();
       assert.equal(actualCreator, wallet.address, "wrong creator");
       assert.equal(actualOperator, operatorWallet.address, "wrong operator");
     });
     it("4. Should create new feed WITH salt WITHOUT operator", async () => {
-      let [tx, feedAddress] = await feedFactory.create({
+      let {confirmedTx, feed} = await feedFactory.create({
         proof: PROOF,
         metadata: METADATA,
         salt: SALT
@@ -92,20 +90,19 @@ describe("Feed Factory", function() {
         ["address", "bytes32", "bytes"],
         [NULL_ADDRESS, proofHash, metaDataHash]
       );
-      let newFeedEvent = tx.events.find(
+      let newFeedEvent = confirmedTx.events.find(
         e => e.event == "InstanceCreated",
         "No InstanceCreated event found"
       );
       assert(newFeedEvent.args.instance, "No address for new instance");
       assert.equal(newFeedEvent.args.callData, callData);
-      let instanceContract = getFeedInstance(feedAddress);
-      let actualCreator = await instanceContract.getCreator();
-      let actualOperator = await instanceContract.getOperator();
+      let actualCreator = await feed.owner();
+      let actualOperator = await feed.operator();
       assert.equal(actualCreator, wallet.address, "wrong creator");
       assert.equal(actualOperator, NULL_ADDRESS, "wrong operator");
     });
     it("5. Should create new feed WITH salt WITH operator", async () => {
-      let [tx, feedAddress] = await feedFactory.create({
+      let {confirmedTx, feed} = await feedFactory.create({
         proof: PROOF,
         metadata: METADATA,
         operator: operatorWallet.address,
@@ -116,15 +113,14 @@ describe("Feed Factory", function() {
         ["address", "bytes32", "bytes"],
         [operatorWallet.address, proofHash, metaDataHash]
       );
-      let newFeedEvent = tx.events.find(
+      let newFeedEvent = confirmedTx.events.find(
         e => e.event == "InstanceCreated",
         "No InstanceCreated event found"
       );
       assert(newFeedEvent.args.instance, "No address for new instance");
       assert.equal(newFeedEvent.args.callData, callData);
-      let instanceContract = getFeedInstance(feedAddress);
-      let actualCreator = await instanceContract.getCreator();
-      let actualOperator = await instanceContract.getOperator();
+      let actualCreator = await feed.owner();
+      let actualOperator = await feed.operator();
       assert.equal(actualCreator, wallet.address, "wrong creator");
       assert.equal(actualOperator, operatorWallet.address, "wrong operator");
     });

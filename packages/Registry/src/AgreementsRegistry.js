@@ -4,10 +4,10 @@ class Agreements_Registry extends Registry {
   constructor(provider, network = "mainnet") {
     super(Contracts.Erasure_Agreements, provider, network);
   }
-  getAgreement=this.getInstance
-  getAgreementsCount = this.getInstanceCount
-  getAgreementData=this.getInstanceData
-  getAllAgreements=this.getInstances
-  getPaginatedAgreements=this.getPaginatedInstances
+  async getAgreement(address){return this.getInstance(address)}
+  async getAgreementsCount(){return this.getInstanceCount()}
+  async getAgreementData(address){return this.getInstanceData(address)}
+  async getAllAgreements(){return this.getInstances()}
+  async getPaginatedAgreements(start,end){return this.getPaginatedInstances(start,end)}
 }
 module.exports =  Agreements_Registry 

@@ -3,7 +3,8 @@ const ipfsHash = require("ipfs-only-hash")
 const ErasureHelper= require("@erasure/crypto-ipfs")
 
 const createIPFShash = (data)=>ErasureHelper.multihash({inputType:'raw',outputType:'b58',input:data})
-
+const hexlify = utf8str =>
+   ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8str));
 
 function createSelector(functionName, abiTypes) {
   const joinedTypes = abiTypes.join(",");
@@ -39,6 +40,11 @@ function hexToHash(hex){
   }
   return multihash.toB58String(multihash.fromHexString(hex))
 }
+function b64(data){
+  let buf = Buffer.from(data);
+let encodedData = buf.toString('base64');
+return encodedData
+}
 
 const NULL_ADDRESS = ethers.utils.getAddress(
   "0x0000000000000000000000000000000000000000"
@@ -52,7 +58,7 @@ const RATIO_TYPES = {
   Dec: 2
 }
 
-const AGREMENT_STATUS = {
+const AGREEMENT_STATUS = {
   isTerminated: 2,
   isInCountdown: 1,
   isInitialized: 0
@@ -72,7 +78,7 @@ const ESCROW_STATUS = {
   isCancelled: 6
 }
 
-const AGREMENT_TYPE={
+const AGREEMENT_TYPE={
   COUNTDOWN:"CountdownGriefing",
   SIMPLE:"SimpleGriefing"
 }
@@ -82,7 +88,8 @@ module.exports = {
   createSelector,
   createIPFShash,
   abiEncodeWithSelector,
+  b64,
   NULL_ADDRESS,
   RATIO_TYPES,
-  ESCROW_STATUS
+  ESCROW_STATUS,AGREEMENT_STATUS,AGREEMENT_TYPE
 };

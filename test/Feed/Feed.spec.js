@@ -11,7 +11,10 @@ const {
   provider
 } = require("../utils");
 const { Contracts } = require("../../packages/Base");
-const { Feed,Feed_Factory } = require("../../packages/Feed/");
+const { ErasureFeed,Feed_Factory } = require("../../packages/Feed");
+const IPFS = require("ipfs-mini")
+const ErasureGraph = require("../../packages/GraphClient")
+const ErasureHelper = require("@erasure/crypto-ipfs")
 
 
 describe("Feed", function() {
@@ -33,7 +36,7 @@ describe("Feed", function() {
     ethers.utils.toUtf8Bytes("newFeedMetadata")
   );
   const proofHash = ethers.utils.sha256(hexlify(PROOF));
-  let TestFeed,TestOperatorFeed,feedFactory,feedAddress
+  let TestOperatorFeed,feedFactory, TestFeed, ifpfs,graph
   describe("Feed Tests", function() {
     /**
      * Create New feed from factory as requirements
@@ -44,39 +47,32 @@ describe("Feed", function() {
         provider,
         network : "ganache"}
       );
-      [tx,feedAddress] = await feedFactory.create({proof:PROOF,metadata:METADATA,operator:operatorWallet.address})
-    });
-    it("1.Should create new Feed with class method", async() => {
-      let feed =await  Feed.createFeed(
-        {proof:PROOF,metadata:METADATA,wallet:wallet,provider:provider,network:"ganache",operator:operatorWallet.address}
-      );
-      let actualCreator =await feed.getCreator()
-      let actualOperator = await feed.getOperator()
-
-      assert.equal(actualCreator,wallet.address)
-      assert.equal(actualOperator,operatorWallet.address)
+      const {confirmedTx,feed} = await feedFactory.create({proof:PROOF,metadata:METADATA,operator:operatorWallet.address})
+      TestFeed = feed
+      tx = confirmedTx
+      ipfs = new IPFS({host:"ipfs.infura.io",port:"5001",protocol:"https"})
+      graph = new ErasureGraph({network:"ganache",uri:"https://api.thegraph.com/subgraphs/name/jgeary/erasure-rinkeby120"})
     });
     it("2.Should initilize ErasureFeed class with existed address",async ()=>{
-      TestFeed = new Feed({address:feedAddress,wallet,provider})
-      let actualCreator =await TestFeed.getCreator()
-      let actualOperator = await TestFeed.getOperator()      
+      TestFeed = new ErasureFeed({address:TestFeed.address,wallet,provider,ipfs,graph})
+      let actualCreator =await TestFeed.owner()
+      let actualOperator = await TestFeed.operator()      
       assert.equal(actualCreator,wallet.address)
       assert.equal(actualOperator,operatorWallet.address)
     });
     it("3.Should initilize ErasureFeed class with existed address from operator wallet",async ()=>{
-      TestOperatorFeed = new Feed({address:feedAddress,wallet:operatorWallet,provider})
-      let actualCreator =await TestOperatorFeed.getCreator()
-      let actualOperator = await TestOperatorFeed.getOperator()      
+      TestOperatorFeed = new ErasureFeed({address:TestFeed.address,wallet:operatorWallet,provider,ipfs,graph})
+      let actualCreator =await TestOperatorFeed.owner()
+      let actualOperator = await TestOperatorFeed.operator()      
       assert.equal(actualCreator,wallet.address)
       assert.equal(actualOperator,operatorWallet.address)
     });
 
-    it("4. Operator and creator should be able to submit hash for feed", async () => {
-      let hashtx = await TestFeed.submitProof(PROOF);
-      const proofHash = ethers.utils.keccak256(hexlify(PROOF));
-      let submitProofEvent = hashtx.events.find(e=>e.event=="HashSubmitted")
+    it("4. Operator and creator should be able to create post for feed", async () => {
+      let {symKey,confirmedTx} = await TestFeed.createPost(PROOF);
+      let submitProofEvent = confirmedTx.events.find(e=>e.event=="HashSubmitted")
       assert(submitProofEvent.args.hash,"no hash found in submitHash event")
-      assert.equal(submitProofEvent.args.hash,proofHash)
+      assert(symKey,"No symkey found")
 
     });
     it("5. Creator should be able to set Metadata", async () => {

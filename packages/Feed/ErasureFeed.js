@@ -1,7 +1,8 @@
 const { Template, Contracts } = require("../Base");
 const { ethers } = require("ethers");
-const { hexlify ,createIPFShash} = require("../Utils");
+const { hexlify ,createIPFShash,b64} = require("../Utils");
 const ErasureHelper = require("@erasure/crypto-ipfs")
+const assert = require("assert")
 
 class ErasureFeed extends Template {
   /**
@@ -18,8 +19,7 @@ class ErasureFeed extends Template {
    * @param {string} sha256 of metadata 
    */
   async submitProof(proof) {
-    const proofHash = hexlify(proof);
-    let tx = await this.contract.submitHash(hexlify(proofHash));
+    let tx = await this.contract.submitHash(proof);
     return await tx.wait();
   }
 
@@ -46,23 +46,22 @@ class ErasureFeed extends Template {
    */
 
   async createPost( rawData) {
-
     //create symkey
     const symKey = ErasureHelper.crypto.symmetric.generateKey()
     const keyHash = await createIPFShash(symKey) //ipfs path for symkey (for revealing later)
 
     //encrypt file with symkey and post to ipfs
     const rawDataHash = await createIPFShash(rawData) //ipfs path for raw data (for revealing later)
-    const dataEncoded = b64.encode(rawData)
-    const encrytpedData = ErasureHelper.crypto.symmetric.encryptMessage(symKey, dataEncoded)
-    const encryptedDataHash = await createIPFShash(encrytpedData) //ipfs path for encrypted data
+    const dataEncoded = b64(rawData)
+    const encryptedData = ErasureHelper.crypto.symmetric.encryptMessage(symKey, dataEncoded)
+    const encryptedDataHash = await createIPFShash(encryptedData) //ipfs path for encrypted data
     const metadata = {
       address: this.wallet.address,
       rawDataHash,
       keyHash,
       encryptedDataHash
     }
-    const proofHash = await ErasureHelper.multihash({input:metadata, inputType:'raw', outputType:'digest'}) 
+    const proofHash = await ErasureHelper.multihash({input:JSON.stringify(metadata), inputType:'raw', outputType:'digest'}) 
     //submit proofHash to Feed
     let confirmedTx = await this.submitProof(proofHash)
     //save encrypted data file and metadata to ipfs
@@ -70,6 +69,7 @@ class ErasureFeed extends Template {
     assert.equal(encryptedDataIpfsPath, encryptedDataHash, "encrypted data ipfs hash are not the same")
     const proofHashIpfsPath = await this.ipfs.addJSON(metadata)
     return {symKey,confirmedTx}
+
   }
 
 /**

@@ -4,6 +4,9 @@ const {ethers} = require("ethers")
 const assert = require("assert")
 const {stakerWallet,counterpartyWallet,network,provider,wallet} = require("./utils")
 const delay = (ms) => new Promise(_ => setTimeout(_, ms));
+const IPFS = require("ipfs-mini")
+const ErasureGraph = require("../packages/GraphClient")
+const ErasureHelper = require("@erasure/crypto-ipfs")
 
 before(async () => {
   const [deployer,contracts] = await deploy("ganache", Contracts);
@@ -18,6 +21,8 @@ before(async () => {
   const actualBalance = await NMRcontract.balanceOf(stakerWallet.address)
   assert.equal(ethers.utils.formatEther(actualBalance),"1000.0")
 //   NMRcontract.from(counterpartyWallet.address).mintMockTokens(counterpartyWallet.address,balance)
+    ipfs = new IPFS({host:"ipfs.infura.io",port:"5001",protocol:"https"})
+      graph = new ErasureGraph({network:"ganache",uri:"https://api.thegraph.com/subgraphs/name/jgeary/erasure-rinkeby120"})
 });
 
 

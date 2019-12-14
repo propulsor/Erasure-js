@@ -1,7 +1,7 @@
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { abiEncodeWithSelector, NULL_ADDRESS, hexlify } = require("../../Utils");
-const { Template, Contracts } = require("../../Base");
+const { abiEncodeWithSelector, NULL_ADDRESS, hexlify } = require("../Utils");
+const { Factory, Contracts } = require("../Base");
 
 class Escrow_Factory extends Factory {
     constructor({ wallet, provider, network = "mainnet" }) {
@@ -31,7 +31,7 @@ class Escrow_Factory extends Factory {
         let createdEvent = confirmedTx.events.find(e => e.event == "InstanceCreated")
         try {
             assert(createdEvent.args.instance, "No new address of new instance found")
-            const escrow = new CountdownGriefingEscrow({ address: createdEvent.args.instance, wallet: this.wallet, provider: this.provider })
+            const escrow = new CountdownGriefingEscrow({ address: createdEvent.args.instance, wallet: this.wallet, provider: this.provider,ipfs,graph })
             return { confirmedTx, escrow }
         } catch (e) {
             return { confirmedTx, error: "Escrow creation failed" }

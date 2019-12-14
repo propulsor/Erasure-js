@@ -1,4 +1,6 @@
 const { ethers } = require("ethers");
+const IPFS = require("ipfs-mini")
+const ErasureGraph = require("../../GraphClient")
 
 class Template {
   constructor({contract, address, wallet, provider,ipfs,graph}) {
@@ -59,9 +61,7 @@ class Template {
   async owner() {
     return await this.contract.getCreator();
   }
-  async address(){
-    return this.address
-  }
+  
   async contract(){
     return this.contract
   }

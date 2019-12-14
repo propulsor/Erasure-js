@@ -3,8 +3,8 @@
  */
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { ESCROW_STATUS, createIpfsHash } = require("../../Utils");
-const { Template, Contracts } = require("../../Base");
+const { ESCROW_STATUS, createIpfsHash } = require("../Utils");
+const { Template, Contracts } = require("../Base");
 const ErasureHelper = require("@erasure/crypto-ipfs")
 
 class ErasureEscrow extends Template {

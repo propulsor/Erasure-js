@@ -5,11 +5,12 @@ const { ethers } = require("ethers");
 const assert = require("assert");
 const { NULL_ADDRESS, abiEncodeWithSelector, hexlify, AGREEMENT_TYPE } = require("../Utils");
 const { Factory, Contracts } = require("../Base");
+const {ErasureAgreement} = require("./Agreement")
 
 class Agreement_Factory extends Factory {
-  constructor({ wallet, provider, network = null }) {
+  constructor({ wallet, provider, network = null,type }) {
     network = network || "mainnet";
-    if (this.type == AGREEMENT_TYPE.COUNTDOWN) {
+    if (!type || type == AGREEMENT_TYPE.COUNTDOWN) {
       super({ contract: Contracts.CountdownGriefing, wallet, network, provider });
     } else {
       super({ contract: Contracts.SimpleGriefing, wallet, network, provider });
@@ -21,7 +22,7 @@ class Agreement_Factory extends Factory {
     counterparty,
     ratio,
     ratioType,
-    countDown=null,
+    countdown=null,
     metaData,
     ipfs,
     graph,
@@ -32,13 +33,13 @@ class Agreement_Factory extends Factory {
       operator = ethers.utils.getAddress(operator);
     }
     let callData
-    if(!countDown){//simplegriefing
+    if(!countdown){//simplegriefing
       callData = abiEncodeWithSelector(
         "initialize",
         ["address", "address", "address", "uint256", "uint8", "bytes"],
         [
           operator || NULL_ADDRESS,
-          ether.utils.getAddress(staker),
+          ethers.utils.getAddress(staker),
           ethers.utils.getAddress(counterparty),
           ethers.utils.bigNumberify(ratio),
           ethers.utils.bigNumberify(ratioType),
@@ -52,11 +53,11 @@ class Agreement_Factory extends Factory {
         ["address", "address", "address", "uint256", "uint8", "uint256", "bytes"],
         [
           operator || NULL_ADDRESS,
-          ether.utils.getAddress(staker),
+          ethers.utils.getAddress(staker),
           ethers.utils.getAddress(counterparty),
           ethers.utils.bigNumberify(ratio),
           ethers.utils.bigNumberify(ratioType),
-          ethers.utils.bigNumberify(countDown),
+          ethers.utils.bigNumberify(countdown),
           ethers.utils.keccak256(hexlify(metaData))
         ]
       );
@@ -75,7 +76,7 @@ class Agreement_Factory extends Factory {
       e => e.event == "InstanceCreated"
     );
     assert(createdEvent.args.instance, "No new instance's address found");
-    const agreement = new Agreement({ address: createdEvent.address, wallet: this.wallet, provider: this.provider, ipfs, graph })
+    const agreement = new ErasureAgreement({ address: createdEvent.args.instance, wallet: this.wallet, provider: this.provider, ipfs, graph })
     return { confirmedTx, agreement };
   }
 }

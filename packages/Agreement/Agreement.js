@@ -9,13 +9,10 @@ const { Template, Contracts } = require("../Base");
 class ErasureAgreement extends Template {
 
   constructor(opts) {
-    if (opts.countDown) {
-      this.type = AGREEMENT_TYPE.COUNTDOWN
-
-    } else {
-      this.type = AGREEMENT_TYPE.SIMPLE
-    }
-    super({ type: this.type, ...opts });
+    if(!opts.type || opts.type==AGREEMENT_TYPE.COUNTDOWN)
+    super({ contract:Contracts.CountdownGriefing, ...opts });
+    else
+    super({contract : Contracts.SimpleGriefing,...opts})
 
 
   }
@@ -146,7 +143,7 @@ class ErasureAgreement extends Template {
     return await this.contract.isStaker(ethers.utils.getAddress(caller));
   }
   async counterparty() {
-    return await this.contract.getCounterParty();
+    return await this.contract.getCounterparty();
   }
   async isCounterparty(caller) {
     return await this.contract.isCounterparty(ethers.utils.getAddress(caller));

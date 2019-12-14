@@ -4,10 +4,10 @@ class Escrows_Registry extends Registry {
   constructor(provider, network = "mainnet") {
     super(Contracts.Erasure_Escrows, provider, network);
   }
-  getEscrow=this.getInstance
-  getEscrowsCount = this.getInstanceCount
-  getEscrowData=this.getInstanceData
-  getAllEscrows=this.getInstances
-  getPaginatedEscrows=this.getPaginatedInstances
+  async getEscrow(address){return this.getInstance(address)}
+  async getEscrowsCount(){return this.getInstanceCount()}
+  async getEscrowData(address){return this.getInstanceData(address)}
+  async getAllEscrows(){return this.getInstances()}
+  async getPaginatedEscrows(start,end){return this.getPaginatedInstances(start,end)}
 }
 module.exports = Escrows_Registry 
