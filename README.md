@@ -19,6 +19,22 @@ const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,Erasu
 - `ipfs` : Default = infura node, format : `{host:"",port:"",protocol:"https"} `
 - `network` (optional) : only used in development env
 - `graph` : default to ErasureGraph of provider's network, can passed in custom local graph for development
+
+
+
+# Contents
+- [Erasure Client](#erasureclient)
+- [Erasure User](#erasureuser)
+- [Erasure Template](#template)
+- [Erasure Feed](#erasurefeed)
+- [Erasure Agreement](#erasureagreement)
+- [Erasure Escrow](#erasureescrow)
+- [Erasure Graph Client](#erasure-graph)
+- [In development](#in-development)
+
+
+<hr/>
+
 ## ErasureClient
 ```
 const client = new ErasureClient({wallet,provider,ipfs=null:{host:string,post:string,protocol:string},graph=null:string})
@@ -84,7 +100,8 @@ await client.getUserData(address)
 - `await operator()`
 - `address` - instance's address
 - `contract` - Contract object 
-### Feed (extends Template)
+### ErasureFeed 
+- (extends Template)
 ```
 const feed = new ErasureFeed({address,wallet,provider,ipfs,graph})
 ```
@@ -201,7 +218,7 @@ const erasureGraph = new ErasureGraph(network="mainnet")
     + `ganache` for local node (require having a graph node locally and run deploy graph)
 - [Queries available](https://github.com/propulsor/Erasure-sdk/blob/master/packages/GraphClient/Queries.js)
 
-### In development : 
+### In development
 ### Listening to subscriptions 
 - If no `events` array is passed in, client will listen to all events
 ```
