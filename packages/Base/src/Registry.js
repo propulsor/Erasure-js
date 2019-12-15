@@ -7,11 +7,11 @@ const { ethers } = require("ethers");
  * Read only class for getting data from registries
  */
 class Registry {
-  constructor(contractObj, provider, network = "mainnet") {
+  constructor({contract, provider, network = "mainnet"}) {
     this.provider = provider;
     this.contract = new ethers.Contract(
-      contractObj[network].address,
-      contractObj.artifact.abi,
+      contract[network].address,
+      contract.artifact.abi,
       provider
     );
   }
@@ -20,7 +20,7 @@ class Registry {
     return await this.contract.getInstanceType();
   }
   async getInstanceCount() {
-    return await this.contract.getInstanctCount();
+    return await this.contract.getInstanceCount();
   }
   async getInstance(index) {
     return await this.contract.getInstance(ethers.utils.bigNumberify(index));

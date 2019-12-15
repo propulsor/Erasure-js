@@ -15,19 +15,18 @@ const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../Utils");
  * listen to Feeds and Posts related event
  */
 class Feed_Factory extends Factory {
-  constructor({ wallet, provider, network = null }) {
-    network = network || "mainnet";
-    super({ contract: Contracts.Feed_Factory, wallet, network, provider });
+  constructor({ wallet, provider, network = "mainnet" }) {
+    super({ contract: Contracts.Feed, wallet, network, provider });
   }
   /**
    * Create New Feed == Deploy new Feed Template instance by Factory
    * Using nonce for new addrss
    * @param {*} param0
    */
-  async create({ proof, metadata, operator = null, salt = null ,ipfs,graph}) {
+  async create({ proof, metaData, operator = null, salt = null ,ipfs,graph}) {
     const proofHash = ethers.utils.sha256(hexlify(proof));
-    const feedMetadata = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes(metadata)
+    const feedmetaData = ethers.utils.keccak256(
+      ethers.utils.toUtf8Bytes(metaData)
     );
     if (operator) {
       operator = ethers.utils.getAddress(operator);
@@ -35,7 +34,7 @@ class Feed_Factory extends Factory {
     let callData = abiEncodeWithSelector(
       "initialize",
       ["address", "bytes32", "bytes"],
-      [operator || NULL_ADDRESS, proofHash, feedMetadata]
+      [operator || NULL_ADDRESS, proofHash, feedmetaData]
     );
     let tx;
     if (salt) {

@@ -33,6 +33,7 @@ const deploy = async (network, c) => {
   await deployRegistry("Erasure_Escrows");
   await deployRegistry("Erasure_Agreements");
   await deployRegistry("Erasure_Posts");
+  await deployRegistry("Erasure_Users");
 
   await deployNMR()
 
@@ -44,6 +45,7 @@ const deploy = async (network, c) => {
 
   // Erasure_Escrows
   await getRegistry("Erasure_Escrows");
+
 
 
   // Feed

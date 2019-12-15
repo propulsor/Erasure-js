@@ -24,7 +24,7 @@ describe("Agreements", function() {
     network = "ganache",
     ratio = 2,
     ratioType = RATIO_TYPES.Dec,
-    metaData = "metadata",
+    metaData = "metaData",
     operator=operatorWallet.address
     countdown =10
     let testAgreement,agreementFactory, ipfs,graph
@@ -40,7 +40,6 @@ describe("Agreements", function() {
         ratio,
         ratioType,
         metaData,
-        wallet,
         countdown,
         provider,
         network,

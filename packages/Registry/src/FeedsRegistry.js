@@ -1,8 +1,8 @@
 const { Registry, Contracts } = require("../../Base");
 
 class Feeds_Registry extends Registry {
-  constructor(provider, network = "mainnet") {
-    super(Contracts.Erasure_Feeds, provider, network);
+  constructor({provider, network = "mainnet"}) {
+    super({contract:Contracts.Erasure_Posts, provider, network});
   }
  async getFeed(address){return this.getInstance(address)}
  async getFeedsCount (){return this.getInstanceCount()}

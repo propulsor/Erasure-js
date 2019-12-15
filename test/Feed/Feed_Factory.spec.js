@@ -13,7 +13,7 @@ const { Feed_Factory } = require("../../packages/Feed");
 
 describe("Feed Factory", function() {
   const PROOF = "proof",
-    METADATA = "metadata",
+    METADATA = "metaData",
     SALT = "salt";
   const proofHash = ethers.utils.sha256(hexlify(PROOF));
   const metaDataHash = ethers.utils.keccak256(
@@ -36,7 +36,7 @@ describe("Feed Factory", function() {
     it("2. Should create new feed WITHOUT salt, WITHOUT operator", async () => {
       let {confirmedTx, feed} = await feedFactory.create({
         proof: PROOF,
-        metadata: METADATA
+        metaData: METADATA
       });
       let callData = abiEncodeWithSelector(
         "initialize",
@@ -56,7 +56,7 @@ describe("Feed Factory", function() {
     it("3. Should create new feed WITHOUT salt, WITH operator", async () => {
       let {confirmedTx, feed} = await feedFactory.create({
         proof: PROOF,
-        metadata: METADATA,
+        metaData: METADATA,
         operator: operatorWallet.address
       });
 
@@ -82,7 +82,7 @@ describe("Feed Factory", function() {
     it("4. Should create new feed WITH salt WITHOUT operator", async () => {
       let {confirmedTx, feed} = await feedFactory.create({
         proof: PROOF,
-        metadata: METADATA,
+        metaData: METADATA,
         salt: SALT
       });
       let callData = abiEncodeWithSelector(
@@ -104,7 +104,7 @@ describe("Feed Factory", function() {
     it("5. Should create new feed WITH salt WITH operator", async () => {
       let {confirmedTx, feed} = await feedFactory.create({
         proof: PROOF,
-        metadata: METADATA,
+        metaData: METADATA,
         operator: operatorWallet.address,
         salt: SALT + "1"
       });

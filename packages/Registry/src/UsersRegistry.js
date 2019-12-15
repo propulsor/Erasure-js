@@ -6,15 +6,16 @@ const assert = require("assert");
  * Erasure_Users has its own methods and doesnt extend Registry class
  */
 class Users_Registry {
-  constructor({ wallet = null, provider, network = null }) {
-    this.wallet = wallet || ethers.Wallet.createRandom();
+  constructor({ wallet, provider, network = "mainnet" }) {
+    this.wallet = wallet;
     this.provider = provider;
-    this.network = network || "mainnet";
+    this.network = network;
     this.contract = new ethers.Contract(
       Contracts.Erasure_Users[network].address,
       Contracts.Erasure_Users.artifact.abi,
       provider
     );
+    console.log("contract address : ",      Contracts.Erasure_Users[network].address    )
     this.contract.connect(wallet);
   }
 
@@ -52,15 +53,16 @@ class Users_Registry {
   /**
    * Get all users from registry
    */
-  static async getUsers() {
+   async getUsers() {
     return await this.contract.getUsers();
   }
 
   /**
    * Get total users count
    */
-  static async getUsersCount() {
-    return await this.contract.getUserCount();
+   async getUsersCount() {
+    const userCount =  await this.contract.getUserCount();
+    return userCount.toString()
   }
 
   /**
@@ -69,7 +71,7 @@ class Users_Registry {
    * @param {end index} end
    */
 
-  static async getPaginatedUsers(start, end) {
+   async getPaginatedUsers(start, end) {
     return await this.contract.getPaginatedUsers(
       ethers.utils.bigNumberify(start),
       ethers.utils.bigNumberify(end)

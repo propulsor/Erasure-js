@@ -75,6 +75,15 @@ await erasureUser.removeUser()
 ```
 await client.getUserData(address)
 ```
+### Template 
+#### Methods: 
+- `await owner()`
+- `await setMetadata(data)`
+- `await denounceOperator()`
+- `await transferOperator(address)`
+- `await operator()`
+- `address` - instance's address
+- `contract` - Contract object 
 ### Feed (extends Template)
 ```
 const feed = new ErasureFeed({address,wallet,provider,ipfs,graph})
@@ -93,7 +102,7 @@ await feed.createPost(rawData)
             symkeyIpfsHash
             encryptedIpfsHash
         }
-        4. Upload metadata's ipfs hash to feeds as proofhash
+        4. Upload metadata's multihash digest form to feeds as proofhash
         5. Upload metadata and encryptedData to IPFS
 
 - `await feed.reveal()` : Reveal all posts  
@@ -105,7 +114,7 @@ await feed.createPost(rawData)
 
 #### Getters
 - Get status of feed (if revealed) : `await feed.status()`
-- [Template Methods]()
+- [Template Methods](#template)
 
 ### ErasurePost : 
 ```
@@ -125,8 +134,8 @@ const success:bool = await post.reveal({symKey})
 - `await post.offerAsOperator()` : Create escrow as operator
 #### Getters:
 - `await post.status()` : Get status if revealed
-- `post.owner()`
-- `post.proofHash()`
+- `await post.owner()`
+- `await post.proofHash()`
 - `await post.getEscrows()` : Get all Escrows that transact this post
 
 ### ErasureEscrow : 
@@ -142,7 +151,7 @@ const escrow = new ErasureEscrow({address,wallet,provider,ipfs,graph})
     + How it works:
         1. Get dataSubmitted of this escrow from the graph
         2. Decrypt data submitted -> symkey
-        3. Get Metadata( ipfs path of metadata) from the escrow
+        3. Get Metadata( multihash digest form of metadata) from the escrow
         4. Get metadata from IPfS
         5. Get encrypted data from metadata.encryptedDataHash
         6. Decrypt data with symKey
@@ -159,6 +168,7 @@ const escrow = new ErasureEscrow({address,wallet,provider,ipfs,graph})
 #### GETTERS
 - `await escrow.getAgreement()` : Get ErasureAgreement obj of this escrow
 - `await escrow.buyer()`
+- `await escrow.owner()`
 - `await escrow.seller()`
 - `await escrow.status()`
 - `await escrow.data()`
@@ -168,10 +178,20 @@ const escrow = new ErasureEscrow({address,wallet,provider,ipfs,graph})
 const agreement = new ErasureAgreement({address,wallet,provider,ipfs,graph})
 ```
 #### METHODS
-//TODO
+- `await agreement.reward(amount)`
+- `await agreement.punish(amount)`
+- `await agreement.releaseStake()`
+- `await agreement.timeout()`
+- `await agreement.cancel()`
+- `await agreement.retrieveStake()` (countdown)
 #### GETTERS
-//TODO
-## ErasureGraph
+- `await agreement.staker()`
+- `await agreement.counterparty()`
+- `await agreement.owner()`
+- `await agreement.status()`
+- `await escrow.data()`
+
+## Erasure Graph
 ```
 const {ErasureGraph} = require("erasureJs)
 const erasureGraph = new ErasureGraph(network="mainnet") 
@@ -179,6 +199,9 @@ const erasureGraph = new ErasureGraph(network="mainnet")
 - Network : 
     + `mainnet` or `rinkery` for accessing Erasure graph public node
     + `ganache` for local node (require having a graph node locally and run deploy graph)
+- [Queries available](https://github.com/propulsor/Erasure-sdk/blob/master/packages/GraphClient/Queries.js)
+
+### In development : 
 ### Listening to subscriptions 
 - If no `events` array is passed in, client will listen to all events
 ```
@@ -196,5 +219,6 @@ COMING SOON : Details of all queries available
 # Development
 
 - `yarn`
+- `yarn ganache`
 - `yarn test`
 

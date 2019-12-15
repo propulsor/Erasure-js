@@ -22,7 +22,7 @@ before(async () => {
   assert.equal(ethers.utils.formatEther(actualBalance),"1000.0")
 //   NMRcontract.from(counterpartyWallet.address).mintMockTokens(counterpartyWallet.address,balance)
     ipfs = new IPFS({host:"ipfs.infura.io",port:"5001",protocol:"https"})
-      graph = new ErasureGraph({network:"ganache",uri:"https://api.thegraph.com/subgraphs/name/jgeary/erasure-rinkeby120"})
+      graph = new ErasureGraph({network:"rinkery",uri:"https://api.thegraph.com/subgraphs/name/jgeary/erasure-rinkeby120"})
 });
 
 

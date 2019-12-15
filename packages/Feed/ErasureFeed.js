@@ -16,7 +16,7 @@ class ErasureFeed extends Template {
 
   /**
    * Submit proofHash to add to feed
-   * @param {string} sha256 of metadata 
+   * @param {string} sha256 of metaData 
    */
   async submitProof(proof) {
     let tx = await this.contract.submitHash(proof);
@@ -24,7 +24,7 @@ class ErasureFeed extends Template {
   }
 
   /**
-   *Override setMetadata method because Feed creator can also set metadata
+   *Override setMetadata method because Feed creator can also set metaData
    * @param {*} data
    */
   async setMetadata(data) {
@@ -37,7 +37,7 @@ class ErasureFeed extends Template {
    * 1. Create symkey
    * 2. Encrypt data with symkey
    * 3. Create MetaData of ipfs hash of data,encryptedData,key
-   * 4. create ipfs hash of metadata and push hash to feed
+   * 4. create ipfs hash of metaData and push hash to feed
    * 5. push encryptedData and proofHash to ipfs
    * @param {raw data} rawData 
    * @param {any msg to sign } msg 
@@ -55,26 +55,26 @@ class ErasureFeed extends Template {
     const dataEncoded = b64(rawData)
     const encryptedData = ErasureHelper.crypto.symmetric.encryptMessage(symKey, dataEncoded)
     const encryptedDataHash = await createIPFShash(encryptedData) //ipfs path for encrypted data
-    const metadata = {
+    const metaData = {
       address: this.wallet.address,
       rawDataHash,
       keyHash,
       encryptedDataHash
     }
-    const proofHash = await ErasureHelper.multihash({input:JSON.stringify(metadata), inputType:'raw', outputType:'digest'}) 
+    const proofHash = await ErasureHelper.multihash({input:JSON.stringify(metaData), inputType:'raw', outputType:'digest'}) 
     //submit proofHash to Feed
     let confirmedTx = await this.submitProof(proofHash)
-    //save encrypted data file and metadata to ipfs
+    //save encrypted data file and metaData to ipfs
     const encryptedDataIpfsPath = await this.ipfs.add(encryptedData)
     assert.equal(encryptedDataIpfsPath, encryptedDataHash, "encrypted data ipfs hash are not the same")
-    const proofHashIpfsPath = await this.ipfs.addJSON(metadata)
+    const proofHashIpfsPath = await this.ipfs.addJSON(metaData)
     return {symKey,confirmedTx}
 
   }
 
 /**
    * Reveal all posts
-   * @return Array of ipfs path to keys and metadata
+   * @return Array of ipfs path to keys and metaData
    * //TODO get all posts from graph, check if reveal, if not -> reveal
    */
   async reveal({ symKey, rawData }) {
@@ -93,7 +93,7 @@ class ErasureFeed extends Template {
   /**
   * Create a new CountdownGriefingEscrow as seller and deposit stake
      * - only called by feed owner
-     * - add feed address to metadata
+     * - add feed address to metaData
      * - add feed owner as staker
      *
      * @param {Object} config - configuration for escrow
@@ -108,11 +108,11 @@ class ErasureFeed extends Template {
      * @returns {Promise}  createTx : confirmed receipts of escrow creation tranaction
      * @returns {Promise}  createTx : confirmed receipts of depositing stake tranaction
    */
-  async offerSell({stakeAmount,paymentAmount,ratio,ratioType,escrowCountdown,buyer=NULL_ADDRESS}){
+  async offerSell({stakeAmount,paymentAmount,ratio,ratioType,countdown,buyer=NULL_ADDRESS}){
     const owner = await this.owner()
     assert.equal(this.wallet.address,owner,"Only feed owner can offer sell")
     const factory = new CountdownGriefingEscrow_Factory({wallet:this.wallet,provider:this.provider})
-    const [createTx,escrow]= await factory.create({seller:owner,stakeAmount,paymentAmount,ratio,ratioType,escrowCountdown,buyer})
+    const [createTx,escrow]= await factory.create({seller:owner,stakeAmount,paymentAmount,ratio,ratioType,countdown,buyer})
     const sTx = await escrow.depositStake(stakeAmount)
     const stakeTx = await stakeTx.wait()
     return {createTx,stakeTx,escrow}
@@ -120,7 +120,7 @@ class ErasureFeed extends Template {
 
     /**
   * Create a new CountdownGriefingEscrow sa buyer and deposit payment
-     * - add feed address to metadata
+     * - add feed address to metaData
      * - add feed owner as staker
      *
      * @param {Object} config - configuration for escrow

@@ -9,6 +9,8 @@ cp test/etherlime-setup.json node_modules/etherlime-config/ganacheSetup.json
 
 yarn run ganache > ganache.log &
 
+sleep 3
+
 OUTPUT="$(yarn run test_mocha)"
 
 echo -e "$OUTPUT"

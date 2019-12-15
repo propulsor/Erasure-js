@@ -19,8 +19,8 @@ class Template {
     this.graph=graph
   }
   /**
-   * set metadata
-   * default is only operator can set metadata
+   * set metaData
+   * default is only operator can set metaData
    * @param {*} data
    */
   async setMetadata(data) {
@@ -62,9 +62,6 @@ class Template {
     return await this.contract.getCreator();
   }
   
-  async contract(){
-    return this.contract
-  }
 
 }
 

@@ -1,8 +1,8 @@
 const { Registry, Contracts } = require("../../Base");
 
 class Escrows_Registry extends Registry {
-  constructor(provider, network = "mainnet") {
-    super(Contracts.Erasure_Escrows, provider, network);
+  constructor({provider, network = "mainnet"}) {
+    super({contract:Contracts.Erasure_Escrows, provider, network});
   }
   async getEscrow(address){return this.getInstance(address)}
   async getEscrowsCount(){return this.getInstanceCount()}

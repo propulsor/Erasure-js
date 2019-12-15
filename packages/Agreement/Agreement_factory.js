@@ -8,8 +8,7 @@ const { Factory, Contracts } = require("../Base");
 const {ErasureAgreement} = require("./Agreement")
 
 class Agreement_Factory extends Factory {
-  constructor({ wallet, provider, network = null,type }) {
-    network = network || "mainnet";
+  constructor({ wallet, provider, network = "mainnet",type }) {
     if (!type || type == AGREEMENT_TYPE.COUNTDOWN) {
       super({ contract: Contracts.CountdownGriefing, wallet, network, provider });
     } else {
