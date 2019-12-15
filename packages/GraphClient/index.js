@@ -72,19 +72,51 @@ class ErasureGraph {
      * Get Data Submitted of an escrow
      * @param {*} escrowAddress 
      */
-    async getDataSubmitted(escrowAddress) { }
+    async getDataSubmitted(escrowAddress) { 
+        query = `query getDataSubmit{
+            dataSubmittedCountdownGriefingEscrow()
+        }`
+    }
 
     /**
      * Get Agreement Address of an finalized escrow
+     * FIXMe how to do this with escrow address?
      * @param {} escrowAddress 
      */
-    async getAgreementOfEscrow(escrowAddress) { }
+    async getAgreementOfEscrow(escrowAddress) { 
+        query = `query getAgreements{
+            countdownGriefingEscrows(where:{id:${escrowAddress}}){
+                countdownGriefingAgreement{
+                    id
+                }
+            }
+        }`
+        return await this.query({query:gql`${query}`})
+    }
 
     /**
-     * Get latest post submitted of a feed
+     * Get all posts submitted to a feed
      * @param {} feedAddress 
      */
-    async getLatestPost(feedAddress) { }
+    async getPosts(feedAddress) { 
+        const query = `query getLatestpost{
+            feeds(where:{id:${feedAddress}}){
+                id
+                hashes
+            }
+        }`
+        const res = await this.query({query:gql`${query}`)
+        return res.hashes
+    }
+
+    /**
+     * Get all escrows for a feed address
+     * @param {String} feedAddress 
+     */
+    async getEscrowsForFeed(feedAddress){
+
+    }
+    
     /**
      * subscribe to events
      * If no evenName specified, will listen to all events

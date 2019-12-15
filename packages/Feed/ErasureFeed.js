@@ -87,7 +87,7 @@ class ErasureFeed extends Template {
    * @returns {Promise} array of {ipfsKeyHash,ipfsEncryptedData}
    * */
   async getEscrows(){
-    await this.graph.getEscrowsForFeed(this.wallet.address)
+    await this.graph.getEscrowsForFeed(this.address)
   }
 
   /**

@@ -6,10 +6,12 @@ const assert = require("assert");
 const { ESCROW_STATUS, createIpfsHash ,NULL_ADDRESS} = require("../Utils");
 const { Template, Contracts } = require("../Base");
 const ErasureHelper = require("@erasure/crypto-ipfs")
+const {Erasure_Users} = require("../Registry")
 
 class ErasureEscrow extends Template {
   constructor(opts) {
     super({ contract: Contracts.CountdownGriefingEscrow, ...opts });
+    this.userRegistry = new Erasure_Users({wallet:opts.wallet,provider:opts.provider,network:opts.network})
   }
 
   //====MODIFIERS====//
@@ -177,7 +179,7 @@ class ErasureEscrow extends Template {
     const buyer = await this.buyer()
     const seller = await this.seller()
     assert.equal(seller, this.wallet.address, "you are not the seller of this escrow")
-    const buyerPubkey = await this.graph.getUser(buyer)
+    const buyerPubkey = await this.userRegistry.getUser(buyer)
     // Encrypt symkey with buyer's pubkey
     const encryptedSymkey = crypto.publicEncrypt(buyerPubkey, Buffer.from(symKey))
     const json_selldata = {
