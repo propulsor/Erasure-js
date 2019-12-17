@@ -8,7 +8,7 @@ const gql = require("graphql-tag")
  * Client to query Erasure data from explorer
  */
 class ErasureGraph {
-    constructor({ network, uri = null }) {
+    constructor({ network="mainnet", uri = null }={}) {
         const cache = new InMemoryCache();
         if (!uri) {
             if (network == "rinkerby") {
@@ -17,9 +17,9 @@ class ErasureGraph {
             else if (network == "mainnet") {
                 uri = "https://thegraph.com/explorer/subgraph/jgeary/erasure"
             }
-            else if (network == "ganache") {
-                //todo use localgraph
-            }
+            // else if (network == "ganache") {
+            //     //todo use localgraph
+            // }
             else {
                 throw "Network unknown, please provide uri for graph Erasure"
             }
@@ -124,4 +124,4 @@ class ErasureGraph {
     }
 
 }
-module.exports = ErasureGraph
+module.exports = {ErasureGraph}
