@@ -25,14 +25,15 @@ describe("ErasureClient", function() {
         ratio = 2,
         ratioType = RATIO_TYPES.Dec,
         metaData = "metaData",
-        operator=operatorWallet.address,
-        countdown =10,
         proof="proof"
     let client, ipfs,graph
 
     describe("Erasure Client test", function() {
         before(async () => {
         });
+        it("Should create with no wallet and provider specified", ()=>{
+          client = new ErasureClient({})
+        })
         it("1.Should create a Erasure Client", async () => {
             client = new ErasureClient({wallet,provider,network})
         });

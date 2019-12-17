@@ -7,6 +7,7 @@ const assert = require("assert");
  */
 class Users_Registry {
     constructor({ wallet, provider, network = "mainnet" }) {
+      console.error("provider here", provider)
         this.wallet = wallet;
         this.provider = provider;
         this.network = network;

@@ -34,6 +34,7 @@ class ErasureClient {
         }
         if(!wallet){
             wallet = ethers.Wallet.createRandom()
+            wallet.connect(provider)
         }
         this.wallet = wallet.provider ? wallet : wallet.connect(provider);
         this.provider = provider;

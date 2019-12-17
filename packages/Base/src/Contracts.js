@@ -38,10 +38,10 @@ const Contracts = {
     Erasure_Escrows: {
         artifact: require("../artifacts/Erasure_Escrows.json"),
         mainnet: {
-            address: ""
+            address: "0x348FA9DcFf507B81C7A1d7981244eA92E8c6Af29"
         },
         rinkeby: {
-            address: "0xA9FfF710c8687fF1a5bD8031225907917f03319A"
+            address: "0x57EB544cCA126D356FFe19D732A79Db494ba09b1"
         },
         ganache: {
             address: ""
@@ -50,10 +50,10 @@ const Contracts = {
     Erasure_Users: {
         artifact: require("../artifacts/Erasure_Users.json"),
         mainnet: {
-            address: ""
+            address: "0x789D0082B20A929D6fB64EB4c10c68e827AAB7aB"
         },
         rinkeby: {
-            address: ""
+            address: "0xbF7339e68b81a1261FDF46FDBe916cd88f3609c0"
         },
         ganache: {
             address: ""
@@ -66,7 +66,7 @@ const Contracts = {
                 address: "0x206780873974878722Ed156544589701832eE920"
             },
             rinkeby: {
-                address: "0xa3140871346f4efF924dc874EC6AfD4573232F03"
+                address: "0xDE19C478b2eD51668e36704b2341b81DEBFe2c40"
             },
             ganache: {
                 address: ""
@@ -78,7 +78,7 @@ const Contracts = {
                 address: "0xA411eB36538a2Ae060A766221E43A94205460369"
             },
             rinkeby: {
-                address: "0x7aA06aa3b6D5476c0CE720231E2Add74164f78CD"
+                address: "0x91faaf60aadcce295e2a99b98dd77421f3517f16"
             },
             ganache: {
                 address: ""
@@ -103,7 +103,7 @@ const Contracts = {
                 address: "0x67ef9503cf0350dB52130Ef2Ad053E868Bc90FC7"
             },
             rinkeby: {
-                address: "0x86afD598Ab5CcBDe770dCb57373E3f4c8E23df95"
+                address: "0x4e278036DB69b7D96352Bc3cdB89B5eE7d31E2a6"
             },
             ganache: {
                 address: ""
@@ -115,7 +115,7 @@ const Contracts = {
                 address: "0xC04Bd2f0d484b7e0156b21c98B2923Ca8b9ce149"
             },
             rinkeby: {
-                address: "0xda6D8eCd5a56d3ae1741BebbA3Fb382B073DAaFf"
+                address: "0x1f1e4Fb5E496910A0A0EeeBF979A49E69cd11321"
             },
             ganache: {
                 address: ""
@@ -140,7 +140,7 @@ const Contracts = {
                 address: "0xd330e5e9670738D36E31dcb1fde0c08B1895a0b1"
             },
             rinkeby: {
-                address: "0xffc062e58CB967d2ca33F9d714257f9f003A3b6d"
+                address: "0x2523f1195537626317Bc0b07e29Afb9F704B510e"
             },
             ganache: {
                 address: ""
@@ -152,7 +152,7 @@ const Contracts = {
                 address: "0x89a2958544f86Cc57828dbBf31E2C786f20Fe0a0"
             },
             rinkeby: {
-                address: "0x93F75120365129Da3A9E3e23e3AbB857F1ADf5B6"
+                address: "0xaD4Fe9BB39C92E145eD200E19E5C475F7ab0A100"
             },
             ganache: {
                 address: ""
@@ -177,7 +177,7 @@ const Contracts = {
                 address: ""
             },
             rinkeby: {
-                address: "0x51FA999b00aCA5005AE4599b71ef05e32E9A2D00"
+                address: "0xE11290a6841198423198744d1222401a2aa5C3d0"
             },
             ganache: {
                 address: ""
@@ -189,7 +189,7 @@ const Contracts = {
                 address: ""
             },
             rinkeby: {
-                address: "0x714089F6F615AeFd042982c91b9E89C24878c5E4"
+                address: "0x4cC2FBBB2e93c5bffd09Ac9177D65Db95F649daC"
             },
             ganache: {
                 address: ""
