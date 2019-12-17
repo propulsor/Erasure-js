@@ -35,11 +35,11 @@ class ErasureGraph {
     }
 
     /**
-     * Query any event name 
+     * Query any event name
      * @param {} queryName (optional)
-     * @param {*} eventName 
-     * @param {*} opts 
-     * @param {*} returnData 
+     * @param {*} eventName
+     * @param {*} opts
+     * @param {*} returnData
      */
     async query({ queryName = "Erasure", eventName, opts = {}, returnData }) {
         try {
@@ -55,6 +55,7 @@ class ErasureGraph {
         }
 
     }
+
     async querySchema() {
         const query = `query IntrospectionQuery {
             __schema {
@@ -67,59 +68,57 @@ class ErasureGraph {
         const res = await this.client.query({ query: gql`${query}` })
         return res
     }
+
     //==== CUSTOM CALLS FOR INTERNAL USE ===//
     /**
      * Get Data Submitted of an escrow
-     * @param {*} escrowAddress 
+     * @param {*} escrowAddress
      */
-    async getDataSubmitted(escrowAddress) { 
-        query = `query getDataSubmit{
-            dataSubmittedCountdownGriefingEscrow()
+    async getDataSubmitted(escrowAddress) {
+        const query = `query getDataSubmit{
+            dataSubmittedCountdownGriefingEscrow(where:{contractAddress:${escrowAddress}})
+                data
         }`
+        const res = await this.query({query:gql`${query}`})
+        return res.data
     }
 
     /**
      * Get Agreement Address of an finalized escrow
      * FIXMe how to do this with escrow address?
-     * @param {} escrowAddress 
+     * @param {} escrowAddress
      */
-    async getAgreementOfEscrow(escrowAddress) { 
-        query = `query getAgreements{
+    async getAgreementOfEscrow(escrowAddress) {
+        const query = `query getAgreements{
             countdownGriefingEscrows(where:{id:${escrowAddress}}){
                 countdownGriefingAgreement{
                     id
                 }
             }
         }`
-        return await this.query({query:gql`${query}`})
+        const res =  await this.query({query:gql`${query}`})
+        return res.id
     }
 
     /**
      * Get all posts submitted to a feed
-     * @param {} feedAddress 
+     * @param {} feedAddress
      */
-    async getPosts(feedAddress) { 
+    async getPosts(feedAddress) {
         const query = `query getLatestpost{
             feeds(where:{id:${feedAddress}}){
                 id
                 hashes
             }
         }`
-        const res = await this.query({query:gql`${query}`)
+        const res = await this.query({query:gql`${query}`})
         return res.hashes
     }
 
     /**
-     * Get all escrows for a feed address
-     * @param {String} feedAddress 
-     */
-    async getEscrowsForFeed(feedAddress){
-
-    }
-    
-    /**
      * subscribe to events
      * If no evenName specified, will listen to all events
+     * TODO
      * */
     async subscribeToEvent(eventName = null) {
     }

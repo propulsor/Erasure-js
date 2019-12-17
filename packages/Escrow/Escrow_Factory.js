@@ -15,16 +15,16 @@ class Escrow_Factory extends Factory {
     }
 
     /**
-     * 
-     * @param {Object} param0 
+     *
+     * @param {Object} param0
      */
     async create({ buyer, seller, paymentAmount, stakeAmount, countdown, metaData, agreementParams, ipfs, graph, operator = null, salt = null }) {
         if (operator) {
             operator = getAddress(operator)
         }
         const agreementTypes = ['uint120', 'uint8', 'uint128']
-    // const agreementParams = [griefRatio, ratioType, agreementCountdown]
-    const encodedParams = AbiCoder.encode(agreementTypes, [agreementParams.ratio,agreementParams.ratioType,agreementParams.agreementCountdown])
+        // const agreementParams = [griefRatio, ratioType, agreementCountdown]
+        const encodedParams = AbiCoder.encode(agreementTypes, [agreementParams.ratio,agreementParams.ratioType,agreementParams.agreementCountdown])
 
         let callData = abiEncodeWithSelector("initialize",
             ["address",
@@ -36,13 +36,13 @@ class Escrow_Factory extends Factory {
                 "bytes",
                 "bytes"],
             [operator || NULL_ADDRESS,
-             getAddress(buyer||NULL_ADDRESS),
-              getAddress(seller|| NULL_ADDRESS),
-               getNumber(paymentAmount),
+                getAddress(buyer||NULL_ADDRESS),
+                getAddress(seller|| NULL_ADDRESS),
+                getNumber(paymentAmount),
                 getNumber(stakeAmount),
-                 getNumber(countdown),
-                 ethers.utils.toUtf8Bytes(metaData||""),
-                   getHash(encodedParams)])
+                getNumber(countdown),
+                ethers.utils.toUtf8Bytes(metaData||""),
+                getHash(encodedParams)])
         let tx
         if (salt) {
             tx = await this.contract.createSalty(callData, getBytesString(salt))

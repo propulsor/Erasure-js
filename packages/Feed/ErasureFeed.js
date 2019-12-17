@@ -82,13 +82,7 @@ class ErasureFeed extends Template {
     const rawDataIpfs = await this.ipfs.add(rawData)
     return {symKeyIpfs, rawDataIpfs}
   }
-  /**
-   * get all escrows to transact this feed (from graph)
-   * @returns {Promise} array of {ipfsKeyHash,ipfsEncryptedData}
-   * */
-  async getEscrows(){
-    await this.graph.getEscrowsForFeed(this.address)
-  }
+
 
   /**
   * Create a new CountdownGriefingEscrow as seller and deposit stake
