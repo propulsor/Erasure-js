@@ -1,3 +1,4 @@
+const ethers = require("ethers")
 const { Users_Registry, Feeds_Registry, Agreements_Registry, Escrows_Registry } = require("../Registry")
 const { ErasureEscrow ,Escrow_Factory} = require("../Escrow")
 const {ErasureAgreement,Agreement_Factory} = require("../Agreement")
@@ -18,8 +19,22 @@ class ErasureClient {
    * @param {graphUri} [config.graphUri] - graph uri for ErasureGraph
    * @param wallet
    */
-    constructor({ wallet, provider, network = "mainnet", ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH }) {
+    constructor({ wallet=null, provider=null, network = "mainnet", ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH }) {
         ipfsOpts = ipfsOpts || { host: "ipfs.infura.io", port: "5001", protocol: "https" }
+        if(!provider){
+            if(network=="mainnet"){
+                provider = new ethers.providers.InfuraProvider()
+            }
+            else if (network=="rinkerby"){
+                provider = new ethers.providers.InfuraProvider("rinkeby")
+            }
+            else{
+                provider = new ethers.providers.JsonRpcProvider()
+            }
+        }
+        if(!wallet){
+            wallet = ethers.Wallet.createRandom()
+        }
         this.wallet = wallet.provider ? wallet : wallet.connect(provider);
         this.provider = provider;
         this.network = network;

@@ -1,6 +1,6 @@
 {
   "name": "erasurejs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Erasure JS , wraping contract ABIs",
   "main": "packages/index.js",
   "author": "propulsor",
@@ -30,6 +30,7 @@
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "ipfs-mini": "^1.1.5",
-    "multihashes": "^0.4.15"
+    "multihashes": "^0.4.15",
+    "node-fetch": "^2.6.0"
   }
 }

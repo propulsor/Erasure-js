@@ -37,8 +37,12 @@ const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,Erasu
 
 ## ErasureClient
 ```
-const client = new ErasureClient({wallet,provider,ipfs=null:{host:string,post:string,protocol:string},graph=null:string})
+const client = new ErasureClient({wallet=null, provider=null, ipfs=null:{host:string,post:string,protocol:string},graph=null:string})
 ```
+- Note : 
+    - If no wallet is specified, a new ethers wallet will be created (when you just want to read data)
+    - If no provider is specified, mainnet provider from infura will be provided
+
 #### METHODS:
 - `await client.createUser() -> ErasureUser`
 - `await client.createFeed() -> ErasureFeed`
