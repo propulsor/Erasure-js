@@ -32,7 +32,7 @@ describe("ErasureClient", function() {
         before(async () => {
         });
         it("Should create with no wallet and provider specified", ()=>{
-          client = new ErasureClient({})
+          client = new ErasureClient()
         })
         it("1.Should create a Erasure Client", async () => {
             client = new ErasureClient({wallet,provider,network})

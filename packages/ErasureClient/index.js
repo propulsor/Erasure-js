@@ -19,7 +19,7 @@ class ErasureClient {
    * @param {graphUri} [config.graphUri] - graph uri for ErasureGraph
    * @param wallet
    */
-    constructor({ wallet=null, provider=null, network = "mainnet", ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH }) {
+    constructor({ wallet=null, provider=null, network = "mainnet", ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH }={}) {
         ipfsOpts = ipfsOpts || { host: "ipfs.infura.io", port: "5001", protocol: "https" }
         if(!provider){
             if(network=="mainnet"){
