@@ -6,12 +6,12 @@ const assert = require("assert");
 const { ESCROW_STATUS, createIpfsHash ,NULL_ADDRESS} = require("../Utils");
 const { Template, Contracts } = require("../Base");
 const ErasureHelper = require("@erasure/crypto-ipfs")
-const {Erasure_Users} = require("../Registry")
+const {Users_Registry} = require("../Registry")
 
 class ErasureEscrow extends Template {
     constructor(opts) {
         super({ contract: Contracts.CountdownGriefingEscrow, ...opts });
-        this.userRegistry = new Erasure_Users({wallet:opts.wallet,provider:opts.provider,network:opts.network})
+        this.userRegistry = new Users_Registry({wallet:opts.wallet,provider:opts.provider,network:opts.network})
     }
 
     //====MODIFIERS====//

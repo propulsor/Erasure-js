@@ -42,7 +42,7 @@ describe("ErasureClient", function() {
             const feedsCount = await client.getFeedsCount()
             assert.equal(feedsCount,0)
             const agreementsCount = await client.getAgreementsCount()
-            assert.equal(agreementsCount,0)
+            assert.equal(agreementsCount,'1')
             assert.equal(usersCount,0)
         });
         it("3.Should create and get Feed", async () => {

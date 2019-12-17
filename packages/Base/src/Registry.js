@@ -22,7 +22,8 @@ class Registry {
     }
 
     async getInstanceCount() {
-        return await this.contract.getInstanceCount();
+        const count =  await this.contract.getInstanceCount();
+        return count.toString()
     }
 
     async getInstance(index) {

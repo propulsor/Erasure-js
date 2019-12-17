@@ -14,7 +14,7 @@ const { Contracts } = require("../../packages/Base");
 const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Utils")
 const {ErasureEscrow,Escrow_Factory} = require("../../packages/Escrow")
 
-describe.only("CountdownGriefingEscrow",function(){
+describe("CountdownGriefingEscrow",function(){
     let testEscrow,escrowOpts,ipfs,graph
     const staker = stakerWallet.address,
         counterparty = counterpartyWallet.address,

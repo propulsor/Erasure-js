@@ -1,11 +1,11 @@
 {
-  "name": "erasure",
-  "version": "1.0.0",
-  "description": "Erasure JS sdk wraping contract ABIs",
+  "name": "erasurejs",
+  "version": "1.0.2",
+  "description": "Erasure JS , wraping contract ABIs",
   "main": "packages/index.js",
   "author": "propulsor",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "ganache": "ganache-cli --port 8545 --deterministic --secure -u 0x9608010323ed882a38ede9211d7691102b4f0ba0 --defaultBalanceEther 1000 -i 5777",
     "test": "bash test/run-ganache-tests.sh",
@@ -13,7 +13,6 @@
   },
   "devDependencies": {
     "eslint": "^6.7.2",
-    "eslint-config-google": "^0.14.0",
     "etherlime": "^2.2.4",
     "etherlime-lib": "^1.1.5",
     "ganache-cli": "6.5.1",
@@ -31,7 +30,6 @@
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "ipfs-mini": "^1.1.5",
-    "multihashes": "^0.4.15",
-    "npm-run-all": "^4.1.5"
+    "multihashes": "^0.4.15"
   }
 }
