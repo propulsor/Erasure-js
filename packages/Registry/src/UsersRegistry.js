@@ -7,7 +7,6 @@ const assert = require("assert");
  */
 class Users_Registry {
     constructor({ wallet, provider, network = "mainnet" }) {
-      console.error("provider here", provider)
         this.wallet = wallet;
         this.provider = provider;
         this.network = network;
@@ -16,7 +15,6 @@ class Users_Registry {
             Contracts.Erasure_Users.artifact.abi,
             provider
         );
-        console.log("contract address : ",      Contracts.Erasure_Users[network].address    )
         this.contract.connect(wallet);
     }
 

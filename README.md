@@ -1,4 +1,4 @@
-# NMR ERASURE JS SDK
+# ERASUREJS : SDK for Erasure Protocol
 ErasureJS module comprises of:
 1. ErasureClient for creating and getting  Users,Feeds,Posts,Agreements,Escrows
 2. Core Erasure modules : ErasureFeed,ErasurePost,ErasureAgreements,ErasureEscrows 

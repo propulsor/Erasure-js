@@ -1,9 +1,14 @@
 {
   "name": "erasurejs",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Erasure JS , wraping contract ABIs",
   "main": "packages/index.js",
   "author": "propulsor",
+  "homepage": "https://github.com/propulsor/Erasure-js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/propulsor/Erasure-js"
+  },
   "license": "MIT",
   "private": false,
   "scripts": {
