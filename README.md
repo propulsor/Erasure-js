@@ -8,7 +8,7 @@ ErasureJS module comprises of:
 
 # Usage
 ```
-const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,ErasureEscrow} = require("erasure-js)
+const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,ErasureEscrow,ErasureUtils} = require("erasure-js)
 ```
 
 ### Config variables for constructors
@@ -20,7 +20,14 @@ const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,Erasu
 - `network` (optional) : only used in development env
 - `graph` : default to ErasureGraph of provider's network, can passed in custom local graph for development
 
-
+# Version : Support both V1.0.1 and V1.2.0 
+Erasure SDK supports both Version 1.0.1 and 1.2.0
+```
+const {VERSION_V1,VERSION_V2,MAINNET,RINKEBY} = ErasureUtils
+const client = new ErasureClient({version=VERSION_V2})
+const graph = new ErasureGraph({version=VERSION_V1,network=MAINNET})
+```
+- If no version and network is specified, defaults are : RINKEBY, VERSION_V2
 
 # Contents
 - [Erasure Client](#erasureclient)
@@ -214,8 +221,8 @@ const agreement = new ErasureAgreement({address,wallet,provider,ipfs,graph})
 
 ## Erasure Graph
 ```
-const {ErasureGraph} = require("erasureJs)
-const erasureGraph = new ErasureGraph(network="mainnet") 
+const {ErasureGraph} = require("erasureJs")
+const erasureGraph = new ErasureGraph({network:ErasureUtils.RINKEBY,version:ErasureUtils.VERSION_V2}) 
 ```
 - Network : 
     + `mainnet` or `rinkery` for accessing Erasure graph public node

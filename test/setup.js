@@ -5,7 +5,7 @@ const assert = require("assert")
 const {stakerWallet,counterpartyWallet,network,provider,wallet} = require("./utils")
 const delay = (ms) => new Promise(_ => setTimeout(_, ms));
 const IPFS = require("ipfs-mini")
-const ErasureGraph = require("../packages/GraphClient")
+const {ErasureGraph} = require("../packages/GraphClient")
 const ErasureHelper = require("@erasure/crypto-ipfs")
 
 before(async () => {

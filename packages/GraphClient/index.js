@@ -2,27 +2,38 @@ const { ApolloClient } = require("apollo-client")
 const fetch = require("node-fetch")
 const { InMemoryCache } = require('apollo-cache-inmemory');
 const { createHttpLink } = require('apollo-link-http');
-const Queries = require("./Queries")
+const {MAINNET,RINKEBY,VERSION_1,VERSION_2} = require("../Utils")
+const Queries_v1 = require("./Queries_v1")
+const Queries_v2 = require("./Queries_v2")
 const gql = require("graphql-tag")
+
 /**
  * Client to query Erasure data from explorer
  */
 class ErasureGraph {
-    constructor({ network="mainnet", uri = null }={}) {
+    constructor({ network=RINKEBY, uri = null, version=VERSION_2 }={}) {
         const cache = new InMemoryCache();
+        let Queries
+        if(version == VERSION_2 && network==MAINNET){
+            throw "Erasure Graph V2 is only available in rinkeby"
+        }
         if (!uri) {
-            if (network == "rinkerby") {
+            if (network == RINKEBY) {
                 uri = "https://api.thegraph.com/subgraphs/name/jgeary/erasure-rinkeby120"
             }
             else if (network == "mainnet") {
                 uri = "https://thegraph.com/explorer/subgraph/jgeary/erasure"
             }
-            // else if (network == "ganache") {
-            //     //todo use localgraph
-            // }
             else {
                 throw "Network unknown, please provide uri for graph Erasure"
+                //TODO local graph
             }
+        }
+        if(version == VERSION_1){
+            Queries = Queries_v1
+        }
+        else{
+            Queries = Queries_v2
         }
         const link = createHttpLink({ uri, fetch })
         this.client = new ApolloClient({ cache, link })
@@ -43,13 +54,11 @@ class ErasureGraph {
      */
     async query({ queryName = "Erasure", eventName, opts = {}, returnData }) {
         try {
-            console.log(queryName, eventName, opts, returnData)
             const query = `query ${queryName}{${eventName}(where:${JSON.stringify(opts)}) {
             ${returnData}
           } }`
-            console.log(query)
             const res = await this.client.query({ query: gql`${query}` })
-            return res.data
+            return res.data[eventName]
         } catch (e) {
             return e.message
         }

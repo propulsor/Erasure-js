@@ -1,5 +1,4 @@
 const ethers = require("ethers");
-const ipfsHash = require("ipfs-only-hash")
 const ErasureHelper= require("@erasure/crypto-ipfs")
 
 const createIPFShash = (data)=>ErasureHelper.multihash({inputType:'raw',outputType:'b58',input:data})
@@ -82,7 +81,10 @@ const AGREEMENT_TYPE={
     COUNTDOWN:"CountdownGriefing",
     SIMPLE:"SimpleGriefing"
 }
-
+const VERSION_1 = "1.0"
+const VERSION_2 = "1.2"
+const MAINNET = "mainnet"
+const RINKEBY = "rinkeby"
 module.exports = {
     hexlify,
     createSelector,
@@ -91,5 +93,7 @@ module.exports = {
     b64,
     NULL_ADDRESS,
     RATIO_TYPES,
-    ESCROW_STATUS,AGREEMENT_STATUS,AGREEMENT_TYPE
+    ESCROW_STATUS,AGREEMENT_STATUS,AGREEMENT_TYPE,
+    VERSION_2,
+    VERSION_1,MAINNET,RINKEBY
 };
