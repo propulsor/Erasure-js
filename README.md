@@ -20,15 +20,16 @@ const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,Erasu
 - `network` (optional) : only used in development env
 - `graph` : default to ErasureGraph of provider's network, can passed in custom local graph for development
 
-# Version : Support both V1.0.1 and V1.2.0 
-Erasure SDK supports both Version 1.0.1 and 1.2.0
+# Version :
+### ErasureGraph supports both protocol version 1.0.1 and 1.2.0
 ```
 const {VERSION_V1,VERSION_V2,MAINNET,RINKEBY} = ErasureUtils
 const client = new ErasureClient({version=VERSION_V2})
 const graph = new ErasureGraph({version=VERSION_V1,network=MAINNET})
 ```
 - If no version and network is specified, defaults are : RINKEBY, VERSION_V2
-
+### ErasureClient Only support protocol version 1.2.0 
+- Future development will be added if requested
 # Contents
 - [Erasure Client](#erasureclient)
 - [Erasure User](#erasureuser)
