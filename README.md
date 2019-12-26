@@ -8,7 +8,7 @@ ErasureJS module comprises of:
 
 # Usage
 ```
-const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,ErasureEscrow,ErasureUtils} = require("erasure-js)
+const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,ErasureEscrow,ErasureUtils} = require("erasurejs)
 ```
 
 ### Config variables for constructors
