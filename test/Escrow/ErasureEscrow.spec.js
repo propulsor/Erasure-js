@@ -1,30 +1,20 @@
 const assert = require("assert");
-const { ethers } = require("ethers");
 const {
-    hexlify,
-    abiEncodeWithSelector,
-    NULL_ADDRESS,
     wallet,
     provider,
     stakerWallet,
     counterpartyWallet,
     operatorWallet
 } = require("../utils");
-const { Contracts } = require("../../packages/Base");
-const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Utils")
+const {RATIO_TYPES} = require("../../packages/Utils")
 const {ErasureEscrow,Escrow_Factory} = require("../../packages/Escrow")
 
 describe("CountdownGriefingEscrow",function(){
     let testEscrow,escrowOpts,ipfs,graph
-    const staker = stakerWallet.address,
-        counterparty = counterpartyWallet.address,
-        network = "ganache",
+    const network = "ganache",
         ratio = 2,
         ratioType = RATIO_TYPES.Dec,
-        metaData = "metaData",
-        operator=operatorWallet.address,
-        countdown =10,
-        proof="proof"
+        metaData = "metaData"
     describe("Escrow factory",function(){
         before(()=>{
             escrowOpts ={

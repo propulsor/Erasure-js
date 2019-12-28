@@ -1,14 +1,6 @@
-const etherlime = require("etherlime-lib");
-const { deploy } = require("../deploy_ganache");
-const { ethers } = require("ethers");
-const ganache = require("ganache-core");
 const assert = require("assert");
-const {Contracts} = require("../../packages/Base")
 const {
-    hexlify,
-    NULL_ADDRESS,
     wallet,
-    operatorWallet,
     provider,
     stakerWallet,
     counterpartyWallet
@@ -16,7 +8,7 @@ const {
 const {
     ErasureClient
 } = require("../../packages/ErasureClient");
-const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Utils")
+const {RATIO_TYPES} = require("../../packages/Utils")
 
 describe("ErasureClient", function() {
     const staker = stakerWallet.address,
@@ -32,7 +24,7 @@ describe("ErasureClient", function() {
         before(async () => {
         });
         it("Should create with no wallet and provider specified", ()=>{
-          client = new ErasureClient()
+            client = new ErasureClient()
         })
         it("1.Should create a Erasure Client", async () => {
             client = new ErasureClient({wallet,provider,network})

@@ -129,14 +129,6 @@ class ErasureClient {
         return await factory.create({ staker, counterparty, ratio, ratioType, metaData, operator, countdown, salt, ipfs: this.ipfs, graph: this.graph })
     }
 
-    /**
-   * Get Agreement from agreement address
-   * @param {string} address of agreement
-   */
-    async getAgreement(address) {
-        return new ErasureAgreement({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
-    }
-
 
     // ==== ESCROW ====//
     //getters

@@ -3,7 +3,8 @@
  */
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { ESCROW_STATUS, createIpfsHash ,NULL_ADDRESS} = require("../Utils");
+const { ESCROW_STATUS, createIpfsHash ,NULL_ADDRESS,hexToHash} = require("../Utils");
+const Buffer = require("buffer")
 const { Template, Contracts } = require("../Base");
 const ErasureHelper = require("@erasure/crypto-ipfs")
 const {Users_Registry} = require("../Registry")

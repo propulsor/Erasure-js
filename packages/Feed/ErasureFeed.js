@@ -1,7 +1,8 @@
 const { Template, Contracts } = require("../Base");
 const { ethers } = require("ethers");
-const { hexlify ,createIPFShash,b64} = require("../Utils");
+const { createIPFShash,b64} = require("../Utils");
 const ErasureHelper = require("@erasure/crypto-ipfs")
+const {CountdownGriefingEscrow_Factory} = require("../Escrow")
 const assert = require("assert")
 
 class ErasureFeed extends Template {
@@ -67,7 +68,7 @@ class ErasureFeed extends Template {
         //save encrypted data file and metaData to ipfs
         const encryptedDataIpfsPath = await this.ipfs.add(encryptedData)
         assert.equal(encryptedDataIpfsPath, encryptedDataHash, "encrypted data ipfs hash are not the same")
-        const proofHashIpfsPath = await this.ipfs.addJSON(metaData)
+        await this.ipfs.addJSON(metaData)
         return {symKey,confirmedTx}
 
     }
@@ -108,7 +109,7 @@ class ErasureFeed extends Template {
         const factory = new CountdownGriefingEscrow_Factory({wallet:this.wallet,provider:this.provider})
         const [createTx,escrow]= await factory.create({seller:owner,stakeAmount,paymentAmount,ratio,ratioType,countdown,buyer})
         const sTx = await escrow.depositStake(stakeAmount)
-        const stakeTx = await stakeTx.wait()
+        const stakeTx = await sTx.wait()
         return {createTx,stakeTx,escrow}
     }
 
@@ -129,11 +130,11 @@ class ErasureFeed extends Template {
      * @returns {Promise}  createTx : confirmed receipts of escrow creation tranaction
      * @returns {Promise}  createTx : confirmed receipts of depositing stake tranaction
    */
-    async offerBuy(){
+    async offerBuy({stakeAmount,paymentAmount,ratio,ratioType,escrowCountdown,seller}){
         const factory = new CountdownGriefingEscrow_Factory({wallet:this.wallet,provider:this.provider})
         const [createTx,escrow]= await factory.create({buyerr:await this.owner(),stakeAmount,paymentAmount,ratio,ratioType,escrowCountdown,seller})
         const sTx = await escrow.depositStake(stakeAmount)
-        const stakeTx = await stakeTx.wait()
+        const stakeTx = await sTx.wait()
         return {createTx,stakeTx,escrow}  }
 
 

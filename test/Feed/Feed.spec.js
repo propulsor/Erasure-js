@@ -1,20 +1,14 @@
-const etherlime = require("etherlime-lib");
-const { deploy } = require("../deploy_ganache");
 const { ethers } = require("ethers");
-const ganache = require("ganache-core");
 const assert = require("assert")
 const {
     hexlify,
-    NULL_ADDRESS,
     wallet,
     operatorWallet,
     provider
 } = require("../utils");
-const { Contracts } = require("../../packages/Base");
 const { ErasureFeed,Feed_Factory } = require("../../packages/Feed");
 const IPFS = require("ipfs-mini")
 const ErasureGraph = require("../../packages/GraphClient")
-const ErasureHelper = require("@erasure/crypto-ipfs")
 
 
 describe("Feed", function() {
