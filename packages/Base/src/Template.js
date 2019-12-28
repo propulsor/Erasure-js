@@ -1,6 +1,5 @@
 const { ethers } = require("ethers");
-const IPFS = require("ipfs-mini")
-const ErasureGraph = require("../../GraphClient")
+const assert = require("assert")
 
 class Template {
     constructor({contract, address, wallet, provider,ipfs,graph}) {
@@ -28,7 +27,7 @@ class Template {
         const actualOpertor = await this.contract.getOperator();
         assert.equal(
             actualOpertor,
-            wallet.address,
+            this.wallet.address,
             "Only Operator can set Metadata"
         );
         const feedMetadata = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(data));

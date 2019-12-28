@@ -1,11 +1,11 @@
 const ethers = require("ethers")
 const { Users_Registry, Feeds_Registry, Agreements_Registry, Escrows_Registry } = require("../Registry")
 const { ErasureEscrow ,Escrow_Factory} = require("../Escrow")
-const {ErasureAgreement,Agreement_Factory} = require("../Agreement")
+const {Agreement_Factory,ErasureAgreement} = require("../Agreement")
 const {ErasureFeed,Feed_Factory} = require("../Feed")
 const { INFURA_IPFS, MAINNET_GRAPH ,AGREEMENT_TYPE} = require("../Utils")
 const IPFS = require("ipfs-mini")
-const ErasureGraph = require("../GraphClient")
+const {ErasureGraph} = require("../GraphClient")
 
 
 class ErasureClient {
@@ -29,6 +29,7 @@ class ErasureClient {
                 provider = new ethers.providers.InfuraProvider("rinkeby")
             }
             else{
+                network="ganache"
                 provider = new ethers.providers.JsonRpcProvider()
             }
         }
@@ -98,15 +99,30 @@ class ErasureClient {
 
 
     //=== AGREEMENTS ====//
-    async getAgreement(address) {return this.agreementRegistry.getAgreement(address)}
+    /**
+     *
+     * @param {string} address
+     * @return {ErasureAgreement}
+     */
+    async getAgreement(address) {
 
-    async getAgreementsCount(){return this.agreementRegistry.getAgreementsCount()}
+        const agreement =  await this.getAgreementData(address)
+        const factoryId = agreement[1]
+        const countDownFactoryId = await this.agreementRegistry.getCountDownFactoryId()
+        if(factoryId===countDownFactoryId){
+            return new ErasureAgreement({type:AGREEMENT_TYPE.COUNTDOWN,address,wallet:this.wallet,provider:this.provider,ipfs:this.ipfs,graph:this.graph})
+        }
+        return new ErasureAgreement({type:AGREEMENT_TYPE.SIMPLE,address,wallet:this.wallet,provider:this.provider,ipfs:this.ipfs,graph:this.graph})
 
-    async getAgreementData(address){this.agreementRegistry.getAgreementData(address)}
+    }
 
-    async getAllAgreements(){return this.agreementRegistry.getAllAgreements()}
+    async getAgreementsCount(){return await this.agreementRegistry.getAgreementsCount()}
 
-    async getPaginatedAgreements(start,end){return  this.agreementRegistry.getPanigatedAgreements(start,end)}
+    async getAgreementData(address){return await this.agreementRegistry.getAgreementData(address)}
+
+    async getAllAgreements(){return await this.agreementRegistry.getAllAgreements()}
+
+    async getPaginatedAgreements(start,end){return await  this.agreementRegistry.getPanigatedAgreements(start,end)}
 
     /**
    * Create CountdownGriefing /SimpleGriefing Agreement

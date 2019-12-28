@@ -8,7 +8,7 @@ const {
 } = require("../utils");
 const { ErasureFeed,Feed_Factory } = require("../../packages/Feed");
 const IPFS = require("ipfs-mini")
-const ErasureGraph = require("../../packages/GraphClient")
+const {ErasureGraph} = require("../../packages/GraphClient")
 
 
 describe("Feed", function() {
@@ -73,16 +73,16 @@ describe("Feed", function() {
             let resetdataTx = await TestFeed.setMetadata(newMetaData)
             const feedMetadata = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(newMetaData));
             let setDataEvent = resetdataTx.events.find(e=>e.event=="MetadataSet")
-            assert(setDataEvent.args.metaData,"no metaData found in setMetaData event")
-            assert.equal(setDataEvent.args.metaData,feedMetadata)
+            assert(setDataEvent.args.metadata,"no metaData found in setMetaData event")
+            assert.equal(setDataEvent.args.metadata,feedMetadata)
 
         });
         it("6. Operator should be able to set Metadata", async () => {
             let resetdataTx = await TestOperatorFeed.setMetadata(newMetaData)
             const feedMetadata = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(newMetaData));
             let setDataEvent = resetdataTx.events.find(e=>e.event=="MetadataSet")
-            assert(setDataEvent.args.metaData,"no metaData found in setMetaData event")
-            assert.equal(setDataEvent.args.metaData,feedMetadata)
+            assert(setDataEvent.args.metadata,"no metaData found in setMetaData event "+ JSON.stringify(setDataEvent.args))
+            assert.equal(setDataEvent.args.metadata,feedMetadata)
         });
     });
 });

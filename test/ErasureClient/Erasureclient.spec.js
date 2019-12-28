@@ -8,7 +8,7 @@ const {
 const {
     ErasureClient
 } = require("../../packages/ErasureClient");
-const {RATIO_TYPES} = require("../../packages/Utils")
+const {RATIO_TYPES,RINKEBY} = require("../../packages/Utils")
 
 describe("ErasureClient", function() {
     const staker = stakerWallet.address,
@@ -22,9 +22,11 @@ describe("ErasureClient", function() {
 
     describe("Erasure Client test", function() {
         before(async () => {
+            
         });
         it("Should create with no wallet and provider specified", ()=>{
-            client = new ErasureClient()
+            client = new ErasureClient({network:RINKEBY})
+            //mainnet and random wallet created
         })
         it("1.Should create a Erasure Client", async () => {
             client = new ErasureClient({wallet,provider,network})
@@ -48,7 +50,7 @@ describe("ErasureClient", function() {
             assert.equal(owner,wallet.address)
         });
 
-        it("4. Should create and get Agreement", async () => {
+        it("4. Should create and get Agreement SimpleGriefing", async () => {
             const agreementOpts={
                 staker,
                 counterparty,
@@ -59,8 +61,9 @@ describe("ErasureClient", function() {
             console.log("agreement opts:", agreementOpts)
             const {confirmedTx,agreement} = await client.createAgreement(agreementOpts)
             assert(agreement.address,"No agreement created")
-            const agreementCount = await client.getAgreementsCount()
-            assert.equal(agreementCount,1,"should have 1 agreement in registry")
+            const agreementData = await client.getAgreementData(agreement.address)
+            console.log("agreement data",agreementData)
+            assert(agreementData,"should have agreement data in registry")
             const sameAgreement = await client.getAgreement(agreement.address)
             assert.equal(sameAgreement.address,agreement.address)
         });

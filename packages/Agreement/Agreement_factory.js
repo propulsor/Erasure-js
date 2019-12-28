@@ -11,8 +11,10 @@ class Agreement_Factory extends Factory {
     constructor({ wallet, provider, network = "mainnet",type }) {
         if (!type || type == AGREEMENT_TYPE.COUNTDOWN) {
             super({ contract: Contracts.CountdownGriefing, wallet, network, provider });
+            this.type = AGREEMENT_TYPE.COUNTDOWN
         } else {
             super({ contract: Contracts.SimpleGriefing, wallet, network, provider });
+            this.type = AGREEMENT_TYPE.SIMPLE
 
         }
     }
@@ -34,6 +36,7 @@ class Agreement_Factory extends Factory {
         }
         let callData
         if(!countdown){//simplegriefing
+            this.type=AGREEMENT_TYPE.SIMPLE
             callData = abiEncodeWithSelector(
                 "initialize",
                 ["address", "address", "address", "uint256", "uint8", "bytes"],
@@ -43,11 +46,12 @@ class Agreement_Factory extends Factory {
                     ethers.utils.getAddress(counterparty),
                     ethers.utils.bigNumberify(ratio),
                     ethers.utils.bigNumberify(ratioType),
-                    ethers.utils.keccak256(hexlify(metaData))
+                    Buffer.from(metaData)
                 ]
             );
         }
         else{//countdownGriefing
+            this.type=AGREEMENT_TYPE.COUNTDOWN
             callData = abiEncodeWithSelector(
                 "initialize",
                 ["address", "address", "address", "uint256", "uint8", "uint256", "bytes"],
@@ -58,7 +62,7 @@ class Agreement_Factory extends Factory {
                     ethers.utils.bigNumberify(ratio),
                     ethers.utils.bigNumberify(ratioType),
                     ethers.utils.bigNumberify(countdown),
-                    ethers.utils.keccak256(hexlify(metaData))
+                    Buffer.from(metaData)
                 ]
             );
         }

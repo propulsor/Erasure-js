@@ -1,0 +1,11 @@
+test/
+.eslintrc.js
+run-ganache-tests.sh
+deploy_ganache.js
+etherlime-setup.json
+yarn.lock
+package-lock.json
+ganache.log
+mocharc.yml
+.etherlime-store/
+

@@ -25,7 +25,7 @@ class ErasureGraph {
                 uri = "https://thegraph.com/explorer/subgraph/jgeary/erasure"
             }
             else {
-                throw "Network unknown, please provide uri for graph Erasure"
+                uri="http://localhost:8020"
                 //TODO local graph
             }
         }

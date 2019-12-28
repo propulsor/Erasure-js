@@ -33,11 +33,8 @@ function abiEncodeWithSelector(functionName, abiTypes, abiValues) {
     return encoded;
 }
 
-function hexToHash(hex){
-    if(hex.startswith("0x")){
-        hex.splice(2)
-    }
-    return multihash.toB58String(multihash.fromHexString(hex))
+async function hexToHash(data){
+    return await ErasureHelper.multihash({data,inputType:"hex",outputType:"b58"})
 }
 function b64(data){
     let buf = Buffer.from(data);
@@ -87,6 +84,7 @@ const MAINNET = "mainnet"
 const RINKEBY = "rinkeby"
 module.exports = {
     hexlify,
+    hexToHash,
     createSelector,
     createIPFShash,
     abiEncodeWithSelector,

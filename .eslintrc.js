@@ -15,6 +15,7 @@ module.exports = {
     'ecmaVersion': 2018,
   },
   'rules': {
+    "no-unused-vars": 1,
     "no-else-return": 1,
     "no-trailing-spaces": 1,
     "class-methods-use-this": 0,

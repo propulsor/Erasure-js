@@ -9,14 +9,17 @@ const { Template, Contracts } = require("../Base");
 class ErasureAgreement extends Template {
 
     constructor(opts) {
-        if(!opts.type || opts.type==AGREEMENT_TYPE.COUNTDOWN)
+        if(!opts.type || opts.type==AGREEMENT_TYPE.COUNTDOWN){
             super({ contract:Contracts.CountdownGriefing, ...opts });
-        else
+            this.type=AGREEMENT_TYPE.COUNTDOWN
+        }
+        else{
             super({contract : Contracts.SimpleGriefing,...opts})
+            this.type=AGREEMENT_TYPE.SIMPLE
+        }
 
 
     }
-
 
     //====Modifiers====//
 
@@ -63,7 +66,7 @@ class ErasureAgreement extends Template {
         );
         let confirmedTx = await tx.wait();
         let newStakeAmount = await this.getCurrentStake();
-        return [confirmedTx, newStakeAmount];
+        return {confirmedTx, newStakeAmount};
     }
 
     /**
@@ -99,7 +102,7 @@ class ErasureAgreement extends Template {
    * Only counterparty or operator
    * @param {} amount
    */
-    async releaseStake(amount) {
+    async releaseStake(amount,message="") {
         await this.onlyCounterpartyOrOperator();
         let tx = await this.contract.punish(
             ethers.utils.bigNumberify(amount),
@@ -112,12 +115,11 @@ class ErasureAgreement extends Template {
     /**
    * Only staker or operator
    */
-    async startCountDown() {
-        assert.equal(this.type, AGREEMENT_TYPE.COUNTDOWN, "SimpleGriefing can't start countdown")
+    async startCountdown() {
+        assert.equal(this.type, AGREEMENT_TYPE.COUNTDOWN, "SimpleGriefing can't start countdown "+this.type)
         await this.onlyStakerOrOperator();
-        await this.onlyWhenInitialized();
         //todo only when countdown is not started
-        let tx = await this.contract.startCountDown();
+        let tx = await this.contract.startCountdown();
         let confirmedTx = await tx.wait();
         let deadline = confirmedTx.deadline; //TODO get deadline from confirmedTx
         return [confirmedTx, deadline];

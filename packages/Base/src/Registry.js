@@ -14,6 +14,7 @@ class Registry {
             contract.artifact.abi,
             provider
         );
+        this.network=network
     }
 
     //GETTERS
@@ -45,6 +46,10 @@ class Registry {
             ethers.utils.bigNumberify(start),
             ethers.utils.bigNumberify(end)
         );
+    }
+
+    async getFactoryId(address){
+        return await this.contract.getFactoryID(address)
     }
 }
 module.exports = { Registry };
