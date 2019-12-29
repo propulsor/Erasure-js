@@ -1,6 +1,6 @@
 {
   "name": "erasurejs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Erasure JS , wraping contract ABIs",
   "main": "packages/index.js",
   "author": "propulsor",
