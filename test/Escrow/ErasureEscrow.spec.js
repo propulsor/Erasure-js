@@ -44,7 +44,6 @@ describe.only("CountdownGriefingEscrow",function(){
         })
         it("Should approve and deposit stake",async ()=>{
             const sellerEscrow = new ErasureEscrow({address:testEscrow.address,wallet:stakerWallet,provider})
-            await sellerEscrow.approveStake();
             const confirmedTx = await sellerEscrow.depositStake()
             console.log("confirmed tx of deposit stake", confirmedTx)
 

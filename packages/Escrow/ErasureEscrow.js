@@ -96,10 +96,6 @@ class ErasureEscrow extends Template {
 
     //===== STATE METHODS ====//
 
-    async approveStake(){
-        const stakeAmount = await this.getStakeAmount();
-        await 
-    }
     /**
    * If sellet is not set -> set seller
    * If buyer is already deposit payment => finalize

@@ -18,7 +18,7 @@ const {
 } = require("../../packages/Agreement");
 const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Utils")
 
-describe("Agreements", function() {
+describe.only("Agreements", function() {
     const staker = stakerWallet.address,
         counterparty = counterpartyWallet.address,
         network = "ganache",
