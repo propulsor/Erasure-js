@@ -18,7 +18,7 @@ const {
 } = require("../../packages/Agreement");
 const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Utils")
 
-describe.only("Agreements", function() {
+describe("Agreements", function() {
     const staker = stakerWallet.address,
         counterparty = counterpartyWallet.address,
         network = "ganache",
@@ -71,7 +71,7 @@ describe.only("Agreements", function() {
 
         it("3. Counterparty should increase stake", async()=>{
         })
-        it("4. Staker should increase stake ", async () => {
+        it.skip("4. Staker should increase stake ", async () => {
             const NMR = new ethers.Contract(Contracts.NMR.ganache.address,Contracts.NMR.artifact.abi,provider)
             const NMRcontract = NMR.connect(stakerWallet)
             // let stakerFactory = new Agreement_Factory({wallet:stakerWallet,provider,network,type:AGREEMENT_TYPE.COUNTDOWN})

@@ -1,14 +1,18 @@
 const { ethers } = require("ethers");
 const assert = require("assert")
+const {Contracts} = require("./Contracts")
+const {MAINNET} = require("../../Utils")
 
 class Template {
-    constructor({contract, address, wallet, provider,ipfs,graph}) {
+    constructor({contract, address, wallet, provider,ipfs,graph,network=MAINNET}) {
         let contractInstance = new ethers.Contract(
             address,
             contract.template.artifact.abi,
             provider
         );
         this.contract = contractInstance.connect(wallet);
+        const tokenInstance = new ethers.Contract(Contracts.NMR[network].address,Contracts.NMR.artifact.abi);
+        this.tokenContract = tokenInstance.connect(wallet);
         this.interface = new ethers.utils.Interface(
             contract.template.artifact.abi
         );

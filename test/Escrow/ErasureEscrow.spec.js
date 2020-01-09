@@ -9,7 +9,7 @@ const {
 const {RATIO_TYPES} = require("../../packages/Utils")
 const {ErasureEscrow,Escrow_Factory} = require("../../packages/Escrow")
 
-describe("CountdownGriefingEscrow",function(){
+describe.only("CountdownGriefingEscrow",function(){
     let testEscrow,escrowOpts,ipfs,graph
     const network = "ganache",
         ratio = 2,
@@ -42,11 +42,11 @@ describe("CountdownGriefingEscrow",function(){
             const sameEscrow = new ErasureEscrow({address:testEscrow.address,wallet,provider,ipfs,graph})
             assert.equal(sameEscrow.address,testEscrow.address)
         })
-        it("Should deposit stake",async ()=>{
-            sellerEscrow = new ErasureEscrow({address:testEscrow.address,wallet:counterpartyWallet,provider})
-            const confirmedTx = await sellerEscrow.depositStake(1)
+        it("Should approve and deposit stake",async ()=>{
+            const sellerEscrow = new ErasureEscrow({address:testEscrow.address,wallet:stakerWallet,provider})
+            await sellerEscrow.approveStake();
+            const confirmedTx = await sellerEscrow.depositStake()
             console.log("confirmed tx of deposit stake", confirmedTx)
-
 
         })
         it("Should deposit payment", async ()=>{

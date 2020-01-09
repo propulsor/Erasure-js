@@ -19,7 +19,6 @@ class ErasureEscrow extends Template {
     async onlySellerOrOperator() {
         let seller = await this.seller()
         let operator = await this.operator();
-        console.log("seller : ", seller)
         assert(
             seller==NULL_ADDRESS || seller == this.wallet.address || operator == this.wallet.address,
             "Only seller or operator can perform this method"
@@ -97,6 +96,10 @@ class ErasureEscrow extends Template {
 
     //===== STATE METHODS ====//
 
+    async approveStake(){
+        const stakeAmount = await this.getStakeAmount();
+        await 
+    }
     /**
    * If sellet is not set -> set seller
    * If buyer is already deposit payment => finalize
@@ -105,7 +108,7 @@ class ErasureEscrow extends Template {
         await this.onlyOpenOrPaymentDeposited();
         let seller = await this.seller();
         let tx;
-        if (!seller) {
+        if (seller==NULL_ADDRESS) {
             //deposit and set seller
             tx = await this.contract.depositAndSetSeller(this.wallet.address);
         } else {

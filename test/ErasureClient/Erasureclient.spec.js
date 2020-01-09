@@ -58,11 +58,9 @@ describe("ErasureClient", function() {
                 ratio,
                 ratioType
             }
-            console.log("agreement opts:", agreementOpts)
             const {confirmedTx,agreement} = await client.createAgreement(agreementOpts)
             assert(agreement.address,"No agreement created")
             const agreementData = await client.getAgreementData(agreement.address)
-            console.log("agreement data",agreementData)
             assert(agreementData,"should have agreement data in registry")
             const sameAgreement = await client.getAgreement(agreement.address)
             assert.equal(sameAgreement.address,agreement.address)
