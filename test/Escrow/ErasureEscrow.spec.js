@@ -9,7 +9,7 @@ const {
 const {RATIO_TYPES} = require("../../packages/Utils")
 const {ErasureEscrow,Escrow_Factory} = require("../../packages/Escrow")
 
-describe.only("CountdownGriefingEscrow",function(){
+describe("CountdownGriefingEscrow",function(){
     let testEscrow,escrowOpts,ipfs,graph
     const network = "ganache",
         ratio = 2,

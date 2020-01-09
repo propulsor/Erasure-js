@@ -11,8 +11,8 @@ class Template {
             provider
         );
         this.contract = contractInstance.connect(wallet);
-        const tokenInstance = new ethers.Contract(Contracts.NMR[network].address,Contracts.NMR.artifact.abi);
-        this.tokenContract = tokenInstance.connect(wallet);
+        // const tokenInstance = new ethers.Contract(Contracts.NMR[network].address,Contracts.NMR.artifact.abi);
+        // this.tokenContract = tokenInstance.connect(wallet);
         this.interface = new ethers.utils.Interface(
             contract.template.artifact.abi
         );
