@@ -2,11 +2,9 @@ const assert = require("assert");
 const {
     wallet,
     provider,
-    stakerWallet,
-    counterpartyWallet,
-    operatorWallet
+    stakerWallet
 } = require("../utils");
-const {RATIO_TYPES} = require("../../packages/Utils")
+const {RATIO_TYPES} = require("../../packages/Constants")
 const {ErasureEscrow,Escrow_Factory} = require("../../packages/Escrow")
 
 describe("CountdownGriefingEscrow",function(){

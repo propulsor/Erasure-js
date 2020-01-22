@@ -1,8 +1,8 @@
-const { Registry, Contracts } = require("../../Base");
+const { Registry } = require("../../Base");
 
 class Feeds_Registry extends Registry {
-    constructor({provider, network = "mainnet"}) {
-        super({contract:Contracts.Erasure_Posts, provider, network});
+    constructor(opts) {
+        super({contractName:"Erasure_Posts",...opts});
     }
 
     async getFeed(address){return this.getInstance(address)}

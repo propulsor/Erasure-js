@@ -3,20 +3,20 @@
  * Create post and stake
  */
 
-const { Factory, Contracts } = require("../Base");
+const { Factory } = require("../Base");
 const { ethers } = require("ethers");
 const assert = require("assert");
 const {ErasureFeed} = require("./ErasureFeed")
-const { NULL_ADDRESS, abiEncodeWithSelector, hexlify } = require("../Utils");
-
+const { abiEncodeWithSelector, hexlify } = require("../Utils");
+const {NULL_ADDRESS} = require("../Constants")
 /**
  * Create Feed from factory
  * Get all feeds from registries
  * listen to Feeds and Posts related event
  */
 class Feed_Factory extends Factory {
-    constructor({ wallet, provider, network = "mainnet" }) {
-        super({ contract: Contracts.Feed, wallet, network, provider });
+    constructor(opts) {
+        super({ contractName: "FeedFactory", ...opts});
     }
 
     /**

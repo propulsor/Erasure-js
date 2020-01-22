@@ -1,18 +1,20 @@
-const { Contracts } = require("../../Base");
 const { ethers } = require("ethers");
 const ErasureHelper = require("@erasure/crypto-ipfs");
 const assert = require("assert");
+const {NETWORKS,VERSIONS} = require("../../Constants")
+const {getContractMetadata} = require("../../Utils")
 /**
  * Erasure_Users has its own methods and doesnt extend Registry class
  */
 class Users_Registry {
-    constructor({ wallet, provider, network = "mainnet" }) {
+    constructor({ wallet, provider, network = NETWORKS.MAINNET,version=VERSIONS.V3 }) {
         this.wallet = wallet;
         this.provider = provider;
         this.network = network;
+        const {address,artifact} = getContractMetadata({contractName:"Erasure_Users",version,network})
         this.contract = new ethers.Contract(
-            Contracts.Erasure_Users[network].address,
-            Contracts.Erasure_Users.artifact.abi,
+            address,
+            artifact,
             provider
         );
         this.contract.connect(wallet);

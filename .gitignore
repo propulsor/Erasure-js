@@ -2,3 +2,5 @@ node_modules
 yarn.lock
 .etherlime-store/
 ganache.log
+.DS_Store
+.vscode

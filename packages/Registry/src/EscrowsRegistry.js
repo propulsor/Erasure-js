@@ -1,8 +1,9 @@
-const { Registry, Contracts } = require("../../Base");
+const { Registry } = require("../../Base");
+
 
 class Escrows_Registry extends Registry {
-    constructor({provider, network = "mainnet"}) {
-        super({contract:Contracts.Erasure_Escrows, provider, network});
+    constructor(opts) {
+        super({contractName:"Erasure_Escrows",...opts});
     }
 
     async getEscrow(address){return this.getInstance(address)}

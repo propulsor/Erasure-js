@@ -7,7 +7,6 @@ const {
     counterpartyWallet
 } = require("./utils");
 const assert = require("assert");
-
 require("dotenv").config();
 
 const deploy = async (network, c) => {
@@ -117,7 +116,7 @@ const deploy = async (network, c) => {
     }
 
     async function deployFactory(name, registry, factoryData = ethers.utils.hexlify(0x0)) {
-        await deployer.deploy(c[name].template.artifact).then(wrap => {
+        await deployer.deploy(c[name+"Factory"].template.artifact).then(wrap => {
             c[name].template[network].address = wrap.contractAddress;
         });
 

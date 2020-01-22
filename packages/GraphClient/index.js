@@ -2,7 +2,7 @@ const { ApolloClient } = require("apollo-client")
 const fetch = require("node-fetch")
 const { InMemoryCache } = require('apollo-cache-inmemory');
 const { createHttpLink } = require('apollo-link-http');
-const {MAINNET,RINKEBY,VERSION_1,VERSION_2} = require("../Utils")
+const {VERSIONS,NETWORKS,GRAPH_URLS} = require("../Constants")
 const Queries_v1 = require("./Queries_v1")
 const Queries_v2 = require("./Queries_v2")
 const gql = require("graphql-tag")
@@ -11,29 +11,24 @@ const gql = require("graphql-tag")
  * Client to query Erasure data from explorer
  */
 class ErasureGraph {
-    constructor({ network=RINKEBY, uri = null, version=VERSION_2 }={}) {
+    constructor({ network=NETWORKS.RINKEBY, uri = undefined, version=VERSIONS.V3 }={}) {
         const cache = new InMemoryCache();
         let Queries
         if(version == VERSION_2 && network==MAINNET){
             throw "Erasure Graph V2 is only available in rinkeby"
         }
         if (!uri) {
-            if (network == RINKEBY) {
-                uri = "https://api.thegraph.com/subgraphs/name/jgeary/erasure-rinkeby120"
-            }
-            else if (network == "mainnet") {
-                uri = "https://thegraph.com/explorer/subgraph/jgeary/erasure"
-            }
-            else {
-                uri="http://localhost:8020"
-                //TODO local graph
-            }
+            uri = GRAPH_URLS[version][network]
         }
-        if(version == VERSION_1){
+        if(version == VERSIONS.V1){
             Queries = Queries_v1
         }
-        else{
+        else if (version == VERSIONS.V2){
             Queries = Queries_v2
+        }
+        else{
+            throw "invalid version, V3 is in development"
+            // Queries = Queries_V3
         }
         const link = createHttpLink({ uri, fetch })
         this.client = new ApolloClient({ cache, link })

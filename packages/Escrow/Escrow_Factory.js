@@ -1,8 +1,9 @@
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { abiEncodeWithSelector, NULL_ADDRESS, hexlify } = require("../Utils");
+const { abiEncodeWithSelector } = require("../Utils");
+const {NULL_ADDRESS} = require("../Constants")
 const {ErasureEscrow} = require("./ErasureEscrow")
-const { Factory, Contracts } = require("../Base");
+const { Factory } = require("../Base");
 const getAddress = ethers.utils.getAddress
 const getNumber = ethers.utils.bigNumberify
 const getHash = ethers.utils.hexlify
@@ -10,8 +11,8 @@ const AbiCoder = new ethers.utils.AbiCoder()
 
 
 class Escrow_Factory extends Factory {
-    constructor({ wallet, provider, network = "mainnet" }) {
-        super({ contract: Contracts.CountdownGriefingEscrow, wallet, provider, network })
+    constructor(opts) {
+        super({ contractName: "CountdownGriefingEscrowFactory", ...opts })
     }
 
     /**

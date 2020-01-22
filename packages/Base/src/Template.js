@@ -1,18 +1,17 @@
 const { ethers } = require("ethers");
 const assert = require("assert")
-const {Contracts} = require("./Contracts")
-const {MAINNET} = require("../../Utils")
+const {NETWORKS,VERSIONS} = require("../../Constants")
+const {getContractMetadata} =require("../../Utils")
 
 class Template {
-    constructor({contract, address, wallet, provider,ipfs,graph,network=MAINNET}) {
+    constructor({contractName, wallet, provider,ipfs,graph,network=NETWORKS.MAINNET,version=VERSIONS.V3}) {
+        const {address,artifact} = getContractMetadata({contractName,version,network}) 
         let contractInstance = new ethers.Contract(
             address,
-            contract.template.artifact.abi,
+            artifact,
             provider
         );
         this.contract = contractInstance.connect(wallet);
-        // const tokenInstance = new ethers.Contract(Contracts.NMR[network].address,Contracts.NMR.artifact.abi);
-        // this.tokenContract = tokenInstance.connect(wallet);
         this.interface = new ethers.utils.Interface(
             contract.template.artifact.abi
         );

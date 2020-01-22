@@ -8,9 +8,9 @@ const {
 const {
     ErasureClient
 } = require("../../packages/ErasureClient");
-const {RATIO_TYPES,RINKEBY} = require("../../packages/Utils")
+const {RATIO_TYPES,NETWORKS} = require("../../packages/Constants")
 
-describe("ErasureClient", function() {
+describe("ErasureClient", function () {
     const staker = stakerWallet.address,
         counterparty = counterpartyWallet.address,
         network = "ganache",
@@ -20,12 +20,12 @@ describe("ErasureClient", function() {
         proof="proof"
     let client, ipfs,graph
 
-    describe("Erasure Client test", function() {
+    describe("Erasure Client test", function () {
         before(async () => {
-            
+
         });
         it("Should create with no wallet and provider specified", ()=>{
-            client = new ErasureClient({network:RINKEBY})
+            client = new ErasureClient({network:NETWORKS.RINKEBY})
             //mainnet and random wallet created
         })
         it("1.Should create a Erasure Client", async () => {

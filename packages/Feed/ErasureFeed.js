@@ -12,7 +12,7 @@ class ErasureFeed extends Template {
    * @param {*} provider
    */
     constructor(opts) {
-        super({contract:Contracts.Feed, ...opts});
+        super({contractName:"Feed", ...opts});
     }
 
     /**

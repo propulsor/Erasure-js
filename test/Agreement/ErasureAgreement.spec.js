@@ -5,9 +5,6 @@ const ganache = require("ganache-core");
 const assert = require("assert");
 const {Contracts} = require("../../packages/Base")
 const {
-    hexlify,
-    NULL_ADDRESS,
-    wallet,
     operatorWallet,
     provider,
     stakerWallet,
@@ -16,7 +13,7 @@ const {
 const {
     Agreement_Factory,ErasureAgreement
 } = require("../../packages/Agreement");
-const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Utils")
+const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Constants")
 
 describe.only("Agreements", function() {
     const staker = stakerWallet.address,

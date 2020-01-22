@@ -3,7 +3,7 @@ const { Users_Registry, Feeds_Registry, Agreements_Registry, Escrows_Registry } 
 const { ErasureEscrow ,Escrow_Factory} = require("../Escrow")
 const {Agreement_Factory,ErasureAgreement} = require("../Agreement")
 const {ErasureFeed,Feed_Factory} = require("../Feed")
-const { INFURA_IPFS, MAINNET_GRAPH ,AGREEMENT_TYPE} = require("../Utils")
+const { INFURA_IPFS, MAINNET_GRAPH ,AGREEMENT_TYPE,VERSIONS,NETWORKS} = require("../Constants")
 const IPFS = require("ipfs-mini")
 const {ErasureGraph} = require("../GraphClient")
 
@@ -19,17 +19,17 @@ class ErasureClient {
    * @param {graphUri} [config.graphUri] - graph uri for ErasureGraph
    * @param wallet
    */
-    constructor({ wallet=null, provider=null, network = "mainnet", ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH }={}) {
+    constructor({ wallet=null, provider=null, network = NETWORKS.MAINNET,version=VERSIONS.V3, ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH }={}) {
         ipfsOpts = ipfsOpts || { host: "ipfs.infura.io", port: "5001", protocol: "https" }
         if(!provider){
-            if(network=="mainnet"){
+            if(network==NETWORKS.MAINNET){
                 provider = new ethers.providers.InfuraProvider()
             }
-            else if (network=="rinkerby"){
+            else if (network==NETWORKS.RINKEBY){
                 provider = new ethers.providers.InfuraProvider("rinkeby")
             }
             else{
-                network="ganache"
+                network=NETWORKS.GANACHE
                 provider = new ethers.providers.JsonRpcProvider()
             }
         }
