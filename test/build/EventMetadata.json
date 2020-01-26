@@ -1,0 +1,61 @@
+{
+	"schemaVersion": "2.0.0",
+	"contractName": "EventMetadata",
+	"compilerOutput": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "metadata",
+						"type": "bytes"
+					}
+				],
+				"name": "MetadataSet",
+				"type": "event"
+			}
+		],
+		"evm": {
+			"bytecode": {
+				"linkReferences": {},
+				"object": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820da0573e8d5c60174d5cfc88d53a54da5a7b7ea8265d29e8110ca37be4706304f64736f6c634300050d0032",
+				"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x3E DUP1 PUSH1 0x1D PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 0xDA SDIV PUSH20 0xE8D5C60174D5CFC88D53A54DA5A7B7EA8265D29E DUP2 LT 0xCA CALLDATACOPY 0xBE SELFBALANCE MOD ADDRESS 0x4F PUSH5 0x736F6C6343 STOP SDIV 0xD STOP ORIGIN ",
+				"sourceMap": "237:280:14:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;237:280:14;;;;;;;"
+			}
+		}
+	},
+	"sources": {
+		"modules/EventMetadata.sol": {
+			"id": 14
+		}
+	},
+	"sourceCodes": {
+		"modules/EventMetadata.sol": "pragma solidity ^0.5.13;\n\n\n/// @title EventMetadata\n/// @author Stephane Gosselin (@thegostep) for Numerai Inc\n/// @dev Security contact: security@numer.ai\n/// @dev Version: 1.3.0\n/// @notice This module emits metadata blob as an event.\ncontract EventMetadata {\n\n    event MetadataSet(bytes metadata);\n\n    // state functions\n\n    /// @notice Emit a metadata blob.\n    /// @param metadata data blob of any format.\n    function _setMetadata(bytes memory metadata) internal {\n        emit MetadataSet(metadata);\n    }\n}\n"
+	},
+	"sourceTreeHashHex": "0x08df0e519523799692149a73a5cb825776277df60135f04662ec2875bc3c5d56",
+	"compiler": {
+		"name": "solc",
+		"version": "soljson-v0.5.13+commit.5b0b510c.js",
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"*": [
+						"abi",
+						"evm.bytecode.object"
+					]
+				}
+			},
+			"evmVersion": "constantinople",
+			"remappings": [
+				"@openzeppelin/contracts=/Users/kimbui/Documents/Code/erasure-protocol/node_modules/@openzeppelin/contracts"
+			]
+		}
+	},
+	"networks": {}
+}

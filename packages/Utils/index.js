@@ -49,29 +49,42 @@ function b64(data) {
   let encodedData = buf.toString("base64");
   return encodedData;
 }
-function getContractMetadata({ contractName, version, network }) {
-  if (!VERSIONS.includes(version)) {
-    throw "Invalid version, V1,V2,V3 are available";
+function getContractMetadata({ contractName, version, network ,contracts=null}) {
+  if(network=="ganache"){
+    // get contract data from local ?
+    if(!contracts){
+      throw "contracts objecy is needed for local deployment"
+    }
+    const contract = contract[contractName]
+    return {
+      address: contract.wrap.address,
+      artifact : contract.wrap.artifact.abi
+    }
   }
-  if (!NETWORKS.includes(network)) {
-    throw "Invalid network, mainnet or rinkeby for v1,v2 and optional kovan for v3";
-  }
-  switch (version) {
-    case VERSIONS.V1:
-      return {
-        address: ErasureV1[contractName][network],
-        artifact: ErasureV1[contractName].artifact
-      };
-    case VERSIONS.V2:
-      return {
-        address: ErasureV2[contractName][network],
-        artifact: ErasureV2[contractName].artifact
-      };
-    default:
-      return {
-        address: ErasureV3[contractName][network],
-        artifact: ErasureV3[contractName].artifact
-      };
+  else{
+    if (!VERSIONS[version]) {
+      throw "Invalid version, V1,V2,V3 are available";
+    }
+    if (!NETWORKS[network]) {
+      throw "Invalid network, mainnet or rinkeby for v1,v2 and optional kovan for v3";
+    }
+    switch (version) {
+      case VERSIONS.V1:
+        return {
+          address: ErasureV1[contractName][`${network}Address`],
+          artifact: ErasureV1[contractName].artifact
+        };
+      case VERSIONS.V2:
+        return {
+          address: ErasureV2[contractName][`${network}Address`],
+          artifact: ErasureV2[contractName].artifact
+        };
+      default:
+        return {
+          address: ErasureV3[contractName][`${network}Address`],
+          artifact: ErasureV3[contractName].artifact
+        };
+    }
   }
 }
 module.exports = {

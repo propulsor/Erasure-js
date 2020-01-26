@@ -8,28 +8,30 @@ const {
 const {
     ErasureClient
 } = require("../../packages/ErasureClient");
+const {VERSIONS} = require("../../packages/Constants")
 const {RATIO_TYPES,NETWORKS} = require("../../packages/Constants")
 
-describe("ErasureClient", function () {
+describe.only("ErasureClient", function () {
     const staker = stakerWallet.address,
         counterparty = counterpartyWallet.address,
-        network = "ganache",
+        network = NETWORKS.RINKEBY,
+        version = VERSIONS.V3,
         ratio = 2,
         ratioType = RATIO_TYPES.Dec,
         metaData = "metaData",
         proof="proof"
     let client, ipfs,graph
 
-    describe("Erasure Client test", function () {
+    describe.only("Erasure Client test", function () {
         before(async () => {
 
         });
         it("Should create with no wallet and provider specified", ()=>{
-            client = new ErasureClient({network:NETWORKS.RINKEBY})
+            client = new ErasureClient({network:NETWORKS.RINKEBY,version})
             //mainnet and random wallet created
         })
         it("1.Should create a Erasure Client", async () => {
-            client = new ErasureClient({wallet,provider,network})
+            client = new ErasureClient({wallet,provider,network,version})
         });
         it("2.Should get registry infomation", async () => {
             const usersCount = await client.getUsersCount()
@@ -40,7 +42,7 @@ describe("ErasureClient", function () {
             assert.equal(agreementsCount,'1')
             assert.equal(usersCount,0)
         });
-        it("3.Should create and get Feed", async () => {
+        it.skip("3.Should create and get Feed", async () => {
             const {confirmedTx,feed} = await client.createFeed({proof,metaData})
             assert(feed.address,"no feed created")
             const feedsCount = await client.getFeedsCount()
@@ -50,7 +52,7 @@ describe("ErasureClient", function () {
             assert.equal(owner,wallet.address)
         });
 
-        it("4. Should create and get Agreement SimpleGriefing", async () => {
+        it.skip("4. Should create and get Agreement SimpleGriefing", async () => {
             const agreementOpts={
                 staker,
                 counterparty,
@@ -65,7 +67,7 @@ describe("ErasureClient", function () {
             const sameAgreement = await client.getAgreement(agreement.address)
             assert.equal(sameAgreement.address,agreement.address)
         });
-        it("5 . Should create and get escrow",async ()=>{
+        it.skip("5 . Should create and get escrow",async ()=>{
             const escrowOpts ={
                 paymentAmount:1,
                 stakeAmount:1,

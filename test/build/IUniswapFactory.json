@@ -1,0 +1,171 @@
+{
+	"schemaVersion": "2.0.0",
+	"contractName": "IUniswapFactory",
+	"compilerOutput": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "exchange",
+						"type": "address"
+					}
+				],
+				"name": "NewExchange",
+				"type": "event"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "exchange",
+						"type": "address"
+					}
+				],
+				"name": "createExchange",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"name": "getExchange",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "exchange",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address payable",
+						"name": "exchange",
+						"type": "address"
+					}
+				],
+				"name": "getToken",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "getTokenWithId",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "tokenCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"evm": {
+			"bytecode": {
+				"linkReferences": {},
+				"object": "0x",
+				"opcodes": "",
+				"sourceMap": ""
+			}
+		}
+	},
+	"sources": {
+		"test-contracts/MockUniswap/IUniswapFactory.sol": {
+			"id": 39
+		}
+	},
+	"sourceCodes": {
+		"test-contracts/MockUniswap/IUniswapFactory.sol": "pragma solidity ^0.5.13;\n\n\ncontract IUniswapFactory {\n    // Events\n    event NewExchange(address indexed token, address indexed exchange);\n    // Public Variables\n    uint256 public tokenCount;\n    // Create Exchange\n    function createExchange(address token, address payable exchange) external returns (address payable);\n    // Get Exchange and Token Info\n    function getExchange(address token) external view returns (address payable exchange);\n    function getToken(address payable exchange) external view returns (address token);\n    function getTokenWithId(uint256 tokenId) external view returns (address token);\n}"
+	},
+	"sourceTreeHashHex": "0x2a0232e537f85ab86e5c31aa739d47fd9ee25d45a84543b8f5c780d2fb7569e1",
+	"compiler": {
+		"name": "solc",
+		"version": "soljson-v0.5.13+commit.5b0b510c.js",
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"*": [
+						"abi",
+						"evm.bytecode.object"
+					]
+				}
+			},
+			"evmVersion": "constantinople",
+			"remappings": [
+				"@openzeppelin/contracts=/Users/kimbui/Documents/Code/erasure-protocol/node_modules/@openzeppelin/contracts"
+			]
+		}
+	},
+	"networks": {}
+}

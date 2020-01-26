@@ -1,0 +1,76 @@
+{
+	"schemaVersion": "2.0.0",
+	"contractName": "Operated",
+	"compilerOutput": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "operator",
+						"type": "address"
+					}
+				],
+				"name": "OperatorUpdated",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getOperator",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "operator",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"evm": {
+			"bytecode": {
+				"linkReferences": {},
+				"object": "0x608060405234801561001057600080fd5b5060d38061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063e7f43c6814602d575b600080fd5b60336075565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690509056fea265627a7a72315820b7aebb8f4bcb8a3854f246147e383b5034df2a4190725f292a02fdeccc7b3e9464736f6c634300050d0032",
+				"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0xD3 DUP1 PUSH2 0x1F PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x4 CALLDATASIZE LT PUSH1 0x28 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0xE7F43C68 EQ PUSH1 0x2D JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH1 0x33 PUSH1 0x75 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 POP SWAP1 JUMP INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 0xB7 0xAE 0xBB DUP16 0x4B 0xCB DUP11 CODESIZE SLOAD CALLCODE CHAINID EQ PUSH31 0x383B5034DF2A4190725F292A02FDECCC7B3E9464736F6C634300050D003200 ",
+				"sourceMap": "175:1495:18:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;175:1495:18;;;;;;;"
+			}
+		}
+	},
+	"sources": {
+		"modules/Operated.sol": {
+			"id": 18
+		}
+	},
+	"sourceCodes": {
+		"modules/Operated.sol": "pragma solidity ^0.5.13;\n\n\n/// @title Operated\n/// @author Stephane Gosselin (@thegostep) for Numerai Inc\n/// @dev Security contact: security@numer.ai\n/// @dev Version: 1.3.0\ncontract Operated {\n\n    address private _operator;\n\n    event OperatorUpdated(address operator);\n\n    // state functions\n\n    function _setOperator(address operator) internal {\n\n        // can only be called when operator is null\n        require(_operator == address(0), \"operator already set\");\n\n        // cannot set to address 0\n        require(operator != address(0), \"cannot set operator to address 0\");\n\n        // set operator in storage\n        _operator = operator;\n\n        // emit event\n        emit OperatorUpdated(operator);\n    }\n\n    function _transferOperator(address operator) internal {\n\n        // requires existing operator\n        require(_operator != address(0), \"only when operator set\");\n\n        // cannot set to address 0\n        require(operator != address(0), \"cannot set operator to address 0\");\n\n        // set operator in storage\n        _operator = operator;\n\n        // emit event\n        emit OperatorUpdated(operator);\n    }\n\n    function _renounceOperator() internal {\n\n        // requires existing operator\n        require(_operator != address(0), \"only when operator set\");\n\n        // set operator in storage\n        _operator = address(0);\n\n        // emit event\n        emit OperatorUpdated(address(0));\n    }\n\n    // view functions\n\n    function getOperator() public view returns (address operator) {\n        return _operator;\n    }\n\n    function isOperator(address caller) internal view returns (bool ok) {\n        return caller == _operator;\n    }\n\n}\n"
+	},
+	"sourceTreeHashHex": "0xec9e749a48975e4a7d04c8db788e7e6d3c368bcd1e9aa797281922baefd8bf44",
+	"compiler": {
+		"name": "solc",
+		"version": "soljson-v0.5.13+commit.5b0b510c.js",
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"*": [
+						"abi",
+						"evm.bytecode.object"
+					]
+				}
+			},
+			"evmVersion": "constantinople",
+			"remappings": [
+				"@openzeppelin/contracts=/Users/kimbui/Documents/Code/erasure-protocol/node_modules/@openzeppelin/contracts"
+			]
+		}
+	},
+	"networks": {}
+}

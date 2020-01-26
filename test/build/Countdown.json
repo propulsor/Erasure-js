@@ -1,0 +1,157 @@
+{
+	"schemaVersion": "2.0.0",
+	"contractName": "Countdown",
+	"compilerOutput": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "deadline",
+						"type": "uint256"
+					}
+				],
+				"name": "DeadlineSet",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "length",
+						"type": "uint256"
+					}
+				],
+				"name": "LengthSet",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getCountdownStatus",
+				"outputs": [
+					{
+						"internalType": "enum Countdown.CountdownStatus",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getDeadline",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "deadline",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getDeadlineStatus",
+				"outputs": [
+					{
+						"internalType": "enum Deadline.DeadlineStatus",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getLength",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "length",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getTimeRemaining",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "time",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"evm": {
+			"bytecode": {
+				"linkReferences": {},
+				"object": "0x608060405234801561001057600080fd5b50610339806100206000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c806319fbb48e1461005c5780635f8d96de14610088578063be1c766b146100a6578063dac6270d146100c4578063de2229fe146100e2575b600080fd5b61006461010e565b6040518082600381111561007457fe5b60ff16815260200191505060405180910390f35b610090610187565b6040518082815260200191505060405180910390f35b6100ae610190565b6040518082815260200191505060405180910390f35b6100cc61019a565b6040518082815260200191505060405180910390f35b6100ea6101ca565b604051808260028111156100fa57fe5b60ff16815260200191505060405180910390f35b60008060015414156101235760009050610184565b6000600281111561013057fe5b6101386101ca565b600281111561014357fe5b14156101525760019050610184565b60028081111561015e57fe5b6101666101ca565b600281111561017157fe5b1461017f5760029050610184565b600390505b90565b60008054905090565b6000600154905090565b60004260005411156101c2576101bb426000546101fa90919063ffffffff16565b90506101c7565b600090505b90565b60008060005414156101df57600090506101f7565b4260005411156101f257600190506101f7565b600290505b90565b600061023c83836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250610244565b905092915050565b60008383111582906102f1576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825283818151815260200191508051906020019080838360005b838110156102b657808201518184015260208101905061029b565b50505050905090810190601f1680156102e35780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b506000838503905080915050939250505056fea265627a7a723158201c0ba2581f9b35a26f27f288e55eb87711247aa6132b7c1e59e43802d3285e4664736f6c634300050d0032",
+				"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH2 0x339 DUP1 PUSH2 0x20 PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x4 CALLDATASIZE LT PUSH2 0x57 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0x19FBB48E EQ PUSH2 0x5C JUMPI DUP1 PUSH4 0x5F8D96DE EQ PUSH2 0x88 JUMPI DUP1 PUSH4 0xBE1C766B EQ PUSH2 0xA6 JUMPI DUP1 PUSH4 0xDAC6270D EQ PUSH2 0xC4 JUMPI DUP1 PUSH4 0xDE2229FE EQ PUSH2 0xE2 JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH2 0x64 PUSH2 0x10E JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH1 0x3 DUP2 GT ISZERO PUSH2 0x74 JUMPI INVALID JUMPDEST PUSH1 0xFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x90 PUSH2 0x187 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xAE PUSH2 0x190 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xCC PUSH2 0x19A JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xEA PUSH2 0x1CA JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH1 0x2 DUP2 GT ISZERO PUSH2 0xFA JUMPI INVALID JUMPDEST PUSH1 0xFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x1 SLOAD EQ ISZERO PUSH2 0x123 JUMPI PUSH1 0x0 SWAP1 POP PUSH2 0x184 JUMP JUMPDEST PUSH1 0x0 PUSH1 0x2 DUP2 GT ISZERO PUSH2 0x130 JUMPI INVALID JUMPDEST PUSH2 0x138 PUSH2 0x1CA JUMP JUMPDEST PUSH1 0x2 DUP2 GT ISZERO PUSH2 0x143 JUMPI INVALID JUMPDEST EQ ISZERO PUSH2 0x152 JUMPI PUSH1 0x1 SWAP1 POP PUSH2 0x184 JUMP JUMPDEST PUSH1 0x2 DUP1 DUP2 GT ISZERO PUSH2 0x15E JUMPI INVALID JUMPDEST PUSH2 0x166 PUSH2 0x1CA JUMP JUMPDEST PUSH1 0x2 DUP2 GT ISZERO PUSH2 0x171 JUMPI INVALID JUMPDEST EQ PUSH2 0x17F JUMPI PUSH1 0x2 SWAP1 POP PUSH2 0x184 JUMP JUMPDEST PUSH1 0x3 SWAP1 POP JUMPDEST SWAP1 JUMP JUMPDEST PUSH1 0x0 DUP1 SLOAD SWAP1 POP SWAP1 JUMP JUMPDEST PUSH1 0x0 PUSH1 0x1 SLOAD SWAP1 POP SWAP1 JUMP JUMPDEST PUSH1 0x0 TIMESTAMP PUSH1 0x0 SLOAD GT ISZERO PUSH2 0x1C2 JUMPI PUSH2 0x1BB TIMESTAMP PUSH1 0x0 SLOAD PUSH2 0x1FA SWAP1 SWAP2 SWAP1 PUSH4 0xFFFFFFFF AND JUMP JUMPDEST SWAP1 POP PUSH2 0x1C7 JUMP JUMPDEST PUSH1 0x0 SWAP1 POP JUMPDEST SWAP1 JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 SLOAD EQ ISZERO PUSH2 0x1DF JUMPI PUSH1 0x0 SWAP1 POP PUSH2 0x1F7 JUMP JUMPDEST TIMESTAMP PUSH1 0x0 SLOAD GT ISZERO PUSH2 0x1F2 JUMPI PUSH1 0x1 SWAP1 POP PUSH2 0x1F7 JUMP JUMPDEST PUSH1 0x2 SWAP1 POP JUMPDEST SWAP1 JUMP JUMPDEST PUSH1 0x0 PUSH2 0x23C DUP4 DUP4 PUSH1 0x40 MLOAD DUP1 PUSH1 0x40 ADD PUSH1 0x40 MSTORE DUP1 PUSH1 0x1E DUP2 MSTORE PUSH1 0x20 ADD PUSH32 0x536166654D6174683A207375627472616374696F6E206F766572666C6F770000 DUP2 MSTORE POP PUSH2 0x244 JUMP JUMPDEST SWAP1 POP SWAP3 SWAP2 POP POP JUMP JUMPDEST PUSH1 0x0 DUP4 DUP4 GT ISZERO DUP3 SWAP1 PUSH2 0x2F1 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE DUP4 DUP2 DUP2 MLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 DUP1 DUP4 DUP4 PUSH1 0x0 JUMPDEST DUP4 DUP2 LT ISZERO PUSH2 0x2B6 JUMPI DUP1 DUP3 ADD MLOAD DUP2 DUP5 ADD MSTORE PUSH1 0x20 DUP2 ADD SWAP1 POP PUSH2 0x29B JUMP JUMPDEST POP POP POP POP SWAP1 POP SWAP1 DUP2 ADD SWAP1 PUSH1 0x1F AND DUP1 ISZERO PUSH2 0x2E3 JUMPI DUP1 DUP3 SUB DUP1 MLOAD PUSH1 0x1 DUP4 PUSH1 0x20 SUB PUSH2 0x100 EXP SUB NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP JUMPDEST POP SWAP3 POP POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST POP PUSH1 0x0 DUP4 DUP6 SUB SWAP1 POP DUP1 SWAP2 POP POP SWAP4 SWAP3 POP POP POP JUMP INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 SHR SIGNEXTEND LOG2 PC 0x1F SWAP12 CALLDATALOAD LOG2 PUSH16 0x27F288E55EB87711247AA6132B7C1E59 0xE4 CODESIZE MUL 0xD3 0x28 0x5E CHAINID PUSH5 0x736F6C6343 STOP SDIV 0xD STOP ORIGIN ",
+				"sourceMap": "550:2932:11:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;550:2932:11;;;;;;;"
+			}
+		}
+	},
+	"sources": {
+		"modules/Countdown.sol": {
+			"id": 11
+		},
+		"@openzeppelin/contracts/math/SafeMath.sol": {
+			"id": 52
+		},
+		"modules/Deadline.sol": {
+			"id": 12
+		}
+	},
+	"sourceCodes": {
+		"modules/Countdown.sol": "pragma solidity ^0.5.13;\n\nimport \"@openzeppelin/contracts/math/SafeMath.sol\";\nimport \"./Deadline.sol\";\n\n\n/// @title Countdown\n/// @author Stephane Gosselin (@thegostep) for Numerai Inc\n/// @dev Security contact: security@numer.ai\n/// @dev Version: 1.3.0\n/// @dev State Machine: https://github.com/erasureprotocol/erasure-protocol/blob/release/v1.3.x/docs/state-machines/modules/Countdown.png\n/// @notice This module provides an arbitrary length countdown.\n///         The countdown makes use of block timestamps to determine start time and end time.\ncontract Countdown is Deadline {\n\n    using SafeMath for uint256;\n\n    uint256 private _length;\n\n    event LengthSet(uint256 length);\n\n    // state functions\n\n    /// @notice Set the length of the countdown\n    /// @param length uint256 The amount of time in seconds.\n    function _setLength(uint256 length) internal {\n        _length = length;\n        emit LengthSet(length);\n    }\n\n    /// @notice Start the countdown based on the current block timestamp\n    /// @return deadline uint256 Unix timestamp of the end of the countdown (current timestamp + countdown length).\n    function _start() internal returns (uint256 deadline) {\n        deadline = _length.add(now);\n        Deadline._setDeadline(deadline);\n        return deadline;\n    }\n\n    // view functions\n\n    /// @notice Get the length of the countdown in seconds\n    /// @return length uint256 The amount of time in seconds.\n    function getLength() public view returns (uint256 length) {\n        return _length;\n    }\n\n    enum CountdownStatus { isNull, isSet, isActive, isOver }\n    /// @notice Get the status of the state machine\n    /// @return status CountdownStatus from the following states:\n    ///         - isNull: the length has not been set\n    ///         - isSet: the length is set, but the countdown is not started\n    ///         - isActive: the countdown has started but not yet ended\n    ///         - isOver: the countdown has completed\n    function getCountdownStatus() public view returns (CountdownStatus status) {\n        if (_length == 0)\n            return CountdownStatus.isNull;\n        if (Deadline.getDeadlineStatus() == DeadlineStatus.isNull)\n            return CountdownStatus.isSet;\n        if (Deadline.getDeadlineStatus() != DeadlineStatus.isOver)\n            return CountdownStatus.isActive;\n        else\n            return CountdownStatus.isOver;\n    }\n\n    /// @notice Validate if the state machine is in the CountdownStatus.isNull state\n    /// @return validity bool true if correct state\n    function isNull() internal view returns (bool validity) {\n        return getCountdownStatus() == CountdownStatus.isNull;\n    }\n\n    /// @notice Validate if the state machine is in the CountdownStatus.isSet state\n    /// @return validity bool true if correct state\n    function isSet() internal view returns (bool validity) {\n        return getCountdownStatus() == CountdownStatus.isSet;\n    }\n\n    /// @notice Validate if the state machine is in the CountdownStatus.isActive state\n    /// @return validity bool true if correct state\n    function isActive() internal view returns (bool validity) {\n        return getCountdownStatus() == CountdownStatus.isActive;\n    }\n\n    /// @notice Validate if the state machine is in the CountdownStatus.isOver state\n    /// @return validity bool true if correct state\n    function isOver() internal view returns (bool validity) {\n        return getCountdownStatus() == CountdownStatus.isOver;\n    }\n\n}\n",
+		"@openzeppelin/contracts/math/SafeMath.sol": "pragma solidity ^0.5.0;\n\n/**\n * @dev Wrappers over Solidity's arithmetic operations with added overflow\n * checks.\n *\n * Arithmetic operations in Solidity wrap on overflow. This can easily result\n * in bugs, because programmers usually assume that an overflow raises an\n * error, which is the standard behavior in high level programming languages.\n * `SafeMath` restores this intuition by reverting the transaction when an\n * operation overflows.\n *\n * Using this library instead of the unchecked operations eliminates an entire\n * class of bugs, so it's recommended to use it always.\n */\nlibrary SafeMath {\n    /**\n     * @dev Returns the addition of two unsigned integers, reverting on\n     * overflow.\n     *\n     * Counterpart to Solidity's `+` operator.\n     *\n     * Requirements:\n     * - Addition cannot overflow.\n     */\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\n        uint256 c = a + b;\n        require(c >= a, \"SafeMath: addition overflow\");\n\n        return c;\n    }\n\n    /**\n     * @dev Returns the subtraction of two unsigned integers, reverting on\n     * overflow (when the result is negative).\n     *\n     * Counterpart to Solidity's `-` operator.\n     *\n     * Requirements:\n     * - Subtraction cannot overflow.\n     */\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\n        return sub(a, b, \"SafeMath: subtraction overflow\");\n    }\n\n    /**\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\n     * overflow (when the result is negative).\n     *\n     * Counterpart to Solidity's `-` operator.\n     *\n     * Requirements:\n     * - Subtraction cannot overflow.\n     *\n     * _Available since v2.4.0._\n     */\n    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n        require(b <= a, errorMessage);\n        uint256 c = a - b;\n\n        return c;\n    }\n\n    /**\n     * @dev Returns the multiplication of two unsigned integers, reverting on\n     * overflow.\n     *\n     * Counterpart to Solidity's `*` operator.\n     *\n     * Requirements:\n     * - Multiplication cannot overflow.\n     */\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\n        // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\n        // benefit is lost if 'b' is also tested.\n        // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\n        if (a == 0) {\n            return 0;\n        }\n\n        uint256 c = a * b;\n        require(c / a == b, \"SafeMath: multiplication overflow\");\n\n        return c;\n    }\n\n    /**\n     * @dev Returns the integer division of two unsigned integers. Reverts on\n     * division by zero. The result is rounded towards zero.\n     *\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\n     * uses an invalid opcode to revert (consuming all remaining gas).\n     *\n     * Requirements:\n     * - The divisor cannot be zero.\n     */\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\n        return div(a, b, \"SafeMath: division by zero\");\n    }\n\n    /**\n     * @dev Returns the integer division of two unsigned integers. Reverts with custom message on\n     * division by zero. The result is rounded towards zero.\n     *\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\n     * uses an invalid opcode to revert (consuming all remaining gas).\n     *\n     * Requirements:\n     * - The divisor cannot be zero.\n     *\n     * _Available since v2.4.0._\n     */\n    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n        // Solidity only automatically asserts when dividing by 0\n        require(b > 0, errorMessage);\n        uint256 c = a / b;\n        // assert(a == b * c + a % b); // There is no case in which this doesn't hold\n\n        return c;\n    }\n\n    /**\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\n     * Reverts when dividing by zero.\n     *\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\n     * invalid opcode to revert (consuming all remaining gas).\n     *\n     * Requirements:\n     * - The divisor cannot be zero.\n     */\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\n        return mod(a, b, \"SafeMath: modulo by zero\");\n    }\n\n    /**\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\n     * Reverts with custom message when dividing by zero.\n     *\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\n     * invalid opcode to revert (consuming all remaining gas).\n     *\n     * Requirements:\n     * - The divisor cannot be zero.\n     *\n     * _Available since v2.4.0._\n     */\n    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n        require(b != 0, errorMessage);\n        return a % b;\n    }\n}\n",
+		"modules/Deadline.sol": "pragma solidity ^0.5.13;\n\nimport \"@openzeppelin/contracts/math/SafeMath.sol\";\n\n\n/// @title Deadline\n/// @author Stephane Gosselin (@thegostep) for Numerai Inc\n/// @dev Security contact: security@numer.ai\n/// @dev Version: 1.3.0\n/// @dev State Machine: https://github.com/erasureprotocol/erasure-protocol/blob/release/v1.3.x/docs/state-machines/modules/Deadline.png\n/// @notice This module allows for setting and validating a deadline.\n///         The deadline makes use of block timestamps to determine end time.\ncontract Deadline {\n\n    using SafeMath for uint256;\n\n    uint256 private _deadline;\n\n    event DeadlineSet(uint256 deadline);\n\n    // state functions\n\n    /// @notice Set the deadline\n    /// @param deadline uint256 Unix timestamp to use as deadline.\n    function _setDeadline(uint256 deadline) internal {\n        _deadline = deadline;\n        emit DeadlineSet(deadline);\n    }\n\n    // view functions\n\n    /// @notice Get the timestamp of the deadline\n    /// @return deadline uint256 Unix timestamp of the deadline.\n    function getDeadline() public view returns (uint256 deadline) {\n        return _deadline;\n    }\n\n    // timeRemaining will default to 0 if _setDeadline is not called\n    // if the now exceeds deadline, just return 0 as the timeRemaining\n\n    /// @notice Get the amount of time remaining until the deadline.\n    ///         Returns 0 if deadline is not set or is passed.\n    /// @return time uint256 Amount of time in seconds until deadline.\n    function getTimeRemaining() public view returns (uint256 time) {\n        if (_deadline > now)\n            return _deadline.sub(now);\n        else\n            return 0;\n    }\n\n    enum DeadlineStatus { isNull, isSet, isOver }\n    /// @notice Get the status of the state machine\n    /// @return status DeadlineStatus from the following states:\n    ///         - isNull: the deadline has not been set\n    ///         - isSet: the deadline is set, but has not passed\n    ///         - isOver: the deadline has passed\n    function getDeadlineStatus() public view returns (DeadlineStatus status) {\n        if (_deadline == 0)\n            return DeadlineStatus.isNull;\n        if (_deadline > now)\n            return DeadlineStatus.isSet;\n        else\n            return DeadlineStatus.isOver;\n    }\n\n    /// @notice Validate if the state machine is in the DeadlineStatus.isNull state\n    /// @return validity bool true if correct state\n    function isNull() internal view returns (bool status) {\n        return getDeadlineStatus() == DeadlineStatus.isNull;\n    }\n\n    /// @notice Validate if the state machine is in the DeadlineStatus.isSet state\n    /// @return validity bool true if correct state\n    function isSet() internal view returns (bool status) {\n        return getDeadlineStatus() == DeadlineStatus.isSet;\n    }\n\n    /// @notice Validate if the state machine is in the DeadlineStatus.isOver state\n    /// @return validity bool true if correct state\n    function isOver() internal view returns (bool status) {\n        return getDeadlineStatus() == DeadlineStatus.isOver;\n    }\n\n}\n"
+	},
+	"sourceTreeHashHex": "0xe7a7e3f1c5985e4b317ee3ab8cf415184fb845009c72468e1e973ee67b0199bf",
+	"compiler": {
+		"name": "solc",
+		"version": "soljson-v0.5.13+commit.5b0b510c.js",
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"*": [
+						"abi",
+						"evm.bytecode.object"
+					]
+				}
+			},
+			"evmVersion": "constantinople",
+			"remappings": [
+				"@openzeppelin/contracts=/Users/kimbui/Documents/Code/erasure-protocol/node_modules/@openzeppelin/contracts"
+			]
+		}
+	},
+	"networks": {}
+}

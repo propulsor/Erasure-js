@@ -40,13 +40,13 @@ class ErasureClient {
         this.wallet = wallet.provider ? wallet : wallet.connect(provider);
         this.provider = provider;
         this.network = network;
-        this.userRegistry = new Users_Registry({ wallet, provider, network })
-        this.feedRegistry = new Feeds_Registry({ wallet, provider, network })
-        this.escrowRegistry = new Escrows_Registry({ wallet, provider, network })
-        this.agreementRegistry = new Agreements_Registry({ wallet, provider, network })
+        this.userRegistry = new Users_Registry({ wallet, provider, network ,version})
+        this.feedRegistry = new Feeds_Registry({ wallet, provider, network, version })
+        this.escrowRegistry = new Escrows_Registry({ wallet, provider, network,version })
+        this.agreementRegistry = new Agreements_Registry({ wallet, provider, network,version })
         this.ipfs = new IPFS(ipfsOpts)
-        this.graph = new ErasureGraph({ network, uri: graphUri })
-        this.factoryOpts = { wallet, provider, network }
+        this.graph = new ErasureGraph({ network, uri: graphUri,version })
+        this.factoryOpts = { wallet, provider, network,version }
     }
 
 
