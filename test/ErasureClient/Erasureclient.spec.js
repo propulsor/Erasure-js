@@ -1,14 +1,6 @@
-const etherlime = require("etherlime-lib");
-const { deploy } = require("../deploy_ganache");
-const { ethers } = require("ethers");
-const ganache = require("ganache-core");
 const assert = require("assert");
-const {Contracts} = require("../../packages/Base")
 const {
-    hexlify,
-    NULL_ADDRESS,
     wallet,
-    operatorWallet,
     provider,
     stakerWallet,
     counterpartyWallet
@@ -16,34 +8,38 @@ const {
 const {
     ErasureClient
 } = require("../../packages/ErasureClient");
-const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Utils")
+const {VERSIONS} = require("../../packages/Constants")
+const {RATIO_TYPES,NETWORKS} = require("../../packages/Constants")
 
-describe("ErasureClient", function() {
+describe("ErasureClient", function () {
     const staker = stakerWallet.address,
         counterparty = counterpartyWallet.address,
-        network = "ganache",
+        network = NETWORKS.ganache,
+        version = VERSIONS.V3,
         ratio = 2,
         ratioType = RATIO_TYPES.Dec,
         metaData = "metaData",
         proof="proof"
     let client, ipfs,graph
 
-    describe("Erasure Client test", function() {
+    describe("Erasure Client test", function () {
         before(async () => {
+
         });
         it("Should create with no wallet and provider specified", ()=>{
-          client = new ErasureClient()
+            client = new ErasureClient({network,version,contracts})
+            //mainnet and random wallet created
         })
         it("1.Should create a Erasure Client", async () => {
-            client = new ErasureClient({wallet,provider,network})
+            client = new ErasureClient({wallet,provider,network,version,contracts})
         });
         it("2.Should get registry infomation", async () => {
             const usersCount = await client.getUsersCount()
             const users = await client.getAllUsers()
             const feedsCount = await client.getFeedsCount()
-            assert.equal(feedsCount,0)
+            assert.equal(feedsCount,2)
             const agreementsCount = await client.getAgreementsCount()
-            assert.equal(agreementsCount,'1')
+            assert.equal(agreementsCount,'4')
             assert.equal(usersCount,0)
         });
         it("3.Should create and get Feed", async () => {
@@ -56,7 +52,7 @@ describe("ErasureClient", function() {
             assert.equal(owner,wallet.address)
         });
 
-        it("4. Should create and get Agreement", async () => {
+        it("4. Should create and get Agreement SimpleGriefing", async () => {
             const agreementOpts={
                 staker,
                 counterparty,
@@ -64,11 +60,10 @@ describe("ErasureClient", function() {
                 ratio,
                 ratioType
             }
-            console.log("agreement opts:", agreementOpts)
             const {confirmedTx,agreement} = await client.createAgreement(agreementOpts)
             assert(agreement.address,"No agreement created")
-            const agreementCount = await client.getAgreementsCount()
-            assert.equal(agreementCount,1,"should have 1 agreement in registry")
+            const agreementData = await client.getAgreementData(agreement.address)
+            assert(agreementData,"should have agreement data in registry")
             const sameAgreement = await client.getAgreement(agreement.address)
             assert.equal(sameAgreement.address,agreement.address)
         });

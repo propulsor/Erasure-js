@@ -3,21 +3,26 @@
  */
 
 const { ethers } = require("ethers");
+const {NETWORKS,VERSIONS} = require("../../Constants")
+const {getContractMetadata} = require("../../Utils")
 /**
  * Read only class for getting data from registries
  */
 class Registry {
-    constructor({contract, provider, network = "mainnet"}) {
+    constructor({contractName, provider, version=VERSIONS.V3,network = NETWORKS.mainnet,contracts=null}) {
         this.provider = provider;
+        const {address,artifact} = getContractMetadata({contractName,version,network,contracts})
         this.contract = new ethers.Contract(
-            contract[network].address,
-            contract.artifact.abi,
+            address,
+            artifact,
             provider
         );
+        this.network=network
+        this.version=version
     }
 
     //GETTERS
-    async getInstanceType() {
+    async getInstanceType(){
         return await this.contract.getInstanceType();
     }
 
@@ -45,6 +50,10 @@ class Registry {
             ethers.utils.bigNumberify(start),
             ethers.utils.bigNumberify(end)
         );
+    }
+
+    async getFactoryId(address){
+        return await this.contract.getFactoryID(address)
     }
 }
 module.exports = { Registry };

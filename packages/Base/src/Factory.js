@@ -1,74 +1,85 @@
 const { ethers } = require("ethers");
-const { Contracts } = require("./Contracts");
+const { VERSIONS, NETWORKS } = require("../../Constants");
+const { getContractMetadata } = require("../../Utils");
 
 class Factory {
-    constructor({contract, wallet, network, provider}) {
-        let contractInstance = new ethers.Contract(
-            contract.factory[network].address,
-            contract.factory.artifact.abi,
-            provider
-        );
-        this.provider = provider;
-        this.contract = contractInstance.connect(wallet);
-        this.interface = new ethers.utils.Interface(
-            contract.factory.artifact.abi
-        );
-        this.wallet = wallet;
-    }
+  constructor({
+    contractName,
+    wallet,
+    provider,
+    network = NETWORKS.mainnet,
+    version = VERSIONS.V3,
+    contracts=null
+  }) {
+    console.log("opts in factory", contractName,network,version)
+    const { address, artifact } = getContractMetadata({
+      contractName,
+      version,
+      network,contracts
+    });
+    console.log("address from utils", contractName,address)
+    let contractInstance = new ethers.Contract(address, artifact, provider);
+    this.provider = provider;
+    this.contract = contractInstance.connect(wallet);
+    this.interface = new ethers.utils.Interface(artifact);
+    this.wallet = wallet;
+    this.network=network
+    this.version=version
+    this.contracts=contracts
+  }
 
-    //==== methods with required implementation
-    async create(callData) {
-        throw "Implementation required";
-    }
+  //==== methods with required implementation
+  async create(callData) {
+    throw "Implementation required";
+  }
 
+  //====GETTERS====//
+  async getInitSelector() {
+    return await this.contract.getInitSelector();
+  }
 
-    //====GETTERS====//
-    async getInitSelector() {
-        return await this.contract.getInitSelector();
-    }
+  async getInstanceRegistry() {
+    return await this.contract.getInstanceRegistry();
+  }
 
-    async getInstanceRegistry() {
-        return await this.contract.getInstanceRegistry();
-    }
+  async getTemplate() {
+    return await this.contract.getTemplate();
+  }
 
-    async getTemplate() {
-        return await this.contract.getTemplate();
-    }
+  async getInstanceCount() {
+    return await this.contract.getInstanceCount();
+  }
 
-    async getInstanceCount() {
-        return await this.contract.getInstanceCount();
-    }
+  async getSaltyInstance(calldata, salt) {
+    return await this.contract.getSaltyInstance(
+      calldata,
+      ethers.utils.formatBytes32String(salt)
+    );
+  }
 
-    async getSaltyInstance(calldata, salt) {
-        return await this.contract.getSaltyInstance(
-            calldata,
-            ethers.utils.formatBytes32String(salt)
-        );
-    }
+  async getInstanceCreator(instanceAddress) {
+    return await this.contract.getInstanceCreator(
+      instanceAddress
+    );
+  }
 
-    async getInstanceCreator(instanceAddress) {
-        return await this.contract.getInstanceCreator(
-            ethers.utils.getAddress(instanceAddress)
-        );
-    }
+  async getInstanceType() {
+    return await this.contract.getInstanceType();
+  }
 
-    async getInstanceType() {
-        return await this.contract.getInstanceType();
-    }
+  async getInstance(index) {
+    return await this.contract.getInstance(ethers.utils.bigNumberify(index));
+  }
 
-    async getInstance(index) {
-        return await this.contract.getInstance(ethers.utils.bigNumberify(index));
-    }
+  async getInstances() {
+    return await this.contract.getInstances();
+  }
 
-    async getInstances() {
-        return await this.contract.getInstances();
-    }
-
-    async getPaginatedInstances(start, end) {
-        return await this.contract.getPaginatedInstances(
-            ether.utils.bigNumberify(start),
-            ethers.utils.bigNumberify(end)
-        );
-    }
+  async getPaginatedInstances(start, end) {
+    return await this.contract.getPaginatedInstances(
+      ether.utils.bigNumberify(start),
+      ethers.utils.bigNumberify(end)
+    );
+  }
 }
 module.exports = { Factory };

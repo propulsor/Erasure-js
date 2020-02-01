@@ -1,30 +1,18 @@
 const assert = require("assert");
-const { ethers } = require("ethers");
 const {
-    hexlify,
-    abiEncodeWithSelector,
-    NULL_ADDRESS,
     wallet,
     provider,
-    stakerWallet,
-    counterpartyWallet,
-    operatorWallet
+    stakerWallet
 } = require("../utils");
-const { Contracts } = require("../../packages/Base");
-const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Utils")
+const {RATIO_TYPES} = require("../../packages/Constants")
 const {ErasureEscrow,Escrow_Factory} = require("../../packages/Escrow")
 
 describe("CountdownGriefingEscrow",function(){
     let testEscrow,escrowOpts,ipfs,graph
-    const staker = stakerWallet.address,
-        counterparty = counterpartyWallet.address,
-        network = "ganache",
+    const network = "ganache",
         ratio = 2,
         ratioType = RATIO_TYPES.Dec,
-        metaData = "metaData",
-        operator=operatorWallet.address,
-        countdown =10,
-        proof="proof"
+        metaData = "metaData"
     describe("Escrow factory",function(){
         before(()=>{
             escrowOpts ={
@@ -52,11 +40,10 @@ describe("CountdownGriefingEscrow",function(){
             const sameEscrow = new ErasureEscrow({address:testEscrow.address,wallet,provider,ipfs,graph})
             assert.equal(sameEscrow.address,testEscrow.address)
         })
-        it("Should deposit stake",async ()=>{
-            sellerEscrow = new ErasureEscrow({address:testEscrow.address,wallet:counterpartyWallet,provider})
-            const confirmedTx = await sellerEscrow.depositStake(1)
+        it("Should approve and deposit stake",async ()=>{
+            const sellerEscrow = new ErasureEscrow({address:testEscrow.address,wallet:stakerWallet,provider})
+            const confirmedTx = await sellerEscrow.depositStake()
             console.log("confirmed tx of deposit stake", confirmedTx)
-
 
         })
         it("Should deposit payment", async ()=>{

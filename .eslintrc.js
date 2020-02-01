@@ -7,28 +7,28 @@ module.exports = {
   'extends': [
     'eslint:recommended',
   ],
-  'globals': {
-    'Atomics': 'readonly',
-    'SharedArrayBuffer': 'readonly',
-  },
   'parserOptions': {
-    'ecmaVersion': 2018,
+    'ecmaVersion': 6,
+    "sourceType": "module"
   },
   'rules': {
-    "no-else-return": 1,
+    "no-unused-vars": 1,
     "no-trailing-spaces": 1,
-    "class-methods-use-this": 0,
+    "class-methods-use-this": 1,
     "max-len": [2, 120],
     "indent": 1,
     "func-names": 0,
-    "no-param-reassign": 0,
-    "space-before-function-paren": 0,
+    "no-param-reassign": 1,
+    "space-before-function-paren": 1,
     "lines-between-class-members": 1,
     "import/prefer-default-export": 0,
-    "comma-dangle": 0,
-    "no-useless-constructor": 0,
-    "arrow-parens": 0,
-    "arrow-body-style": 0,
-    "no-void": 0,
+    "comma-dangle": 1,
+    "no-useless-constructor": 1,
+    "arrow-parens": 1,
+    "arrow-body-style": 1,
+    "no-void": 1,
+    "no-console": 1,
+    "no-else-return": 1,
+    "no-trailing-spaces": 1
   },
 };

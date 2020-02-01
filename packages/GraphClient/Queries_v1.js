@@ -10,7 +10,9 @@ const Queries = {
         variableMetadata
         variableMetadataB58
         postRegistry
-        posts
+        posts{
+            id
+        }
         initCallData
         createdTimestamp
         `
@@ -33,7 +35,7 @@ const Queries = {
         timestamp
         txHash`
     },
-    variableMetadatSetFeeds:{
+    variableMetadataSetFeeds:{
         returnData:`
         id
         instance
@@ -42,7 +44,7 @@ const Queries = {
         timestamp
         txHash`
     },
-    opreatorUpdateFeeds:{
+    operatorUpdatedFeeds:{
         returnData:`
         id
         instance
@@ -54,6 +56,9 @@ const Queries = {
     posts:{
         returnData: `id
         feed
+        {
+            id
+        }
         creator
         operator
         operatorStatus
@@ -65,7 +70,7 @@ const Queries = {
         initCallData
         createdTimestamp`
     },
-    instanceCreatePostFactories:{
+    instanceCreatedPostFactories:{
         returnData:`
         id
         instance
@@ -108,16 +113,16 @@ const Queries = {
         txHash
         `
     },
-    operatorUpdatePosts:{
+    operatorUpdatedPosts:{
         returnData:`
         id
         instance
-        oeprator
+        operator
         status
         timestamp
         txHash`
     },
-    proofHashSetPost:{
+    proofHashSetPosts:{
         returnData:`
         id
         instance
@@ -131,18 +136,16 @@ const Queries = {
         returnData:`
         id
         creator
-        staker
         counterparty
         operator
         operatorStatus
         ratio
         ratioType
-        countDownLength
         staticMetadata
         staticMetadataB58
         variableMetadata
         variableMetadataB58
-        statke
+        stake
         token
         deadline
         initCallData
@@ -192,18 +195,16 @@ const Queries = {
         returnData:`
         id
         instance
-        staker
         ratio
         ratioType
         timestamp
         txHash`
     },
-    griefedOneWayGriefing:{
+    griefedOneWayGriefings:{
         returnData:`
         id
         instance
         punisher
-        staker
         punishment
         cost
         message
@@ -231,7 +232,7 @@ const Queries = {
         txHash
         `
     },
-    stakeTakenOneWayGriefing:{
+    stakeTakenOneWayGriefings:{
         returnData:`
         id
         instance
@@ -261,7 +262,7 @@ const Queries = {
         txHash
         `
     },
-    deadlineSetOneWayGriefing:{
+    deadlineSetOneWayGriefings:{
         returnData:`
         id
         instance

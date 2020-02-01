@@ -1,22 +1,25 @@
 const { ethers } = require("ethers");
-const IPFS = require("ipfs-mini")
-const ErasureGraph = require("../../GraphClient")
+const assert = require("assert")
+const {NETWORKS,VERSIONS} = require("../../Constants")
+const {getContractMetadata} =require("../../Utils")
 
 class Template {
-    constructor({contract, address, wallet, provider,ipfs,graph}) {
+    constructor({contractName, wallet, provider,ipfs,graph,network=NETWORKS.mainnet,version=VERSIONS.V3,contracts=null}) {
+        console.log("contract feed info", contractName,network,version)
+        const {address,artifact} = getContractMetadata({contractName,version,network,contracts}) 
         let contractInstance = new ethers.Contract(
             address,
-            contract.template.artifact.abi,
+            artifact,
             provider
         );
         this.contract = contractInstance.connect(wallet);
-        this.interface = new ethers.utils.Interface(
-            contract.template.artifact.abi
-        );
         this.wallet = wallet;
         this.address=address
         this.ipfs=ipfs
         this.graph=graph
+        this.version=version
+        this.network=network
+        this.contract.getCreator().then(console.log).catch(console.error)
     }
 
     /**
@@ -28,7 +31,7 @@ class Template {
         const actualOpertor = await this.contract.getOperator();
         assert.equal(
             actualOpertor,
-            wallet.address,
+            this.wallet.address,
             "Only Operator can set Metadata"
         );
         const feedMetadata = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(data));
@@ -42,7 +45,7 @@ class Template {
    */
     async transferOperator(newOperator) {
         let tx = await this.contract.transferOperator(
-            ethers.utils.getAddress(newOperator)
+            newOperator
         );
         return await tx.wait();
     }

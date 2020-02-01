@@ -1,0 +1,51 @@
+{
+	"schemaVersion": "2.0.0",
+	"contractName": "BurnNMR",
+	"compilerOutput": {
+		"abi": [],
+		"evm": {
+			"bytecode": {
+				"linkReferences": {},
+				"object": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820b5eee8c01a93ce2bd9f92ee3a4e0590e25be65474308a9296ba81498e632f5b464736f6c634300050d0032",
+				"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x3E DUP1 PUSH1 0x1D PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 0xB5 0xEE 0xE8 0xC0 BYTE SWAP4 0xCE 0x2B 0xD9 0xF9 0x2E 0xE3 LOG4 0xE0 MSIZE 0xE 0x25 0xBE PUSH6 0x474308A9296B 0xA8 EQ SWAP9 0xE6 ORIGIN CREATE2 0xB4 PUSH5 0x736F6C6343 STOP SDIV 0xD STOP ORIGIN ",
+				"sourceMap": "468:1370:10:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;468:1370:10;;;;;;;"
+			}
+		}
+	},
+	"sources": {
+		"modules/BurnNMR.sol": {
+			"id": 10
+		},
+		"modules/iNMR.sol": {
+			"id": 27
+		}
+	},
+	"sourceCodes": {
+		"modules/BurnNMR.sol": "pragma solidity ^0.5.13;\n\nimport \"./iNMR.sol\";\n\n/// @title BurnNMR\n/// @author Stephane Gosselin (@thegostep) for Numerai Inc\n/// @dev Security contact: security@numer.ai\n/// @dev Version: 1.3.0\n/// @notice This module simplifies calling NMR burn functions using regular openzeppelin ERC20Burnable interface and revert on failure.\n///         This helper is required given the non-standard implementation of the NMR burn functions: https://github.com/numerai/contract\ncontract BurnNMR {\n\n    // address of the token\n    address private constant _NMRToken = address(0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671);\n    // uniswap exchange of the token\n    address private constant _NMRExchange = address(0x2Bf5A5bA29E60682fC56B2Fcf9cE07Bef4F6196f);\n\n    /// @notice Burns a specific amount of NMR from this contract.\n    /// @param value uint256 The amount of NMR (18 decimals) to be burned.\n    function _burn(uint256 value) internal {\n        require(iNMR(_NMRToken).mint(value), \"nmr burn failed\");\n    }\n\n    /// @notice Burns a specific amount of NMR from the target address and decrements allowance.\n    /// @param from address The account whose tokens will be burned.\n    /// @param value uint256 The amount of NMR (18 decimals) to be burned.\n    function _burnFrom(address from, uint256 value) internal {\n        require(iNMR(_NMRToken).numeraiTransfer(from, value), \"nmr burnFrom failed\");\n    }\n\n    /// @notice Get the NMR token address.\n    /// @return token address The NMR token address.\n    function getTokenAddress() internal pure returns (address token) {\n        token = _NMRToken;\n    }\n\n    /// @notice Get the NMR Uniswap exchange address.\n    /// @return token address The NMR Uniswap exchange address.\n    function getExchangeAddress() internal pure returns (address exchange) {\n        exchange = _NMRExchange;\n    }\n\n}\n",
+		"modules/iNMR.sol": "pragma solidity ^0.5.13;\n\n\n/// @title iNMR\n/// @author Stephane Gosselin (@thegostep) for Numerai Inc\n/// @dev Security contact: security@numer.ai\n/// @dev Version: 1.3.0\ncontract iNMR {\n\n    // ERC20\n    function totalSupply() external returns (uint256);\n    function balanceOf(address _owner) external returns (uint256);\n    function allowance(address _owner, address _spender) external returns (uint256);\n\n    function transfer(address _to, uint256 _value) external returns (bool ok);\n    function transferFrom(address _from, address _to, uint256 _value) external returns (bool ok);\n    function approve(address _spender, uint256 _value) external returns (bool ok);\n    function changeApproval(address _spender, uint256 _oldValue, uint256 _newValue) external returns (bool ok);\n\n    /// @dev Behavior has changed to match OpenZeppelin's `ERC20Burnable.burn(uint256 amount)`\n    /// @dev Destoys `amount` tokens from `msg.sender`, reducing the total supply.\n    ///\n    /// Emits a `Transfer` event with `to` set to the zero address.\n    /// Requirements:\n    /// - `account` must have at least `amount` tokens.\n    function mint(uint256 _value) external returns (bool ok);\n\n    /// @dev Behavior has changed to match OpenZeppelin's `ERC20Burnable.burnFrom(address account, uint256 amount)`\n    /// @dev Destoys `amount` tokens from `account`.`amount` is then deducted\n    /// from the caller's allowance.\n    ///\n    /// Emits an `Approval` event indicating the updated allowance.\n    /// Emits a `Transfer` event with `to` set to the zero address.\n    ///\n    /// Requirements:\n    /// - `account` must have at least `amount` tokens.\n    /// - `account` must have approved `msg.sender` with allowance of at least `amount` tokens.\n    function numeraiTransfer(address _to, uint256 _value) external returns (bool ok);\n}\n"
+	},
+	"sourceTreeHashHex": "0xe0de64515fa819773d1d0e57c9f4f1551c26d7bee733ff9646b223b0e25ffd7e",
+	"compiler": {
+		"name": "solc",
+		"version": "soljson-v0.5.13+commit.5b0b510c.js",
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"*": [
+						"abi",
+						"evm.bytecode.object"
+					]
+				}
+			},
+			"evmVersion": "constantinople",
+			"remappings": [
+				"@openzeppelin/contracts=/Users/kimbui/Documents/Code/erasure-protocol/node_modules/@openzeppelin/contracts"
+			]
+		}
+	},
+	"networks": {}
+}

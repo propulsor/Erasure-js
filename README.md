@@ -8,7 +8,7 @@ ErasureJS module comprises of:
 
 # Usage
 ```
-const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,ErasureEscrow,ErasureUtils} = require("erasure-js)
+const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,ErasureEscrow,ErasureUtils,ErasureConstants} = require("erasurejs)
 ```
 
 ### Config variables for constructors
@@ -23,7 +23,7 @@ const {ErasureClient,ErasureGraph,ErasureFeed,ErasurePost,ErasureAgreement,Erasu
 # Version :
 ### ErasureGraph supports both protocol version 1.0.1 and 1.2.0
 ```
-const {VERSION_V1,VERSION_V2,MAINNET,RINKEBY} = ErasureUtils
+const {NETWORKS,VERSIONS} = ErasureConstants
 const client = new ErasureClient({version=VERSION_V2})
 const graph = new ErasureGraph({version=VERSION_V1,network=MAINNET})
 ```
@@ -45,7 +45,7 @@ const graph = new ErasureGraph({version=VERSION_V1,network=MAINNET})
 
 ## ErasureClient
 ```
-const client = new ErasureClient({wallet=null, provider=null, ipfs=null:{host:string,post:string,protocol:string},graph=null:string})
+const client = new ErasureClient({wallet=null, provider=null, ipfs=null:{host:string,post:string,protocol:string},graph=null:string,network:NETWORKS.RINKEBY,version:VERSIONS.V2})
 ```
 - Note : 
     - If no wallet is specified, a new ethers wallet will be created (when you just want to read data)
@@ -83,7 +83,7 @@ const client = new ErasureClient({wallet=null, provider=null, ipfs=null:{host:st
 
 ### ErasureUser:
 ```
-const erasureUser = new ErasureUser({wallet,provider,ipfs,graph})
+const erasureUser = new ErasureUser({wallet,provider,ipfs,graph,network:NETWORKS.RINKEBY,version:VERSIONS.V2})
 ```
 #### create and register user 
 
@@ -115,7 +115,7 @@ await client.getUserData(address)
 ### ErasureFeed 
 - (extends Template)
 ```
-const feed = new ErasureFeed({address,wallet,provider,ipfs,graph})
+const feed = new ErasureFeed({address,wallet,provider,ipfs,graph,network:NETWORKS.RINKEBY,version:VERSIONS.V2})
 ```
 #### Create new post: 
 ```
@@ -169,7 +169,7 @@ const success:bool = await post.reveal({symKey})
 
 ### ErasureEscrow : 
 ```
-const escrow = new ErasureEscrow({address,wallet,provider,ipfs,graph})
+const escrow = new ErasureEscrow({address,wallet,provider,ipfs,graphnetwork:NETWORKS.RINKEBY,version:VERSIONS.V2})
 ```
 #### METHODS
 ##### Buyer:
@@ -204,7 +204,7 @@ const escrow = new ErasureEscrow({address,wallet,provider,ipfs,graph})
 
 ### ErasureAgreement
 ```
-const agreement = new ErasureAgreement({address,wallet,provider,ipfs,graph})
+const agreement = new ErasureAgreement({address,wallet,provider,ipfs,graph,network:NETWORKS.RINKEBY,version:VERSIONS.V2})
 ```
 #### METHODS
 - `await agreement.reward(amount)`
@@ -223,7 +223,7 @@ const agreement = new ErasureAgreement({address,wallet,provider,ipfs,graph})
 ## Erasure Graph
 ```
 const {ErasureGraph} = require("erasureJs")
-const erasureGraph = new ErasureGraph({network:ErasureUtils.RINKEBY,version:ErasureUtils.VERSION_V2}) 
+const erasureGraph = new ErasureGraph({network:NETWORKS.RINKEBY,version:VERSIONS.V2}) 
 ```
 - Network : 
     + `mainnet` or `rinkery` for accessing Erasure graph public node

@@ -3,16 +3,19 @@
  */
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { NULL_ADDRESS, abiEncodeWithSelector, hexlify, AGREEMENT_TYPE } = require("../Utils");
+const { abiEncodeWithSelector } = require("../Utils");
+const {AGREEMENT_TYPE,NULL_ADDRESS} = require("../Constants")
 const { Factory, Contracts } = require("../Base");
 const {ErasureAgreement} = require("./Agreement")
 
 class Agreement_Factory extends Factory {
-    constructor({ wallet, provider, network = "mainnet",type }) {
-        if (!type || type == AGREEMENT_TYPE.COUNTDOWN) {
-            super({ contract: Contracts.CountdownGriefing, wallet, network, provider });
+    constructor( opts ) {
+        if (!opts.type || opts.type == AGREEMENT_TYPE.CountdownGriefing) {
+            super({ contractName: "CountdownGriefingFactory",...opts });
+            this.type = opts.type
         } else {
-            super({ contract: Contracts.SimpleGriefing, wallet, network, provider });
+            super({ contractName:"SimpleGriefingFactory",...opts });
+            this.type = opts.type
 
         }
     }
@@ -34,6 +37,7 @@ class Agreement_Factory extends Factory {
         }
         let callData
         if(!countdown){//simplegriefing
+            this.type=AGREEMENT_TYPE.SIMPLE
             callData = abiEncodeWithSelector(
                 "initialize",
                 ["address", "address", "address", "uint256", "uint8", "bytes"],
@@ -43,11 +47,12 @@ class Agreement_Factory extends Factory {
                     ethers.utils.getAddress(counterparty),
                     ethers.utils.bigNumberify(ratio),
                     ethers.utils.bigNumberify(ratioType),
-                    ethers.utils.keccak256(hexlify(metaData))
+                    Buffer.from(metaData)
                 ]
             );
         }
         else{//countdownGriefing
+            this.type=AGREEMENT_TYPE.COUNTDOWN
             callData = abiEncodeWithSelector(
                 "initialize",
                 ["address", "address", "address", "uint256", "uint8", "uint256", "bytes"],
@@ -58,7 +63,7 @@ class Agreement_Factory extends Factory {
                     ethers.utils.bigNumberify(ratio),
                     ethers.utils.bigNumberify(ratioType),
                     ethers.utils.bigNumberify(countdown),
-                    ethers.utils.keccak256(hexlify(metaData))
+                    Buffer.from(metaData)
                 ]
             );
         }

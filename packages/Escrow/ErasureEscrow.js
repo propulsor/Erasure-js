@@ -3,14 +3,16 @@
  */
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { ESCROW_STATUS, createIpfsHash ,NULL_ADDRESS} = require("../Utils");
+const { createIpfsHash ,hexToHash} = require("../Utils");
+const {ESCROW_STATUS,NULL_ADDRESS} = require("../Constants")
+const Buffer = require("buffer")
 const { Template, Contracts } = require("../Base");
 const ErasureHelper = require("@erasure/crypto-ipfs")
 const {Users_Registry} = require("../Registry")
 
 class ErasureEscrow extends Template {
     constructor(opts) {
-        super({ contract: Contracts.CountdownGriefingEscrow, ...opts });
+        super({ contractName: "CountdownGriefingEscrow", ...opts });
         this.userRegistry = new Users_Registry({wallet:opts.wallet,provider:opts.provider,network:opts.network})
     }
 
@@ -18,7 +20,6 @@ class ErasureEscrow extends Template {
     async onlySellerOrOperator() {
         let seller = await this.seller()
         let operator = await this.operator();
-        console.log("seller : ", seller)
         assert(
             seller==NULL_ADDRESS || seller == this.wallet.address || operator == this.wallet.address,
             "Only seller or operator can perform this method"
@@ -104,7 +105,7 @@ class ErasureEscrow extends Template {
         await this.onlyOpenOrPaymentDeposited();
         let seller = await this.seller();
         let tx;
-        if (!seller) {
+        if (seller==NULL_ADDRESS) {
             //deposit and set seller
             tx = await this.contract.depositAndSetSeller(this.wallet.address);
         } else {

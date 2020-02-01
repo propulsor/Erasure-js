@@ -1,20 +1,14 @@
-const etherlime = require("etherlime-lib");
-const { deploy } = require("../deploy_ganache");
 const { ethers } = require("ethers");
-const ganache = require("ganache-core");
 const assert = require("assert")
 const {
     hexlify,
-    NULL_ADDRESS,
     wallet,
     operatorWallet,
     provider
 } = require("../utils");
-const { Contracts } = require("../../packages/Base");
 const { ErasureFeed,Feed_Factory } = require("../../packages/Feed");
 const IPFS = require("ipfs-mini")
-const ErasureGraph = require("../../packages/GraphClient")
-const ErasureHelper = require("@erasure/crypto-ipfs")
+const {ErasureGraph} = require("../../packages/GraphClient")
 
 
 describe("Feed", function() {
@@ -29,12 +23,18 @@ describe("Feed", function() {
         METADATA = "metaData",
         SALT = "salt";
     // post variables
-    const feedMetadata = ethers.utils.keccak256(
-        ethers.utils.toUtf8Bytes("feedMetadata")
-    );
-    const newMetaData = ethers.utils.keccak256(
-        ethers.utils.toUtf8Bytes("newFeedMetadata")
-    );
+    beforeEach(async ()=>{
+        feedMetadata = await ErasureHelper.multihash({
+            input: METADATA,
+            inputType: 'raw',
+            outputType: 'hex',
+          })
+          newMetaData = await ErasureHelper.multihash({
+            input: "newFeedMetaData",
+            inputType: 'raw',
+            outputType: 'hex',
+          })
+    })
     const proofHash = ethers.utils.sha256(hexlify(PROOF));
     let TestOperatorFeed,feedFactory, TestFeed, ifpfs,graph
     describe("Feed Tests", function() {
@@ -79,16 +79,16 @@ describe("Feed", function() {
             let resetdataTx = await TestFeed.setMetadata(newMetaData)
             const feedMetadata = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(newMetaData));
             let setDataEvent = resetdataTx.events.find(e=>e.event=="MetadataSet")
-            assert(setDataEvent.args.metaData,"no metaData found in setMetaData event")
-            assert.equal(setDataEvent.args.metaData,feedMetadata)
+            assert(setDataEvent.args.metadata,"no metaData found in setMetaData event")
+            assert.equal(setDataEvent.args.metadata,feedMetadata)
 
         });
         it("6. Operator should be able to set Metadata", async () => {
             let resetdataTx = await TestOperatorFeed.setMetadata(newMetaData)
             const feedMetadata = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(newMetaData));
             let setDataEvent = resetdataTx.events.find(e=>e.event=="MetadataSet")
-            assert(setDataEvent.args.metaData,"no metaData found in setMetaData event")
-            assert.equal(setDataEvent.args.metaData,feedMetadata)
+            assert(setDataEvent.args.metadata,"no metaData found in setMetaData event "+ JSON.stringify(setDataEvent.args))
+            assert.equal(setDataEvent.args.metadata,feedMetadata)
         });
     });
 });

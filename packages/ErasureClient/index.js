@@ -1,11 +1,11 @@
 const ethers = require("ethers")
 const { Users_Registry, Feeds_Registry, Agreements_Registry, Escrows_Registry } = require("../Registry")
 const { ErasureEscrow ,Escrow_Factory} = require("../Escrow")
-const {ErasureAgreement,Agreement_Factory} = require("../Agreement")
+const {Agreement_Factory,ErasureAgreement} = require("../Agreement")
 const {ErasureFeed,Feed_Factory} = require("../Feed")
-const { INFURA_IPFS, MAINNET_GRAPH ,AGREEMENT_TYPE} = require("../Utils")
+const { INFURA_IPFS, MAINNET_GRAPH ,AGREEMENT_TYPE,VERSIONS,NETWORKS} = require("../Constants")
 const IPFS = require("ipfs-mini")
-const ErasureGraph = require("../GraphClient")
+const {ErasureGraph} = require("../GraphClient")
 
 
 class ErasureClient {
@@ -19,16 +19,17 @@ class ErasureClient {
    * @param {graphUri} [config.graphUri] - graph uri for ErasureGraph
    * @param wallet
    */
-    constructor({ wallet=null, provider=null, network = "mainnet", ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH }={}) {
+    constructor({ wallet=null, provider=null, network = NETWORKS.mainnet,version=VERSIONS.V3, ipfsOpts = INFURA_IPFS, graphUri = MAINNET_GRAPH,contracts=null }={}) {
         ipfsOpts = ipfsOpts || { host: "ipfs.infura.io", port: "5001", protocol: "https" }
         if(!provider){
-            if(network=="mainnet"){
+            if(network==NETWORKS.mainnet){
                 provider = new ethers.providers.InfuraProvider()
             }
-            else if (network=="rinkerby"){
+            else if (network==NETWORKS.rinkeby){
                 provider = new ethers.providers.InfuraProvider("rinkeby")
             }
             else{
+                network=NETWORKS.ganache
                 provider = new ethers.providers.JsonRpcProvider()
             }
         }
@@ -36,16 +37,17 @@ class ErasureClient {
             wallet = ethers.Wallet.createRandom()
             wallet.connect(provider)
         }
+        this.contracts = contracts
         this.wallet = wallet.provider ? wallet : wallet.connect(provider);
         this.provider = provider;
         this.network = network;
-        this.userRegistry = new Users_Registry({ wallet, provider, network })
-        this.feedRegistry = new Feeds_Registry({ wallet, provider, network })
-        this.escrowRegistry = new Escrows_Registry({ wallet, provider, network })
-        this.agreementRegistry = new Agreements_Registry({ wallet, provider, network })
+        this.userRegistry = new Users_Registry({ wallet, provider, network ,version,contracts})
+        this.feedRegistry = new Feeds_Registry({ wallet, provider, network, version,contracts })
+        this.escrowRegistry = new Escrows_Registry({ wallet, provider, network,version,contracts })
+        this.agreementRegistry = new Agreements_Registry({ wallet, provider, network,version,contracts })
         this.ipfs = new IPFS(ipfsOpts)
-        this.graph = new ErasureGraph({ network, uri: graphUri })
-        this.factoryOpts = { wallet, provider, network }
+        this.graph = new ErasureGraph({ network, uri: graphUri,version,contracts })
+        this.factoryOpts = { wallet, provider, network,version,contracts }
     }
 
 
@@ -83,7 +85,7 @@ class ErasureClient {
      * @returns {Promise} {feed,confirmedTx} object
      */
     async createFeed({ proof=null, metaData=null, operator = null, salt = null }) {
-        const feedFactory = new Feed_Factory({ wallet: this.wallet, provider: this.provider, network: this.network })
+        const feedFactory = new Feed_Factory({ wallet: this.wallet, provider: this.provider, network: this.network, contracts:this.contracts})
         return await feedFactory.create({ proof, metaData, salt, operator, ipfs: this.ipfs, graph: this.graph })
     }
 
@@ -92,21 +94,36 @@ class ErasureClient {
    * @param {String} address
    */
     async getFeed(address) {
-        return new ErasureFeed({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
+        return new ErasureFeed({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph , contracts:this.contracts})
     }
 
 
 
     //=== AGREEMENTS ====//
-    async getAgreement(address) {return this.agreementRegistry.getAgreement(address)}
+    /**
+     *
+     * @param {string} address
+     * @return {ErasureAgreement}
+     */
+    async getAgreement(address) {
 
-    async getAgreementsCount(){return this.agreementRegistry.getAgreementsCount()}
+        const agreement =  await this.getAgreementData(address)
+        const factoryId = agreement[1]
+        const countDownFactoryId = await this.agreementRegistry.getCountDownFactoryId()
+        if(factoryId===countDownFactoryId){
+            return new ErasureAgreement({type:AGREEMENT_TYPE.COUNTDOWN,address,wallet:this.wallet,provider:this.provider,ipfs:this.ipfs,graph:this.graph,contracts:this.contracts})
+        }
+        return new ErasureAgreement({type:AGREEMENT_TYPE.SIMPLE,address,wallet:this.wallet,provider:this.provider,ipfs:this.ipfs,graph:this.graph,contracts:this.contracts})
 
-    async getAgreementData(address){this.agreementRegistry.getAgreementData(address)}
+    }
 
-    async getAllAgreements(){return this.agreementRegistry.getAllAgreements()}
+    async getAgreementsCount(){return await this.agreementRegistry.getAgreementsCount()}
 
-    async getPaginatedAgreements(start,end){return  this.agreementRegistry.getPanigatedAgreements(start,end)}
+    async getAgreementData(address){return await this.agreementRegistry.getAgreementData(address)}
+
+    async getAllAgreements(){return await this.agreementRegistry.getAllAgreements()}
+
+    async getPaginatedAgreements(start,end){return await  this.agreementRegistry.getPanigatedAgreements(start,end)}
 
     /**
    * Create CountdownGriefing /SimpleGriefing Agreement
@@ -127,14 +144,6 @@ class ErasureClient {
         const type = countdown ? AGREEMENT_TYPE.COUNTDOWN : AGREEMENT_TYPE.SIMPLE
         let factory = new Agreement_Factory({ ...this.factoryOpts, type })
         return await factory.create({ staker, counterparty, ratio, ratioType, metaData, operator, countdown, salt, ipfs: this.ipfs, graph: this.graph })
-    }
-
-    /**
-   * Get Agreement from agreement address
-   * @param {string} address of agreement
-   */
-    async getAgreement(address) {
-        return new ErasureAgreement({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
     }
 
 
@@ -192,7 +201,7 @@ class ErasureClient {
    * @param {string} address of escrow
    */
     async getEscrow(address) {
-        return new ErasureEscrow({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph })
+        return new ErasureEscrow({ address, wallet: this.wallet, provider: this.provider, ipfs: this.ipfs, graph: this.graph,contracts:this.contracts })
     }
 
 }
