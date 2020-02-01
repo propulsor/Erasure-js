@@ -5,7 +5,7 @@ describe("Erasure graph test",function(){
     let client
     describe("Reading feeds from the graphs", function(){
         before(async ()=>{
-            client = new ErasureGraph({network:NETWORKS.RINKEBY,version:VERSIONS.V2})
+            client = new ErasureGraph({network:NETWORKS.rinkeby,version:VERSIONS.V2})
         })
         it("Should get all feeds", async()=>{
             const feeds = await client.feeds()

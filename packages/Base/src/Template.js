@@ -4,21 +4,22 @@ const {NETWORKS,VERSIONS} = require("../../Constants")
 const {getContractMetadata} =require("../../Utils")
 
 class Template {
-    constructor({contractName, wallet, provider,ipfs,graph,network=NETWORKS.MAINNET,version=VERSIONS.V3}) {
-        const {address,artifact} = getContractMetadata({contractName,version,network}) 
+    constructor({contractName, wallet, provider,ipfs,graph,network=NETWORKS.mainnet,version=VERSIONS.V3,contracts=null}) {
+        console.log("contract feed info", contractName,network,version)
+        const {address,artifact} = getContractMetadata({contractName,version,network,contracts}) 
         let contractInstance = new ethers.Contract(
             address,
             artifact,
             provider
         );
         this.contract = contractInstance.connect(wallet);
-        this.interface = new ethers.utils.Interface(
-            contract.template.artifact.abi
-        );
         this.wallet = wallet;
         this.address=address
         this.ipfs=ipfs
         this.graph=graph
+        this.version=version
+        this.network=network
+        this.contract.getCreator().then(console.log).catch(console.error)
     }
 
     /**
@@ -44,7 +45,7 @@ class Template {
    */
     async transferOperator(newOperator) {
         let tx = await this.contract.transferOperator(
-            ethers.utils.getAddress(newOperator)
+            newOperator
         );
         return await tx.wait();
     }

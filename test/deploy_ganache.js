@@ -1,7 +1,7 @@
 const ethers = require('ethers')
 const assert = require('assert')
 const ganache = require('ganache-cli')
-const { hexlify, createIPFShash, abiEncodeWithSelector } = require('./utils')
+const { hexlify, createIPFShash, abiEncodeWithSelector,provider } = require('./utils')
 const RATIO_TYPES = {
   NaN: 0,
   Inf: 1,
@@ -120,27 +120,11 @@ const unlocked_accounts = [
   daiDeployAddress,
   uniswapFactoryAddress,
 ]
-
-let ganacheConfig = {
-  port: 8545,
-  host: '0.0.0.0',
-  unlocked_accounts: unlocked_accounts,
-  default_balance_ether: 1000,
-  total_accounts: 10,
-  hardfork: 'constantinople',
-  mnemonic:
-    'myth like bonus scare over problem client lizard pioneer submit female collect',
-}
-
-let provider
-// if (args.exit_on_success) {
-  console.log('provider')
-  provider = new ethers.providers.Web3Provider(ganache.provider(ganacheConfig))
 // } else {
-//   console.log('server')
-//   const server = ganache.server(ganacheConfig)
-//   server.listen('8545')
-//   provider = new ethers.providers.JsonRpcProvider()
+  // console.log('server')
+  // const server = ganache.server(ganacheConfig)
+  // server.listen('8545')
+  // provider = new ethers.providers.JsonRpcProvider()
 // }
 
 const main = async () => {

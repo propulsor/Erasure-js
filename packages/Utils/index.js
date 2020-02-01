@@ -50,16 +50,30 @@ function b64(data) {
   return encodedData;
 }
 function getContractMetadata({ contractName, version, network ,contracts=null}) {
-  if(network=="ganache"){
+  if(network==NETWORKS.ganache){
     // get contract data from local ?
+    console.log("GET contract from local")
     if(!contracts){
       throw "contracts objecy is needed for local deployment"
     }
-    const contract = contract[contractName]
+    let contract
+    
+    if(contractName.includes("Factory"))
+      contract = contracts[contractName.replace("Factory","")].factory
+    else if(["Feed","Posts","CountdownGriefing","SimpleGriefing","CountdownGriefingEscrow"].includes(contractName)){
+      contract = contracts[contractName].template
+    }
+    else
+    {
+      contract = contracts[contractName]
+    }
+    console.log("contract name and contract", contractName,contract.wrap.address)
+    // console.log("get contract metadta ", contract.wrap.address, contract.wrap.interface.abi)
     return {
       address: contract.wrap.address,
-      artifact : contract.wrap.artifact.abi
+      artifact : contract.wrap.interface.abi
     }
+    
   }
   else{
     if (!VERSIONS[version]) {

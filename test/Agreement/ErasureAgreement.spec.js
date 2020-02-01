@@ -15,7 +15,7 @@ const {
 } = require("../../packages/Agreement");
 const {RATIO_TYPES,AGREEMENT_TYPE} = require("../../packages/Constants")
 
-describe.only("Agreements", function() {
+describe("Agreements", function() {
     const staker = stakerWallet.address,
         counterparty = counterpartyWallet.address,
         network = "ganache",
@@ -30,7 +30,7 @@ describe.only("Agreements", function() {
         before(async () => {
         });
         it("1.Should create a CountdownGriefing Agreement from Factory", async () => {
-            agreementFactory = new Agreement_Factory({wallet:stakerWallet,provider,network})
+            agreementFactory = new Agreement_Factory({wallet:stakerWallet,provider,network,contracts})
             const {confirmedTx,agreement} = await agreementFactory.create({
                 staker,
                 counterparty,

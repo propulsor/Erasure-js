@@ -9,16 +9,8 @@ const { Template, Contracts } = require("../Base");
 class ErasureAgreement extends Template {
 
     constructor(opts) {
-        if(!opts.type || opts.type==AGREEMENT_TYPE.COUNTDOWN){
-            super({ contract:Contracts.CountdownGriefing, ...opts });
-            this.type=AGREEMENT_TYPE.COUNTDOWN
-        }
-        else{
-            super({contract : Contracts.SimpleGriefing,...opts})
-            this.type=AGREEMENT_TYPE.SIMPLE
-        }
-
-
+        super({ contractName:opts.type, ...opts });
+        this.type=opts.type
     }
 
     //====Modifiers====//

@@ -3,18 +3,19 @@
  */
 const { ethers } = require("ethers");
 const assert = require("assert");
-const { NULL_ADDRESS, abiEncodeWithSelector, hexlify, AGREEMENT_TYPE } = require("../Utils");
+const { abiEncodeWithSelector } = require("../Utils");
+const {AGREEMENT_TYPE,NULL_ADDRESS} = require("../Constants")
 const { Factory, Contracts } = require("../Base");
 const {ErasureAgreement} = require("./Agreement")
 
 class Agreement_Factory extends Factory {
-    constructor({ wallet, provider, network = "mainnet",type }) {
-        if (!type || type == AGREEMENT_TYPE.COUNTDOWN) {
-            super({ contract: Contracts.CountdownGriefing, wallet, network, provider });
-            this.type = AGREEMENT_TYPE.COUNTDOWN
+    constructor( opts ) {
+        if (!opts.type || opts.type == AGREEMENT_TYPE.CountdownGriefing) {
+            super({ contractName: "CountdownGriefingFactory",...opts });
+            this.type = opts.type
         } else {
-            super({ contract: Contracts.SimpleGriefing, wallet, network, provider });
-            this.type = AGREEMENT_TYPE.SIMPLE
+            super({ contractName:"SimpleGriefingFactory",...opts });
+            this.type = opts.type
 
         }
     }

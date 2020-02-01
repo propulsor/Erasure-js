@@ -1,25 +1,31 @@
 const { ethers } = require("ethers");
 const { VERSIONS, NETWORKS } = require("../../Constants");
-const { getContractMetaData } = require("../../Utils");
+const { getContractMetadata } = require("../../Utils");
 
 class Factory {
   constructor({
     contractName,
     wallet,
     provider,
-    network = NETWORKS.MAINNET,
-    version = VERSIONS.V3
+    network = NETWORKS.mainnet,
+    version = VERSIONS.V3,
+    contracts=null
   }) {
-    const { address, artifact } = getContractMetaData({
+    console.log("opts in factory", contractName,network,version)
+    const { address, artifact } = getContractMetadata({
       contractName,
       version,
-      network
+      network,contracts
     });
+    console.log("address from utils", contractName,address)
     let contractInstance = new ethers.Contract(address, artifact, provider);
     this.provider = provider;
     this.contract = contractInstance.connect(wallet);
-    this.interface = new ethers.utils.Interface(contract.factory.artifact.abi);
+    this.interface = new ethers.utils.Interface(artifact);
     this.wallet = wallet;
+    this.network=network
+    this.version=version
+    this.contracts=contracts
   }
 
   //==== methods with required implementation
@@ -53,7 +59,7 @@ class Factory {
 
   async getInstanceCreator(instanceAddress) {
     return await this.contract.getInstanceCreator(
-      ethers.utils.getAddress(instanceAddress)
+      instanceAddress
     );
   }
 

@@ -9,15 +9,16 @@ const {getContractMetadata} = require("../../Utils")
  * Read only class for getting data from registries
  */
 class Registry {
-    constructor({contractName, provider, version=VERSIONS.V3,network = NETWORKS.MAINNET}) {
+    constructor({contractName, provider, version=VERSIONS.V3,network = NETWORKS.mainnet,contracts=null}) {
         this.provider = provider;
-        const {address,artifact} = getContractMetadata({contractName,version,network})
+        const {address,artifact} = getContractMetadata({contractName,version,network,contracts})
         this.contract = new ethers.Contract(
             address,
             artifact,
             provider
         );
         this.network=network
+        this.version=version
     }
 
     //GETTERS

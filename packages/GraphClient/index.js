@@ -5,16 +5,17 @@ const { createHttpLink } = require('apollo-link-http');
 const {VERSIONS,NETWORKS,GRAPH_URLS} = require("../Constants")
 const Queries_v1 = require("./Queries_v1")
 const Queries_v2 = require("./Queries_v2")
+const Queries_v3 = require("./Queries_v3")
 const gql = require("graphql-tag")
 
 /**
  * Client to query Erasure data from explorer
  */
 class ErasureGraph {
-    constructor({ network=NETWORKS.RINKEBY, uri = undefined, version=VERSIONS.V3 }={}) {
+    constructor({ network=NETWORKS.rinkeby, uri = undefined, version=VERSIONS.V3 }={}) {
         const cache = new InMemoryCache();
         let Queries
-        if(version == VERSION_2 && network==MAINNET){
+        if(version == VERSIONS.V2 && network==NETWORKS.rinkeby){
             throw "Erasure Graph V2 is only available in rinkeby"
         }
         if (!uri) {
@@ -23,12 +24,12 @@ class ErasureGraph {
         if(version == VERSIONS.V1){
             Queries = Queries_v1
         }
-        else if (version == VERSIONS.V2){
+        else if (version == VERSIONS.V3){
             Queries = Queries_v2
         }
         else{
-            throw "invalid version, V3 is in development"
-            // Queries = Queries_V3
+            
+             Queries = Queries_v3
         }
         const link = createHttpLink({ uri, fetch })
         this.client = new ApolloClient({ cache, link })

@@ -23,12 +23,18 @@ describe("Feed", function() {
         METADATA = "metaData",
         SALT = "salt";
     // post variables
-    const feedMetadata = ethers.utils.keccak256(
-        ethers.utils.toUtf8Bytes("feedMetadata")
-    );
-    const newMetaData = ethers.utils.keccak256(
-        ethers.utils.toUtf8Bytes("newFeedMetadata")
-    );
+    beforeEach(async ()=>{
+        feedMetadata = await ErasureHelper.multihash({
+            input: METADATA,
+            inputType: 'raw',
+            outputType: 'hex',
+          })
+          newMetaData = await ErasureHelper.multihash({
+            input: "newFeedMetaData",
+            inputType: 'raw',
+            outputType: 'hex',
+          })
+    })
     const proofHash = ethers.utils.sha256(hexlify(PROOF));
     let TestOperatorFeed,feedFactory, TestFeed, ifpfs,graph
     describe("Feed Tests", function() {

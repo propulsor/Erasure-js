@@ -1,7 +1,5 @@
 const ethers = require("ethers")
-const NULL_ADDRESS = ethers.utils.getAddress(
-    "0x0000000000000000000000000000000000000000"
-);
+const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 const RATIO_TYPES = {
     NaN: 0,
     // CgtP: 1,
@@ -32,8 +30,8 @@ const ESCROW_STATUS = {
 };
 
 const AGREEMENT_TYPE = {
-    COUNTDOWN: "CountdownGriefing",
-    SIMPLE: "SimpleGriefing"
+    CountdownGriefing: "CountdownGriefing",
+    SimpleGriefing: "SimpleGriefing"
 };
 const VERSIONS = {
     V1: "V1",
@@ -41,10 +39,11 @@ const VERSIONS = {
     V3: "V3"
 };
 const NETWORKS = {
-    MAINNET: "mainnet",
-    RINKEBY: "rinkeby",
-    KOVAN: "kovan",
-    GANACHE: "ganache"
+    mainnet: "mainnet",
+    rinkeby: "rinkeby",
+    kovan: "kovan",
+    ganache: "ganache",
+    ropsten:"ropsten"
 };
 
 const GRAPH_URLS = {
@@ -53,11 +52,11 @@ const GRAPH_URLS = {
         mainnet: ""
     },
     V2: {
-        rinkeby: "",
-        mainnet: ""
+        rinkeby: "https://thegraph.com/explorer/subgraph/erasureprotocol/rinkeby-v120",
+        mainnet: "https://thegraph.com/explorer/subgraph/erasureprotocol/v120"
     },
     V3: {
-        rinkeby: "",
+        rinkeby: "https://thegraph.com/explorer/subgraph/erasureprotocol/rinkeby-v130",
         mainnet: ""
     }
 };
@@ -69,5 +68,7 @@ module.exports = {
     AGREEMENT_STATUS,
     AGREEMENT_TYPE,
     VERSIONS,
-    NETWORKS
+    NETWORKS,GRAPH_URLS
+
+
 };

@@ -1,4 +1,5 @@
 const ethers = require("ethers");
+const ganache = require('ganache-cli')
 
 const hexlify = utf8str =>
     ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8str));
@@ -63,21 +64,39 @@ function abiEncodeWithSelector(functionName, abiTypes, abiValues) {
     return encoded;
 }
 
+// Deployer addresses
+const nmrDeployAddress = '0x9608010323ed882a38ede9211d7691102b4f0ba0'
+const daiDeployAddress = '0xb5b06a16621616875A6C2637948bF98eA57c58fa'
+const uniswapFactoryAddress = '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95'
 
-const provider = new ethers.providers.JsonRpcProvider();
-const wallet = new ethers.Wallet(
-    "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d",
-    provider
-);
-const operatorWallet = new ethers.Wallet(
-    "0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c",
-    provider
-);
-const stakerWallet= new ethers.Wallet("0x6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1",provider)
-const counterpartyWallet=new ethers.Wallet("0x646f1ce2fdad0e6deeeb5c7e8e5543bdde65e86029e2fd9fc169899c440a7913",provider)
-const NULL_ADDRESS = ethers.utils.getAddress(
-    "0x0000000000000000000000000000000000000000"
-);
+
+const unlocked_accounts = [
+  nmrDeployAddress,
+  daiDeployAddress,
+  uniswapFactoryAddress,
+]
+let ganacheConfig = {
+    port: 8545,
+    host: '0.0.0.0',
+    unlocked_accounts: unlocked_accounts,
+    default_balance_ether: 1000,
+    total_accounts: 10,
+    hardfork: 'constantinople',
+    network:{chainId: 5777, name:"ganache"},
+    network_id:"*",
+    mnemonic:
+      'myth like bonus scare over problem client lizard pioneer submit female collect',
+  }
+
+const provider = new ethers.providers.Web3Provider(ganache.provider(ganacheConfig), {chainId:0,name:"ganache"})
+provider.getNetwork().then(network => console.log("NETWORK",network))
+const wallet = provider.getSigner(1)
+const operatorWallet =provider.getSigner(2)
+console.log("operator wallet", operatorWallet)
+operatorWallet.getAddress(a=>{console.log("ADDRESS",a)}).catch(console.error)
+const stakerWallet=provider.getSigner(3)
+const counterpartyWallet=provider.getSigner(4)
+const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 module.exports = {
     hexlify,
     createEip1167RuntimeCode,

@@ -8,8 +8,7 @@ const {ErasureGraph} = require("../packages/GraphClient")
 const ErasureHelper = require("@erasure/crypto-ipfs")
 
 before(async () => {
-    const contracts = await deploy("ganache");
-    console.log("CONTRACT ",contracts.NMR.token.wrap.interface.abi)
+    contracts = await deploy("ropsten");
     //Mint NMR tokens to staker, creator, operator and counterparty
     await delay(2000)
     // const NMRC = new ethers.Contract(contracts.NMR.token.wrap.address,contracts.NMR.token.wrap.interface.abi,provider)

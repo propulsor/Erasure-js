@@ -7,11 +7,11 @@ const {getContractMetadata} = require("../../Utils")
  * Erasure_Users has its own methods and doesnt extend Registry class
  */
 class Users_Registry {
-    constructor({ wallet, provider, network = NETWORKS.MAINNET,version=VERSIONS.V3 }) {
+    constructor({ wallet, provider, network = NETWORKS.mainnet,version=VERSIONS.V3,contracts=null }) {
         this.wallet = wallet;
         this.provider = provider;
         this.network = network;
-        const {address,artifact} = getContractMetadata({contractName:"Erasure_Users",version,network})
+        const {address,artifact} = getContractMetadata({contractName:"Erasure_Users",version,network,contracts})
         this.contract = new ethers.Contract(
             address,
             artifact,
